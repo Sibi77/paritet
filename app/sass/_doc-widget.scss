@@ -1,0 +1,50 @@
+.doc-widget{
+  display: flex;
+  flex-direction: column;
+  @include media-breakpoint-down(lg){
+    padding: 0 rem(15);
+  }
+  &__title{
+    font-family: $title-font;
+    font-size: rem(20);
+    line-height: rem(24);
+    color: var(--pir-new-primary-color);
+    font-weight: 400;
+    margin-bottom: rem(40);
+  }
+  &__item{
+    margin-bottom: rem(30);
+    font-size: rem(16);
+    line-height: rem(0);
+    color: var(--pir-main-text-color);
+   img{
+     margin-right: rem(10);
+   }
+  }
+  &__download-all{
+    display: inline-flex;
+    width: rem(221);
+    height: rem(40);
+    padding: 0;
+    border: 1px solid var(--action-button-color);
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: rem(0);
+    font-weight: 600;
+    font-size: rem(14);
+    transition: 200ms ease;
+    color: var(--action-button-color);
+    border-radius: rem(3);
+    @include media-breakpoint-down(sm){
+      margin-left: auto;
+      margin-right: auto;
+    }
+    &:hover{
+      background: var(--action-button-color);
+      color: #fff;
+      transition: 200ms ease;
+    }
+  }
+}

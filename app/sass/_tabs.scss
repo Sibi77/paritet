@@ -1,0 +1,35 @@
+.pir-tab{
+  position: relative;
+  width: 100%;
+  button{
+    font-weight: 500;
+    font-size:rem(12);
+    padding: rem(8) rem(30);
+    line-height: rem(15);
+    text-align: center;
+    text-transform: uppercase;
+    background: #fff;
+    color: var(--pir-color-link);
+    border: 1px solid var(--pir-color-link) ;
+  }
+  .active{
+    background: var(--pir-color-link);
+    color: #fff;
+  }
+  .tabcontent{
+    display: none;
+    margin: rem(40) 0;
+    .item{
+      .name{
+        font-weight: normal;
+        font-size: 17px;
+        line-height: 23px;
+      }
+      .price{
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 23px;
+      }
+    }
+  }
+}

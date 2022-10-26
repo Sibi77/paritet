@@ -1,0 +1,230 @@
+.section-new-form {
+  .pir-container{
+    margin: 0 auto;
+  }
+  p {
+    margin: 0;
+    width: 100%;
+  }
+
+  label {
+    margin: 0;
+    font-size: rem(16);
+    line-height: rem(20);
+    font-weight: normal;
+    padding-left: rem(3);
+    display: block;
+    width: rem(453);
+    @include media-breakpoint-down(sm) {
+      font-size: 12px;
+      line-height: 18px;
+      color: var(--pir-main-text-color);
+    }
+
+    input {
+      display: block;
+      border: 1px solid var(--light-grey);
+      box-sizing: border-box;
+      border-radius: rem(5);
+      width: 100%;
+      padding: rem(10) rem(12);
+      transition: 300ms ease;
+      height: rem(50);
+      font-size: rem(16);
+      line-height: rem(28);
+      margin-left: rem(-3);
+      margin-top: rem(3);
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &::placeholder {
+        font-size: rem(16);
+        font-style: normal;
+        @include media-breakpoint-down(sm) {
+          font-size: rem(14);
+          height: rem(40);
+        }
+      }
+
+      &:focus {
+        transition: 300ms ease;
+        box-shadow: var(--pir-box-shadow);
+        border: 1px solid var(--pir-color-link);
+      }
+
+      @include media-breakpoint-down(sm) {
+        height: rem(40);
+        font-size: rem(14);
+        line-height: rem(28);
+      }
+    }
+  }
+
+
+  br {
+    display: none;
+  }
+
+  .wpcf7-spinner {
+    display: none;
+    position: absolute;
+  }
+}
+
+.new-form-title {
+  font-family: $title-font;
+  padding-top: rem(60);
+  text-align: center;
+  font-size: rem(44);
+  line-height: rem(53);
+  width: 100%;
+  font-weight: 500;
+  margin-bottom: rem(30);
+  color: var(--pir-new-primary-color);
+  @include media-breakpoint-down(sm) {
+    font-size: rem(34);
+    line-height: rem(41);
+    margin-bottom: rem(15);
+  }
+
+  p {
+    color: var(--pir-main-text-color);
+    font-size: rem(16);
+    line-height: rem(24);
+    margin-bottom: rem(28);
+    @include media-breakpoint-down(lg) {
+      font-weight: normal;
+    }
+    @include media-breakpoint-down(sm) {
+      font-size: rem(14);
+      line-height: rem(22);
+      margin-top: 8px;
+      margin-bottom: rem(20);
+    }
+  }
+}
+
+.news-form-desk {
+  text-align: center;
+  color: var(--pir-main-text-color);
+  font-size: rem(16);
+  line-height: rem(24);
+  margin-bottom: rem(30) !important;
+  @include media-breakpoint-down(lg) {
+    font-weight: normal;
+  }
+  @include media-breakpoint-down(sm) {
+    font-size: rem(14);
+    line-height: rem(22);
+    margin-top: 8px;
+    margin-bottom: rem(20);
+  }
+}
+
+.new-form-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.new-form-label-name {
+  width: 50%;
+}
+
+.new-form-label-phone {
+  width: 50%;
+}
+
+.new-form-label-textarea {
+  width: 100%!important;
+  span{
+    color: var(--pir-label-color);
+  }
+}
+
+.new-form-question {
+  width: 100%;
+}
+
+.new-form-agreement {
+  font-size: rem(14);
+  line-height: rem(21);
+  color: var(--pir-label-color);
+  max-width: rem(645);
+  margin: 0 auto !important;
+  text-align: center;
+  @include media-breakpoint-down(lg) {
+    margin-bottom: rem(30);
+    margin-top: rem(10);
+  }
+  @include media-breakpoint-down(sm) {
+    font-size: rem(14);
+    line-height: rem(22);
+  }
+}
+
+.new-form-submit {
+  border: 0;
+  margin: rem(30) auto rem(60) auto;
+  display: block;
+  height: rem(50);
+  background: var(--action-button-color);
+  padding: 0 rem(40);
+  font-weight: 600;
+  font-size: rem(16);
+  line-height: rem(20);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #fff;
+  cursor: pointer;
+  transition: 200ms ease-in;
+  border-radius: rem(3);
+
+  &:hover {
+    transition: 200ms ease-in;
+    background: var(--action-button-hover);
+    color: #fff;
+  }
+}
+
+
+.new-form-file {
+  margin-top: rem(20);
+  font-size: rem(16);
+  line-height: rem(20);
+  border: none;
+}
+
+.new-form-question {
+
+  border: 1px solid #DDDDDD;
+  box-sizing: border-box;
+  border-radius: rem(5);
+  padding: rem(10);
+  min-height: rem(50);
+  height: rem(50);
+  transition: 300ms ease;
+  font-size: rem(16);
+  line-height: rem(28);
+  margin-left: rem(-3);
+  margin-top: rem(3);
+  margin-bottom: rem(20);
+  @include media-breakpoint-down(sm) {
+    min-height: rem(40);
+    height: rem(40);
+    font-size: rem(14);
+    line-height: rem(16)
+  }
+
+  &:focus {
+    transition: 300ms ease;
+    box-shadow: var(--pir-box-shadow);
+    border: 1px solid var(--pir-color-link);
+  }
+}
+.new-form-input-wrap{
+  justify-content: space-between;
+  display: flex;
+  width: 100%;
+  margin-bottom: rem(20);
+}

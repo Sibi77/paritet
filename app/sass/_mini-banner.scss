@@ -1,0 +1,41 @@
+.mini-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--pir-orange-super-light);
+  padding: rem(40) 0;
+  text-align: center;
+  &__title{
+    font-family: $title-font;
+    font-weight: 400;
+    font-size: rem(30);
+    line-height: rem(36);
+    margin-bottom: rem(12);
+    color: var(--pir-orange-dark);
+  }
+  &__desk{
+    font-size: rem(14);
+    line-height: rem(21);
+    p{
+      margin-bottom: rem(20);
+    }
+  }
+  &__btn{
+    border: 1px solid var(--action-button-color);
+    border-radius: rem(3);
+    font-weight: 600;
+    font-size: rem(14);
+    line-height: rem(0);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: rem(13) rem(40);
+    color: var(--action-button-color);
+    transition: 200ms ease;
+    &:hover{
+      color: #fff;
+      background: var(--action-button-color);
+      transition: 200ms ease;
+    }
+  }
+}

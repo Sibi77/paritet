@@ -1,0 +1,21 @@
+.faq{
+  background: var(--pir-light-gray-background);
+  &__title{
+    font-family: $title-font;
+    color: var(--pir-new-primary-color);
+    text-align: center;
+    padding: rem(70) 0 rem(40) 0;
+    font-weight: 500;
+    font-size: rem(44);
+    line-height: rem(53);
+    margin-bottom: 0;
+    @include media-breakpoint-down(lg){
+      padding-top: rem(60);
+    }
+    @include media-breakpoint-down(sm){
+      font-size: rem(34);
+      line-height: rem(41);
+      padding-top: rem(50);
+    }
+  }
+}

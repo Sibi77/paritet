@@ -1,0 +1,191 @@
+.table-calc{
+  padding-top: rem(70);
+  padding-bottom: rem(70);
+  position: relative;
+  &__title{
+    font-family: $title-font;
+    font-size: rem(30);
+    line-height: rem(36);
+    font-weight: normal;
+    color: var(--pir-new-primary-color);
+
+    margin-bottom: rem(40);
+  }
+  table{
+    width: 100%;
+    min-width: rem(700);
+    tr{
+      border: 1px solid #EDF0F3;
+      border-left: none;
+      border-right: none;
+      td{
+        position: relative;
+        text-align: right;
+        padding-right: rem(20);
+        &:first-child{
+          width: 60%;
+          text-align: left;
+          padding-right: rem(0);
+        }
+      }
+    }
+    thead{
+      background: var(--pir-card-color);
+      height: rem(70);
+      color: var(--pir-label-color);
+      td{
+        font-size: rem(13);
+        line-height: rem(25);
+        text-transform: uppercase;
+
+
+      }
+    }
+    tbody{
+      tr{
+        height: rem(70);
+        &:nth-child(even){
+          background: var(--pir-card-color);
+        }
+
+      }
+      td{
+        font-size: rem(16);
+        line-height: rem(24);
+      }
+    }
+
+    input[type="checkbox"]{
+      display: flex;
+      margin: 0 auto;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+  }
+  &__total{
+
+    font-size: rem(16);
+    line-height: rem(24);
+    font-weight: 700;
+    padding-left: rem(70);
+  }
+  &__text{
+    margin-left: rem(51);
+  }
+  &__btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: rem(40);
+    max-width: rem(376);
+    height: rem(60);
+    font-weight: 600;
+    font-size: rem(20);
+    line-height: rem(24);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--action-button-color);
+    border: 1px solid var(--action-button-color);
+    transition: 200ms ease;
+    border-radius: rem(3);
+    &:hover{
+      color: #fff;
+      transition: 200ms ease;
+      background: var(--action-button-color);
+    }
+  }
+  &__tab-mob{
+    @include media-breakpoint-down(sm){
+      min-width: rem(320);
+      overflow-x: scroll;
+      @include custom-scroll-bar();
+    }
+  }
+  #totalVal{
+    font-weight: 700;
+  }
+}
+.custom-checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  margin-left: rem(20);
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.custom-checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+  transition: 200ms ease;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: rem(20);
+  height: rem(22);
+  width: rem(22);
+  background-color: #fff;
+  transition: 200ms ease;
+  border: 1px solid var(--pir-color-link);
+  border-radius: rem(2);
+}
+
+/* On mouse-over, add a grey background color */
+.custom-checkbox-container:hover input ~ .checkmark {
+  background-color: var(--pir-label-color);
+  border: none;
+  transition: 200ms ease;
+}
+
+/* When the checkbox is checked, add a blue background */
+.custom-checkbox-container input:checked ~ .checkmark {
+  background-color: var(--pir-label-color);
+  border: none;
+  transition: 200ms ease;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.custom-checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.custom-checkbox-container .checkmark:after {
+  width: rem(15);
+  height: rem(15);
+  background: url("../img/icons/check-mark-1.svg");
+  object-fit: contain;
+}
+.hideblock{
+  display: none;
+  max-width: rem(960);
+  min-width: rem(320);
+  width: 100%;
+  font-size: rem(16);
+  line-height: rem(28);
+  padding: rem(10);
+}

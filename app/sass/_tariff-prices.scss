@@ -1,0 +1,14 @@
+.tariff-prices{
+  position: relative;
+  &__item{
+    font-size: rem(17);
+    line-height: rem(32);
+    margin-bottom: rem(30);
+    span{
+      font-size: rem(36);
+      line-height: rem(44);
+      font-weight: 500;
+      margin-right: rem(20);
+    }
+  }
+}

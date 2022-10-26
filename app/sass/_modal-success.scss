@@ -1,0 +1,116 @@
+.pir-modal-success{
+  display: none;
+  position: absolute;
+  max-width: rem(383);
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  box-shadow: -4px -4px 10px rgba(0, 0, 0, 0.1), 4px 4px 10px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  z-index: 1;
+  @include media-breakpoint-down(sm){
+    max-width: rem(360);
+    width: 100%;
+  }
+  &__head{
+    background: var(--pir-new-primary-color);
+    padding: rem(49);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    color: #fff;
+    @include media-breakpoint-down(sm){
+      padding: rem(30) rem(25);
+    }
+    p{
+      font-family: $title-font;
+      font-weight: normal;
+      margin-bottom: 0;
+      span{
+        display: block;
+        width: 100%;
+        font-weight: 500;
+        font-size: rem(44);
+        line-height: rem(53);
+        margin-bottom: rem(17);
+        @include media-breakpoint-down(sm){
+          font-size: rem(26);
+          line-height: rem(31);
+          margin-bottom: rem(8);
+        }
+      }
+      @include media-breakpoint-down(sm){
+        font-size: rem(18);
+        line-height: rem(22)
+      }
+    }
+  }
+  &__body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: rem(40) rem(37);
+    @include media-breakpoint-down(sm){
+      padding: rem(20) rem(25) rem(15) rem(25);
+    }
+    img{
+    display: inline-flex;
+      max-width: rem(60);
+      margin-bottom: rem(20);
+      @include media-breakpoint-down(sm){
+        max-width: rem(32);
+        margin-bottom: rem(15);
+
+      }
+    }
+    p{
+      font-size: rem(18);
+      line-height: rem(28);
+      margin-bottom: rem(40);
+      color: var(--pir-new-primary-color);
+      @include media-breakpoint-down(sm){
+        font-size: rem(14);
+        line-height: rem(22);
+        margin-bottom: rem(15);
+      }
+    }
+
+    button.pir-btn{
+      font-weight: 600;
+      line-height: rem(14);
+      padding: rem(13) rem(40);
+      font-size: rem(14);
+      @include media-breakpoint-down(sm){
+        background: transparent;
+        box-shadow: none;
+        color: var(--action-button-color);
+        font-size: rem(12);
+        line-height: rem(15);
+        padding: rem(7) rem(20);
+        width: auto;
+      }
+    }
+  }
+}
+.error-form{
+  .pir-modal-success__head{
+    background: red;
+  }
+  .pir-modal-success__body p{
+    color: red;
+  }
+}
+.pir-main-form{
+  position: relative;
+  &:after{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+  }
+}

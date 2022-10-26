@@ -1,0 +1,128 @@
+#accordion {
+  position: relative;
+  width: 100%;
+  padding: rem(40) 0;
+  padding-top: 0;
+  @include media-breakpoint-down(sm){
+    padding-top: 0;
+    padding-bottom: rem(35);
+  }
+
+  .pir-panel-group {
+    margin-bottom: rem(20);
+    border: rem(1) solid var(--pir-main-background);
+    border-radius: rem(5);
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12), 0px 4px 6px -4px rgba(24, 39, 75, 0.12), 0px 8px 8px -4px rgba(24, 39, 75, 0.08);
+    background: #fff;
+    font-size: rem(18);
+    line-height: rem(28);
+    @include media-breakpoint-down(lg){
+      box-shadow: 0px 6px 12px -6px rgba(24, 39, 75, 0.12), 0px 8px 24px -4px rgba(24, 39, 75, 0.08);
+      border-radius: rem(6);
+      margin-bottom: rem(15);
+    }
+  }
+
+  .panel-heading {
+    position: relative;
+    cursor: pointer;
+    padding: rem(20) rem(60) rem(20) rem(30);
+    font-size: rem(18);
+    line-height: rem(28);
+    transition: 200ms ease;
+    @include media-breakpoint-down(sm){
+      padding: rem(15) rem(40) rem(15) rem(15);
+    }
+    &:before {
+      transition: 200ms ease;
+      content: '';
+      position: absolute;
+      right: rem(30);
+      top: rem(31);
+      width: rem(18);
+      height: rem(10);
+      background: url("../img/icons/arrow-down.svg") no-repeat center;
+      background-size: contain;
+      @include media-breakpoint-down(lg){
+        right: rem(20);
+        width: rem(14);
+      }
+      @include media-breakpoint-down(sm){
+        right: rem(15);
+        top: rem(23);
+      }
+    }
+    img{
+      height: rem(28);
+      width: rem(28);
+      object-fit: contain;
+      margin-right: rem(15);
+      @include media-breakpoint-down(sm){
+        display: none;
+      }
+    }
+  }
+
+  .panel-body {
+    display: none;
+    padding: rem(30) rem(30) 0 rem(30) ;
+    font-size: rem(16);
+    line-height: rem(24);
+
+    @include media-breakpoint-down(sm){
+      font-size: rem(14);
+      line-height: rem(22);
+      padding: rem(15) rem(15) 0 rem(15) ;
+    }
+    p{
+      font-size: rem(16);
+      line-height: rem(24);
+      margin-bottom: rem(30);
+      @include media-breakpoint-down(sm){
+        margin-bottom: rem(15);
+      }
+    }
+    a{
+      display: inline-block;
+      text-decoration: underline;
+      margin-bottom: rem(20);
+      &:last-child{
+        margin-bottom: rem(0);
+      }
+    }
+    .pir-faq-link{
+      margin-top: rem(40);
+      @include media-breakpoint-down(sm){
+        margin-top: rem(20);
+      }
+      a{
+        display: inline-flex;
+        margin-bottom: rem(30);
+        margin-right: rem(40);
+        @include media-breakpoint-down(sm){
+          width: 100%;
+          margin-bottom: rem(20);
+        }
+        &:last-child{
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  .active {
+    transition: 200ms ease;
+    background: var(--pir-card-color);
+    border-top-left-radius: rem(5);
+    border-top-right-radius: rem(5);
+    &:before {
+      top: rem(31);
+      transition: 200ms ease;
+      transform: rotate(180deg);
+      @include media-breakpoint-down(sm){
+        top: rem(23);
+      }
+
+    }
+  }
+}

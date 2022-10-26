@@ -1,0 +1,76 @@
+.pir-table{
+  padding-bottom: rem(60);
+  &__title{
+    font-family: $title-font;
+    font-size: rem(24);
+    line-height: rem(29);
+    font-weight: normal;
+    font-style: normal;
+    margin-bottom: rem(40);
+    margin-top: rem(60);
+  }
+  &__table{
+    width: 100%;
+    thead{
+      tr{
+        background: var(--pir-gridlines-color);
+        td{
+          padding: rem(20);
+          font-weight: normal;
+          font-size: rem(13);
+          line-height: rem(25);
+          color: var(--pir-label-color);
+          text-transform: uppercase;
+        }
+
+
+      }
+    }
+    tbody{
+      tr{
+        td{
+          padding: rem(20);
+          font-style: normal;
+          font-weight: normal;
+          font-size: rem(16);
+          line-height: rem(20);
+          vertical-align: top;
+          a{
+            text-decoration: underline;
+          }
+        }
+        &:nth-child(even){
+          background: var(--pir-gridlines-color);
+        }
+      }
+    }
+  }
+  &__download{
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    color: var(--pir-main-text-color);
+    text-decoration: none!important;
+    img{
+      width: rem(23);
+      height: rem(26);
+      object-fit: contain;
+      margin-right: rem(12);
+    }
+  }
+  &__text{
+    margin-bottom: rem(30);
+    font-size: rem(17);
+    h1,h2,h3,h4,h5,h6{
+      font-weight: 600;
+      line-height: rem(17);
+      margin-bottom: rem(10);
+    }
+    span{
+    }
+  }
+  &__requisites{
+    font-size: 17px;
+    line-height: 32px;
+  }
+}

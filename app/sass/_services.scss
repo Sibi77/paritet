@@ -1,0 +1,312 @@
+.pir-services {
+  position: relative;
+  width: 100%;
+  padding: rem(60) 0;
+  padding-top: rem(40);
+  background: var(--pir-light-gray-background);
+  @include media-breakpoint-down(lg) {
+    padding: rem(50) rem(0);
+    background: #fff;
+  }
+  @include media-breakpoint-down(sm) {
+    box-shadow: none;
+  }
+
+  &__wrap-item {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 rem(19);
+    margin-bottom: rem(20);
+    @include media-breakpoint-down(lg) {
+      padding: 0;
+    }
+  }
+
+  &__wrap {
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    transition: all 200ms;
+    margin-bottom: rem(20);
+    border: rem(1) solid var(--pir-gridlines-color);
+    width: calc(33% - 10px);
+    margin-right: 20px;
+    padding: rem(16);
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12), 0px 4px 6px -4px rgba(24, 39, 75, 0.12), 0px 8px 8px -4px rgba(24, 39, 75, 0.08);
+    border-radius: rem(8);
+    background: #fff;
+    &:nth-child(3n) {
+      margin-right: 0;
+      @include media-breakpoint-down(lg) {
+        margin-right: rem(20);
+      }
+      @include media-breakpoint-down(sm) {
+        margin-right: 0;
+      }
+    }
+
+    @include media-breakpoint-down(lg) {
+      width: calc(50% - 10px);
+      &:nth-child(2n) {
+        margin-right: 0;
+      }
+    }
+
+    @include media-breakpoint-down(sm) {
+      padding: 0;
+      background: #fff;
+      width: 100%;
+      margin-right: 0;
+      box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 0px 2px rgba(0, 0, 0, 0.06), 0px 4px 8px rgba(0, 0, 0, 0.04);
+      border-radius: 3px;
+      margin-bottom: rem(16);
+    }
+
+    &:hover {
+      transition: all 500ms;
+      transform: scale(1.02);
+
+      box-shadow: var(--pir-box-shadow);
+      border-color: transparent;
+
+
+    }
+  }
+
+  &__item {
+    width: 100%;
+    position: relative;
+    padding: rem(23);
+    padding-bottom: 10px;
+
+    @include media-breakpoint-down(sm) {
+      padding-top: rem(30);
+      padding-left: rem(16);
+      padding-right: rem(16);
+      padding-bottom: 0;
+      margin-bottom: rem(30);
+    }
+  }
+
+  &__icon {
+    width: 100%;
+    height: rem(48);
+    margin-bottom: rem(16);
+    @include media-breakpoint-up(lg) {
+      height: rem(60);
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  &__title {
+    font-size: rem(24);
+    line-height: rem(29);
+    margin-bottom: rem(20);
+    font-family: $title-font;
+    height: rem(58);
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    box-orient: vertical;
+    color: var(--pir-primary-dark-new);
+    @include media-breakpoint-down(sm) {
+      color: var(--pir-new-primary-color);
+      font-weight: normal;
+      margin-bottom: rem(20);
+
+    }
+  }
+
+  &__desk {
+    font-size: rem(16);
+    line-height: rem(24);
+    color: var(--pir-main-text-new);
+    height: rem(96);
+
+    margin-bottom: rem(30);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    line-clamp: 4;
+    box-orient: vertical;
+  }
+
+  .pir-secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: rem(19);
+    height: rem(40);
+    transition: 200ms ease;
+    &:hover {
+      color: var(--pir-orange-dark);
+      background: #FDF3E7;
+      transition: 200ms ease;
+    }
+  }
+
+  &__all {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+
+  }
+
+  .pir-btn {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0;
+    margin-top: auto;
+    max-width: max-content;
+    height: rem(51);
+    background: transparent;
+    font-size: rem(16);
+    font-weight: 600;
+    line-height: rem(1);
+
+    &:hover {
+      background: var(--action-button-color);
+    }
+
+    @include media-breakpoint-down(sm) {
+      width: 100%;
+      max-width: none;
+      justify-content: center;
+      margin-bottom: 0;
+      margin-top: rem(14);
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+  }
+
+  .services-label {
+    position: absolute;
+    transform: rotate(45deg);
+    background: var(--action-button-color);
+    color: #fff;
+    font-size: rem(14);
+    line-height: rem(23);
+    width: rem(200);
+    padding: rem(5) 0;
+    letter-spacing: 0.1em;
+    right: rem(-51);
+    top: rem(33);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .pir-title {
+    padding-top: 0;
+
+  }
+
+}
+
+.pir-services-all {
+  padding: rem(15);
+  padding-bottom: 0;
+
+  * {
+    color: var(--pir-main-text-color);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    text-decoration-line: underline;
+    font-size: rem(18);
+    line-height: rem(23);
+    margin: 0 0 rem(13) 0;
+  }
+
+  p {
+    font-style: normal;
+    font-weight: normal;
+    font-size: rem(13);
+    line-height: rem(18);
+  }
+
+  &__item {
+    display: block;
+    position: relative;
+    width: 100%;
+    border: 1px solid #DDDDDD;
+    padding: rem(20) rem(15);
+    overflow: hidden;
+    margin-bottom: rem(15);
+    transition: 300ms ease;
+
+    &:hover {
+      transition: 300ms ease;
+      background: var(--pir-hover-link-secondary);
+      box-sizing: border-box;
+    }
+
+    &:nth-child(odd) {
+      &:hover {
+        background: var(--pir-hover-link);
+      }
+    }
+  }
+
+  .label {
+    &:after {
+      content: 'Бесплатно';
+      position: absolute;
+      width: 120px;
+      right: -34px;
+      top: 13px;
+      text-align: center;
+      color: #fff;
+      font-family: $title-font;
+      font-size: rem(10);
+      line-height: rem(23);
+      font-weight: normal;
+      background: var(--pir-new-primary-color);
+      transform: rotate(45deg);
+    }
+  }
+}
+
+.pir-content .num-list {
+  margin-top: rem(17);
+}
+
+.service-card {
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    font-size: rem(17);
+    line-height: rem(23);
+    margin-bottom: rem(32);
+    text-decoration: underline;
+  }
+
+  &__price {
+    span {
+      font-size: rem(17);
+      line-height: rem(23);
+    }
+  }
+
+  &__hours {
+    font-size: rem(14);
+    line-height: rem(23);
+    color: var(--pir-label-color);
+  }
+}

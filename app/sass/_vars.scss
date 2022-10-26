@@ -1,0 +1,20 @@
+$default-font: 'Montserrat', sans-serif;
+$title-font: 'Fira Sans', sans-serif;
+$title-font-condensed: 'Fira Sans Condensed', sans-serif;
+$pir-accent: var(--action-button-color);
+$text: var(--pir-main-text-new);
+
+//  pir hamburger
+$hamburger-height: rem(20);
+$hamburger-width: rem(24);
+$hamburger-layer-height: rem(2);
+$hamburger-colour: #fff;
+
+
+// Customization Bootstrap vars from "app/libs/bootstrap/scss/_variables.scss"
+$grid-gutter-width: 30px;
+$grid-columns: 12;
+$grid-breakpoints: (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px);
+$container-max-widths: (sm: 540px, md: 720px, lg: 960px, xl: 1190px);
+
+$gutter: $grid-gutter-width;

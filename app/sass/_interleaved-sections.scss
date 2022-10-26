@@ -1,0 +1,28 @@
+.interleaved-sections{
+  padding: rem(60) 0;
+  background: var(--pir-light-gray-background);
+  position: relative;
+  width: 100%;
+  &:nth-child(odd){
+    background: #fff;
+  }
+  &__title{
+    font-family: $title-font;
+    color: var(--pir-new-primary-color);
+    font-size: rem(30);
+    line-height: rem(36);
+    margin-bottom: rem(40);
+    font-weight: 400;
+  }
+  &__desk{
+    p{
+      font-weight: 400;
+      font-size: rem(18);
+      line-height: rem(28);
+      margin-bottom: rem(30);
+      &:last-child{
+        margin-bottom: 0;
+      }
+    }
+  }
+}

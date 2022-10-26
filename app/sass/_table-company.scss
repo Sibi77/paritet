@@ -1,0 +1,110 @@
+.table-company{
+  position: relative;
+  padding-bottom: rem(60);
+  @include media-breakpoint-down(sm){
+    padding-bottom: 0;
+  }
+
+  &__mobile{
+    display: none;
+    @include media-breakpoint-down(sm){
+      position: relative;
+      width: 100%;
+      display: block;
+    }
+  }
+  &__mobile-item{
+
+    &:nth-child(odd){
+      background: var(--pir-card-color);
+    }
+  }
+  &__mobile-wrap{
+    display: flex;
+    flex-direction: column;
+    padding: rem(15);
+
+  }
+  &__mobile-title{
+    font-weight: 400;
+    font-size: rem(11);
+    line-height: rem(13);
+  }
+  &__mobile-name{
+    font-weight: 400;
+    font-size: rem(16);
+    line-height: rem(24);
+    margin-bottom: rem(16);
+  }
+
+  table{
+    @include media-breakpoint-down(sm){
+      display: none;
+    }
+    width: 100%;
+    thead{
+      color: var(--pir-label-color);
+      font-size: rem(13);
+      line-height: rem(26);
+      text-transform: uppercase;
+      background: var(--pir-card-color);
+      height: rem(70);
+      td{
+        padding: 0 rem(15);
+      }
+    }
+    tbody{
+      tr{
+        height: rem(88);
+      }
+      td{
+        padding: 0 rem(15);
+        font-weight: 400;
+        font-size: rem(16);
+        line-height: rem(24);
+      }
+    }
+    &:nth-child(even){
+      background: var(--pir-card-color);
+    }
+    tr{
+      &:nth-child(even){
+        background: var(--pir-card-color);
+      }
+    }
+  }
+  .table-order{
+    display: flex;
+    margin-left: auto;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--action-button-color);
+    border: none;
+    line-height: rem(0);
+    font-style: normal;
+    font-weight: 600;
+    font-size: rem(14);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #fff;
+    height: rem(40);
+    width: rem(130);
+    border-radius: rem(3);
+    transition: 200ms ease-in;
+    outline: none;
+    @include media-breakpoint-down(sm){
+      margin-left: initial;
+    }
+    &:hover {
+      transition: 200ms ease-in;
+      background: var(--action-button-hover);
+      color: #fff;
+    }
+  }
+  .booking{
+    background: var(--pir-menu-choosen);
+    pointer-events: none;
+    color: var(--pir-label-color);
+  }
+}

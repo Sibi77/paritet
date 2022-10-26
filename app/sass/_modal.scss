@@ -1,0 +1,90 @@
+$modal-z: 9000;
+$modal-bg: #fff;
+$modal-width: rem(900);
+$modal-height: rem(560);
+$overlay-opacity: rgba(0,0,0, .5);
+
+.modal {
+  will-change: visibility, opacity;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: $modal-z;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  transition-delay: 10ms;
+  &--active{
+    visibility: visible;
+    opacity: 1;
+  }
+  &__bg{
+    background: $overlay-opacity;
+
+  }
+  &__dialog{
+    width: $modal-width;
+    height: $modal-height;
+    padding: 1.2rem;
+  }
+  &__content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform, opacity;
+    position: relative;
+    padding: 2.4rem;
+    height: 100%;
+    background: $modal-bg;
+    background-clip: padding-box;
+    box-shadow: 0 12px 15px 0 rgba(0,0,0,0.25);
+    opacity: 0;
+    transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+    &--active{
+      opacity: 1;
+    }
+  }
+  &__close{
+    z-index: 999;
+    cursor: pointer;
+  }
+  &__trigger{
+    position: relative;
+    display: inline-block;
+    padding: 1.2rem 2.4rem;
+    color: rgba(0,0,0,0.7);
+    line-height: 1;
+    cursor: pointer;
+    background: $modal-bg;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+    user-select: none;
+    transition: all 0.1s cubic-bezier(0.23, 1, 0.32, 1);
+    &--active{
+      z-index: 10;
+    }
+  }
+}
+
+#modal__temp {
+  will-change: transform, opacity;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  -webkit-transform: none;
+  transform: none;
+  opacity: 1;
+  transition: opacity 0.1s ease-out, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+
+

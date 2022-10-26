@@ -1,0 +1,22 @@
+.notification-covid{
+  position: relative;
+  width: 100%;
+  padding: rem(40) 0;
+  background: var(--pir-orange-super-light);
+  &__title{
+    font-family: $title-font;
+    font-size: rem(30);
+    line-height: rem(36);
+    margin-bottom: rem(12);
+    font-weight: normal;
+    color: var(--pir-orange-dark);
+    text-align: center;
+  }
+  &__desk{
+    font-weight: normal;
+    font-size: rem(14);
+    line-height: rem(21);
+    margin-bottom: 0;
+    text-align: center;
+  }
+}
