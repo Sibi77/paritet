@@ -153,6 +153,7 @@
     display: block;
     font-size: rem(12);
     line-height: rem(15);
+    font-weight: 600;
     padding: rem(7) rem(14);
     border: 1px solid #fff;
     color: #fff;
@@ -164,6 +165,13 @@
     border-color: #fff;
     background: #fff;
     transition: 200ms ease;
+  }
+}
+.pir-phone-call{
+  display: none;
+  @include media-breakpoint-down(lg){
+    display: block;
+    margin-right: rem(12);
   }
 }
 

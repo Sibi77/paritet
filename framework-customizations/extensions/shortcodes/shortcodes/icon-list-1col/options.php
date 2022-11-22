@@ -29,5 +29,11 @@ $options = [
             ],
         ],
     ],
+    'list_col_icon_margin' => [
+        'type' => 'checkbox',
+        'value' => false, // checked/unchecked
+        'label' => __('Верхний отступ списка', '{domain}'),
+        'text' => __('Убрать верхний отступ списка', '{domain}'),
+    ],
 
 ];

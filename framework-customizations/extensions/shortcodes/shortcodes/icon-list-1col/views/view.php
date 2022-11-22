@@ -8,7 +8,7 @@
 
 ?>
 
-<ul class="advantages-col">
+<ul class="advantages-col <?php if ($atts['list_col_icon_margin']) { ?> advantages-col-not-margin<?php } ?>">
     <?php foreach($atts['icon_list_add'] as $iconlist):?>
         <li>
             <img src="<?= $iconlist['icon_list_icon']['url'] ?>" alt="">
