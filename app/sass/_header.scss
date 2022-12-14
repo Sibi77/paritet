@@ -149,10 +149,13 @@
 }
 .pir-btn-sign-in-m{
   display: none;
+
   @include media-breakpoint-down(sm) {
-    display: block;
+    display: flex;
+    align-items: center;
+    height: rem(30);
     font-size: rem(12);
-    line-height: rem(15);
+    line-height: rem(0);
     font-weight: 600;
     padding: rem(7) rem(14);
     border: 1px solid #fff;
@@ -170,8 +173,12 @@
 .pir-phone-call{
   display: none;
   @include media-breakpoint-down(lg){
-    display: block;
+    display: flex;
+    height: rem(40);
     margin-right: rem(12);
+  }
+  @include media-breakpoint-down(sm){
+    height: rem(30);
   }
 }
 
