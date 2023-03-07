@@ -6,7 +6,8 @@
   background: var(--pir-orange-super-light);
   padding: rem(40) 0;
   text-align: center;
-  &__title{
+
+  &__title {
     font-family: $title-font;
     font-weight: 400;
     font-size: rem(30);
@@ -14,14 +15,17 @@
     margin-bottom: rem(12);
     color: var(--pir-orange-dark);
   }
-  &__desk{
+
+  &__desk {
     font-size: rem(14);
     line-height: rem(21);
-    p{
+
+    p {
       margin-bottom: rem(20);
     }
   }
-  &__btn{
+
+  &__btn {
     border: 1px solid var(--action-button-color);
     border-radius: rem(3);
     font-weight: 600;
@@ -29,10 +33,17 @@
     line-height: rem(0);
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    padding: rem(13) rem(40);
+    padding: rem(0) rem(40);
+    width: max-content;
     color: var(--action-button-color);
     transition: 200ms ease;
-    &:hover{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: rem(40);
+    margin: 0 auto;
+
+    &:hover {
       color: #fff;
       background: var(--action-button-color);
       transition: 200ms ease;
