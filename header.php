@@ -132,6 +132,7 @@
                     <a href="tel:+74959947275" class="pir-menu__top-phone" onclick="ym(61912495,'reachGoal','phone'); return true;">+7 (495) 994 72 75</a>
                     <a href="tel:74959947275" class="pir-phone-call" onclick="ym(61912495,'reachGoal','phone'); return true;"><img src="<?php bloginfo('template_directory'); ?>/img/icons/phone-call.svg" alt="mobile-phone"></a>
                     <a href="https://pir.paritet.ru/" target="_blank" class="pir-btn-sign-in-m">Вход</a>
+                    <?php echo do_shortcode( '[ivory-search id="6169" title="AJAX Search Form"]' ); ?>
                     <a href="https://pir.paritet.ru/" target="_blank" class="pir-btn-sign-in-d">Вход в кабинет</a>
                 </div>
 
