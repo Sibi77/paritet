@@ -100,25 +100,28 @@ $(function (){
                     btn.after(loader);
                 },
                 success: function(responce){
+                    window.location.href = '/spasibo/';
                     var formSection = $('.form-wrapper').parents('.fw-main-row ');
-                    formSection.addClass('pir-main-form')
-                    formAlert.fadeIn(300, function(){
-                        if(responce.success){
-                            formAlert.addClass('pir-active-modal');
-                            $this[0].reset();
-                            ym(61912495,'reachGoal','send-form'); return true;
-                            // setTimeout(function(){
-                            //     formAlert.fadeOut();
-                            // }, 7000);
-                        }else{
-                            formAlert.addClass('alert-danger');
-                            var errors = '';
-                            for(var key in responce.data.errors){
-                                errors += responce.data.errors[key] + '<br>';
-                            }
-                            formAlert.html(errors);
-                        }
-                    });
+                    ym(61912495,'reachGoal','send-form'); return true;
+                    // formSection.addClass('pir-main-form')
+                    // formAlert.fadeIn(300, function(){
+                    //     if(responce.success){
+                    //         // formAlert.addClass('pir-active-modal');
+                    //
+                    //         $this[0].reset();
+                    //         ym(61912495,'reachGoal','send-form'); return true;
+                    //         // setTimeout(function(){
+                    //         //     formAlert.fadeOut();
+                    //         // }, 7000);
+                    //     }else{
+                    //         formAlert.addClass('alert-danger');
+                    //         var errors = '';
+                    //         for(var key in responce.data.errors){
+                    //             errors += responce.data.errors[key] + '<br>';
+                    //         }
+                    //         formAlert.html(errors);
+                    //     }
+                    // });
                     $('.loader').remove();
                     btn.attr('disabled', false);
                     $this.find('input').removeClass('valid');
