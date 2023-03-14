@@ -100,7 +100,7 @@ $(function (){
                     btn.after(loader);
                 },
                 success: function(responce){
-                    window.location.href = '/spasibo/';
+                    window.location.href = '/thanks/';
                     var formSection = $('.form-wrapper').parents('.fw-main-row ');
                     ym(61912495,'reachGoal','send-form'); return true;
                     // formSection.addClass('pir-main-form')
