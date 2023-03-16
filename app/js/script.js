@@ -31,6 +31,11 @@ $(function () {
     var pirLogo = $('.pir-head').find('.pir-logo');
 
 
+    // $(document).on('click', '.pir-search-site__btn', function (){
+    //     var  formSearch = $('.pir-search-site form');
+    //     formSearch.show();
+    // })
+
     // function pageDeskScaling(){
     //
     //

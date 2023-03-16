@@ -1,3 +1,52 @@
-.pir-search{
+.pir-search-site{
+  position: relative;
+  &__btn{
+    height: rem(20);
+    width: rem(20);
+    background: url("../img/icons/searh-l.svg") no-repeat;
+    background-size: contain;
+    border: none;
+    cursor: pointer;
+    &:focus{
+      outline: none;
+    }
+  }
+  &__wrap{
+  right: 0;
+    position: absolute;
+    box-shadow: -4px -4px 10px rgba(0, 0, 0, 0.1), 4px 4px 10px rgba(0, 0, 0, 0.15);
+    border-radius: rem(15);
+   width: rem(452);
+    //width: 100%;
+    background: #fff;
+  }
+  .searchandfilter {
+    ul{
+      padding-left: rem(14);
+      padding-top: rem(14);
+      li{
+        padding: 0;
+      }
+    }
+
+  }
+  &__link-wrap{
+    padding: rem(14);
+    padding-bottom: rem(10);
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    a{
+      padding: rem(6);
+      border-radius: rem(8);
+      background: var(--pir-gridlines-color);
+      margin-right: rem(4);
+      margin-bottom: rem(4);
+      font-weight: 400;
+      font-size: rem(12);
+      line-height: rem(16);
+      color: var(--pir-new-primary-color);
+    }
+  }
 
 }

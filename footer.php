@@ -75,6 +75,7 @@
                         <option data-id="1">Центральный офис</option>
                         <option data-id="3">Филиал № 2</option>
                         <option data-id="2">Филиал № 4</option>
+                        <option data-id="4">Московский обл. филиал</option>
                     </select>
                 </span>
 
@@ -141,6 +142,28 @@
                         перерыв 12.30 - 14.00 <br>
                         10.00 – 16.00, перерыв 12.30 - 14.00 (пятница, предпраздничные дни) <br>
                         Сб, Вс – выходной
+
+                    </p>
+                </div>
+                <div class="pir-footer__office" data-id="4">
+                    <a href="tel:+79919884313" class="pir-footer__phone" onclick="ym(61912495,'reachGoal','phone'); return true;">+7-991-988-43-13</a>
+                    <a class="pir-footer__mail" href="mailto:office@paritet.ru">office@paritet.ru</a>
+                    <div class="pir-footer__social d-flex w-100">
+                        <a href="https://t.me/paritetrdc" target="_blank"><img
+                                    src="<?php bloginfo('template_directory'); ?>/img/icons/telegram.svg"
+                                    alt="telegram"></a>
+                        <a href="https://vk.com/paritetrdc" target="_blank"><img
+                                    src="<?php bloginfo('template_directory'); ?>/img/icons/vk.svg"
+                                    alt="vk"></a>
+                    </div>
+                    <p>Адрес</p>
+                    <p>141701, Московская область, г.о. Долгопрудный, г. Долгопрудный, Лихачевский проезд, д. 8, помещ. LI, офис 401-3
+                    </p>
+                    <p>Часы приема</p>
+                    <p>ПН-ЧТ 11.00 - 15.00<br>
+                        Пт, предпраздничные дни – 11.00-15.00 <br>
+                        Сб, Вс – выходной
+
 
                     </p>
                 </div>

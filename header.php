@@ -132,28 +132,42 @@
                     <a href="tel:+74959947275" class="pir-menu__top-phone" onclick="ym(61912495,'reachGoal','phone'); return true;">+7 (495) 994 72 75</a>
                     <a href="tel:74959947275" class="pir-phone-call" onclick="ym(61912495,'reachGoal','phone'); return true;"><img src="<?php bloginfo('template_directory'); ?>/img/icons/phone-call.svg" alt="mobile-phone"></a>
 
-                    <div class="pir-search">
-                        <button class="pir-search__btn"></button>
-                        <?php echo do_shortcode( '[searchandfilter id="5579"]' );?>
+                    <div class="pir-search-site">
+                        <button type="button" class="pir-search-site__btn"></button>
 
-                        <div id="pir-search__ajax-result">
-                            <?php
-                            if ( have_posts() && strlen( trim(get_search_query()) ) != 0 ) :?>
+                        <div class="pir-search-site__wrap">
+                            <img src="<?php bloginfo('template_directory'); ?>/img/icons/search-s.svg" alt="search">
+                            <?php echo do_shortcode( '[searchandfilter id="6178"]' );?>
+                            <img src="<?php bloginfo('template_directory'); ?>/img/icons/close-searhc.svg" alt="">
+                            <div id="pir-search-site__ajax-result">
                                 <?php
-                                /* translators: %s: search query. */
-                                printf( esc_html__( 'Search Results for: %s', '_s' ), '<span>' . get_search_query() . '</span>' );
-                                ?>
-                                <?php
-                                /* Start the Loop */
-                                while ( have_posts() ) : the_post();
-                                    get_template_part( 'template-parts/content', 'search' );
-                                endwhile;
-                            endif; ?>
+                                if ( have_posts() && strlen( trim(get_search_query()) ) != 0 ) :?>
+                                    <?php
+                                    /* translators: %s: search query. */
+                                    printf( esc_html__( 'Search Results for: %s', '_s' ), '<span>' . get_search_query() . '</span>' );
+                                    ?>
+                                    <?php
+                                    /* Start the Loop */
+                                    while ( have_posts() ) : the_post();
+                                        get_template_part( 'template-parts/content', 'search' );
+                                    endwhile;
+                                endif; ?>
+                            </div>
+                            <div class="pir-search-site__link-wrap">
+                                <a href="#">Регистрация АО</a>
+                                <a href="#">Ведение реестра</a>
+                                <a href="#">Реорганизация</a>
+                                <a href="#">Регистрация OOО</a>
+                                <a href="#">Ликвидация юр лиц</a>
+                                <a href="#">Услуги Эскроу агента</a>
+                            </div>
+
                         </div>
+
+
                     </div>
 
                     <a href="https://pir.paritet.ru/" target="_blank" class="pir-btn-sign-in-m">Вход</a>
-                    <?php echo do_shortcode( '[ivory-search id="6169" title="AJAX Search Form"]' ); ?>
                     <a href="https://pir.paritet.ru/" target="_blank" class="pir-btn-sign-in-d">Вход в кабинет</a>
                 </div>
 

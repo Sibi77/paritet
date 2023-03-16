@@ -403,6 +403,7 @@
     position: relative;
     border: none;
     transition: 200ms ease;
+    margin-right: 0;
     @include media-breakpoint-down(lg) {
       display: none;
     }
@@ -453,6 +454,9 @@
     display: inherit;
     line-height: rem(16);
     padding: rem(7) 0;
+    &:last-child{
+      margin-right: 0;
+    }
 
     a {
       position: relative;
