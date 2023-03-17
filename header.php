@@ -136,20 +136,16 @@
                         <button type="button" class="pir-search-site__btn"></button>
 
                         <div class="pir-search-site__wrap">
-                            <img src="<?php bloginfo('template_directory'); ?>/img/icons/search-s.svg" alt="search">
-                            <?php echo do_shortcode( '[searchandfilter id="6178"]' );?>
-                            <img src="<?php bloginfo('template_directory'); ?>/img/icons/close-searhc.svg" alt="">
-                            <div id="pir-search-site__ajax-result">
+<!--                            <img src="--><?php //bloginfo('template_directory'); ?><!--/img/icons/search-s.svg" alt="search">-->
+                            <?php echo do_shortcode( '[searchandfilter id="5579"]' );?>
+                            <img class="pir-search-site__close" src="<?php bloginfo('template_directory'); ?>/img/icons/close-searhc.svg" alt="">
+                            <div class="pir-search-site__ajax-result">
                                 <?php
                                 if ( have_posts() && strlen( trim(get_search_query()) ) != 0 ) :?>
                                     <?php
-                                    /* translators: %s: search query. */
-                                    printf( esc_html__( 'Search Results for: %s', '_s' ), '<span>' . get_search_query() . '</span>' );
-                                    ?>
-                                    <?php
                                     /* Start the Loop */
                                     while ( have_posts() ) : the_post();
-                                        get_template_part( 'template-parts/content', 'search' );
+                                        get_template_part( 'template-parts/content', 'pirsearch' );
                                     endwhile;
                                 endif; ?>
                             </div>
