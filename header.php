@@ -137,17 +137,10 @@
 
                         <div class="pir-search-site__wrap">
 <!--                            <img src="--><?php //bloginfo('template_directory'); ?><!--/img/icons/search-s.svg" alt="search">-->
-                            <?php echo do_shortcode( '[searchandfilter id="5579"]' );?>
+                            <?php echo do_shortcode( '[searchandfilter id="6178"]' );?>
                             <img class="pir-search-site__close" src="<?php bloginfo('template_directory'); ?>/img/icons/close-searhc.svg" alt="">
                             <div class="pir-search-site__ajax-result">
-                                <?php
-                                if ( have_posts() && strlen( trim(get_search_query()) ) != 0 ) :?>
-                                    <?php
-                                    /* Start the Loop */
-                                    while ( have_posts() ) : the_post();
-                                        get_template_part( 'template-parts/content', 'pirsearch' );
-                                    endwhile;
-                                endif; ?>
+
                             </div>
                             <div class="pir-search-site__link-wrap">
                                 <a href="#">Регистрация АО</a>
