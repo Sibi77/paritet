@@ -545,7 +545,11 @@ input.invalid {
 }
 
 
-
+#seraph-accel-css-custom {
+  .owl-carousel:not(.owl-loaded)>*:not(:first-child){
+    display: block!important;
+  }
+}
 @import "_feedback";
 @import "media"; // Always at the end
 @import "_typography-vars";
