@@ -26,15 +26,47 @@ $(function () {
     var wpAdminBar = $('.wpadminbar');
     var textarea = $('#id-3');
     var saleRegAo = '. Антикризисная Акция';
-    var modalCookie = $('.notification-cookie');
-    var modalCookieMost = $('.notification-cookie-most');
+
     var pirLogo = $('.pir-head').find('.pir-logo');
 
 
-    // $(document).on('click', '.pir-search-site__btn', function (){
-    //     var  formSearch = $('.pir-search-site form');
-    //     formSearch.show();
-    // })
+    $(document).on('click', '.pir-search-site__btn', function (){
+        var  formSearch = $('.pir-search-site');
+        formSearch.show();
+    })
+    $(document).on('click', '.pir-search-site__close', function (){
+        var  formSearch = $('.pir-search-site');
+        formSearch.hide();
+    })
+    $(document).mouseup(function (e) {
+        var container = $(".pir-search-site");
+        if (container.has(e.target).length === 0){
+            container.hide();
+        }
+    });
+
+
+    function pirSearchSubmit(event){
+        var searchForm = $('#search-filter-form-6178')
+        searchForm.submit(function(){
+            return false;
+        })
+
+
+        var searchInput = searchForm.find('.sf-input-text')
+        searchInput.prop('require')
+            if(searchInput.val() === ''){
+                searchForm.off()
+            }
+
+        console.log(searchForm);
+        console.log(searchInput);
+        $(document).on('submit', searchForm, function (){
+            e.preventDefault();
+            console.log(111)
+        })
+    }
+    pirSearchSubmit();
 
     // function pageDeskScaling(){
     //
@@ -130,7 +162,13 @@ $(function () {
 
 
     function visibleCookieModal(e) {
-        var hideCookieMost = $('.notification-cookie-most');
+        $('.notification-cookie-wrap').prepend('<div class="notification-cookie">\n' +
+            '        <p>Мы используем файлы cookie для улучшения работы сайта. Продолжая просматривать сайт, вы соглашаетесь с\n' +
+            '            условиями использования cookie</p>\n' +
+            '        <a href="#" class="notification-cookie__btn-true ">Закрыть</a>\n' +
+            '    </div>');
+        var modalCookie = $('.notification-cookie');
+        var modalCookieMost = $('.notification-cookie-most');
         modalCookieMost.addClass('notification-cookie-most-visible');
         modalCookie.addClass('notification-cookie-visible')
 

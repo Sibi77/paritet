@@ -132,6 +132,7 @@ function pir_scripts()
 
 
 //    wp_enqueue_script('pir-jquery', get_template_directory_uri() . '/js/jquery.min.js', [], '', true);
+
     wp_enqueue_script('pir-jquery2', get_template_directory_uri() . '/js/jquery-2.2.4.min.js', [], '', true);
     wp_enqueue_script('pir-cookie', get_template_directory_uri() . '/js/jquery.cookie.js', [], '', true);
     wp_enqueue_script('pir-touchSwipe', get_template_directory_uri() . '/js/jquery.touchSwipe.min.js', [], '', true);
@@ -143,6 +144,7 @@ function pir_scripts()
     enqueue_versioned_script( 'pir-scripts', '/js/script.min.js', array( 'jquery'), true );
 //    wp_enqueue_script('pir-scripts', get_template_directory_uri() . '/js/script.min.js', [], '', true);
     wp_localize_script('pir-scripts', 'lawData', array('themePath' => get_template_directory_uri()));
+
     /*
      * Добавляем возможность отправлять AJAX-запросы к скриптам
      * Аргументы:

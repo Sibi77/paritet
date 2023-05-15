@@ -1,6 +1,59 @@
 .pir-search-site {
-  position: relative;
 
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: none;
+  &__title{
+    font-family: $title-font;
+    font-weight: 500;
+    color: var(--pir-new-primary-color);
+    font-size: rem(44);
+    line-height: rem(53);
+    padding-top: rem(40) ;
+  }
+  &__wrap-news{
+    display: block;
+    padding: rem(30) 0;
+    border-bottom: 1px solid var(--pir-main-background);
+    &:last-child{
+      border-bottom: none;
+    }
+    p{
+      color: var(--pir-main-text-color);
+      font-weight: 400;
+      font-size: rem(18);
+      line-height: rem(28);
+      margin: 0;
+    }
+  }
+  &__title-h3{
+    font-family: $title-font;
+    font-weight: 400;
+    font-size: rem(30);
+    line-height: rem(36);
+    color: var(--pir-new-primary-color);
+    margin-bottom: rem(12);
+    .search_expt{
+      color: var(--action-button-color);
+      font-weight: 400;
+    }
+  }
+  &__label{
+    padding: rem(4) rem(8);
+    border: rem(1) solid var(--pir-new-primary-color);
+    font-weight: 400;
+    font-size: rem(12);
+    line-height: rem(16);
+    color: var(--pir-new-primary-color);
+    margin-right: rem(15);
+    border-radius: rem(3);
+  }
+ &__footer{
+   display: flex;
+   margin-top: rem(12);
+   align-items: center;
+ }
   &__btn {
     height: rem(20);
     width: rem(20);
@@ -8,6 +61,7 @@
     background-size: contain;
     border: none;
     cursor: pointer;
+    margin: 0 rem(30);
 
     &:focus {
       outline: none;
@@ -16,7 +70,7 @@
 
   &__wrap {
     right: 0;
-    position: absolute;
+    top: 0;
     box-shadow: -4px -4px 10px rgba(0, 0, 0, 0.1), 4px 4px 10px rgba(0, 0, 0, 0.15);
     border-radius: rem(15);
     width: rem(452);

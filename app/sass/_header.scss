@@ -45,7 +45,7 @@
   display: flex;
   justify-content: space-between;
   max-width: 126px;
-  margin-right: rem(50);
+  margin-right: rem(20);
   @include media-breakpoint-down(lg){
     margin-right: 0;
   }
@@ -429,6 +429,7 @@
   }
 
   &__contact-wrap {
+    position: relative;
     display: flex;
     align-items: center;
   }
@@ -492,7 +493,7 @@
 
 
 .pir-nav-desk {
-  width: calc(100% - 500px);
+  width: calc(100% - 580px);
 }
 .nav-wrap-top{
   top: 0!important;

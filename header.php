@@ -46,6 +46,7 @@
     <?php wp_head(); ?>
 </head>
 <div class="swipe-menu"></div>
+
 <body>
 
 <div class="swipe-overlay"></div>
@@ -131,12 +132,11 @@
                 <div class="pir-nav__contact-wrap">
                     <a href="tel:+74959947275" class="pir-menu__top-phone" onclick="ym(61912495,'reachGoal','phone'); return true;">+7 (495) 994 72 75</a>
                     <a href="tel:74959947275" class="pir-phone-call" onclick="ym(61912495,'reachGoal','phone'); return true;"><img src="<?php bloginfo('template_directory'); ?>/img/icons/phone-call.svg" alt="mobile-phone"></a>
-
+                    <button type="button" class="pir-search-site__btn"></button>
                     <div class="pir-search-site">
-                        <button type="button" class="pir-search-site__btn"></button>
+
 
                         <div class="pir-search-site__wrap">
-<!--                            <img src="--><?php //bloginfo('template_directory'); ?><!--/img/icons/search-s.svg" alt="search">-->
                             <?php echo do_shortcode( '[searchandfilter id="6178"]' );?>
                             <img class="pir-search-site__close" src="<?php bloginfo('template_directory'); ?>/img/icons/close-searhc.svg" alt="">
                             <div class="pir-search-site__ajax-result">
@@ -284,12 +284,13 @@
     <!--        <button class="notification-cookie-most__close" type="button">Закрыть</button>-->
     <!--    </div>-->
     <!--</div>-->
-    <div class="notification-cookie">
-        <p>Мы используем файлы cookie для улучшения работы сайта. Продолжая просматривать сайт, вы соглашаетесь с
-            условиями использования cookie</p>
-        <a href="#" class="notification-cookie__btn-true ">Закрыть</a>
-    </div>
+<!--    <div class="notification-cookie">-->
+<!--        <p>Мы используем файлы cookie для улучшения работы сайта. Продолжая просматривать сайт, вы соглашаетесь с-->
+<!--            условиями использования cookie</p>-->
+<!--        <a href="#" class="notification-cookie__btn-true ">Закрыть</a>-->
+<!--    </div>-->
 </div>
+
 
 
 
