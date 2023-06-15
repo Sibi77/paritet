@@ -131,24 +131,26 @@
 
                 <div class="pir-nav__contact-wrap">
                     <a href="tel:+74959947275" class="pir-menu__top-phone" onclick="ym(61912495,'reachGoal','phone'); return true;">+7 (495) 994 72 75</a>
-                    <a href="tel:74959947275" class="pir-phone-call" onclick="ym(61912495,'reachGoal','phone'); return true;"><img src="<?php bloginfo('template_directory'); ?>/img/icons/phone-call.svg" alt="mobile-phone"></a>
-                    <button type="button" class="pir-search-site__btn"></button>
+                    <button type="button" class="pir-search-site__btn pir-search-site__btn-mob"></button>
+                    <a href="tel:+74959947275" class="pir-phone-call" onclick="ym(61912495,'reachGoal','phone'); return true;"><img src="<?php bloginfo('template_directory'); ?>/img/icons/phone-call.svg" alt="mobile-phone"></a>
+                    <button type="button" class="pir-search-site__btn pir-search-site__btn-desk"></button>
+
                     <div class="pir-search-site">
 
 
                         <div class="pir-search-site__wrap">
-                            <?php echo do_shortcode( '[searchandfilter id="6178"]' );?>
+                            <?php echo do_shortcode( '[searchandfilter id="6743"]' );?>
                             <img class="pir-search-site__close" src="<?php bloginfo('template_directory'); ?>/img/icons/close-searhc.svg" alt="">
                             <div class="pir-search-site__ajax-result">
 
                             </div>
                             <div class="pir-search-site__link-wrap">
-                                <a href="#">Регистрация АО</a>
-                                <a href="#">Ведение реестра</a>
-                                <a href="#">Реорганизация</a>
-                                <a href="#">Регистрация OOО</a>
-                                <a href="#">Ликвидация юр лиц</a>
-                                <a href="#">Услуги Эскроу агента</a>
+                                <a href="/all-services/konsultaczionnye-uslugi/registracziya-ao/">Регистрация АО</a>
+                                <a href="/all-services/joint-stock-companies/vedenie-reestra-akczionerov/">Ведение реестра</a>
+                                <a href="/all-services/konsultaczionnye-uslugi/reorganizacziya-i-likvidacziya-yur-licz/">Реорганизация</a>
+                                <a href="/all-services/uslugi-dlya-ooo/registracziya-ooo/">Регистрация OOО</a>
+                                <a href="/all-services/konsultaczionnye-uslugi/likvidacziya-kompanij/">Ликвидация юр лиц</a>
+                                <a href="/all-services/vladelczam-czennyh-bumag/uslugi-eskrou-agenta/">Услуги Эскроу агента</a>
                             </div>
 
                         </div>
@@ -156,9 +158,33 @@
 
                     </div>
 
-                    <a href="https://pir.paritet.ru/" target="_blank" class="pir-btn-sign-in-m">Вход</a>
+
                     <a href="https://pir.paritet.ru/" target="_blank" class="pir-btn-sign-in-d">Вход в кабинет</a>
                 </div>
+
+
+            </div>
+            <div class="pir-search-site-mob">
+                <div class="pir-search-site-mob__header">
+                    <button class="pir-search-site-mob__close pir-search-site__btn-mob"></button>
+                    <span>ПОИСК ПО САЙТУ</span>
+                </div>
+                <div class="pir-container">
+                    <div class="pir-search-site-mob__search">
+                        <?php echo do_shortcode( '[searchandfilter id="6743"]' );?>
+                        <img class="pir-search-site-mob__icon" src="<?php bloginfo('template_directory'); ?>/img/icons/search.svg" alt="search">
+                    </div>
+                    <h2 class="pir-search-site-mob__title">Быстрые ссылки</h2>
+                    <div class="pir-search-site-mob__fast-link">
+                        <a href="/all-services/konsultaczionnye-uslugi/registracziya-ao/">Регистрация АО</a>
+                        <a href="/all-services/joint-stock-companies/vedenie-reestra-akczionerov/">Ведение реестра</a>
+                        <a href="/all-services/konsultaczionnye-uslugi/reorganizacziya-i-likvidacziya-yur-licz/">Реорганизация</a>
+                        <a href="/all-services/uslugi-dlya-ooo/registracziya-ooo/">Регистрация OOО</a>
+                        <a href="/all-services/konsultaczionnye-uslugi/likvidacziya-kompanij/">Ликвидация юр лиц</a>
+                        <a href="/all-services/vladelczam-czennyh-bumag/uslugi-eskrou-agenta/">Услуги Эскроу агента</a>
+                    </div>
+                </div>
+
 
             </div>
             <nav class="pir-menu">
@@ -172,6 +198,7 @@
                         <span class="pir-logo__text">Паритет</span>
                     </a>
                     <a href="tel:+74959947275" class="pir-menu__top-phone" onclick="ym(61912495,'reachGoal','phone'); return true;">+7 (495) 994 72 75</a>
+                    <a href="https://pir.paritet.ru/" target="_blank" class="pir-btn-sign-in-m">Вход</a>
                 </div>
 
                 <div class="mega-menu-tablet">

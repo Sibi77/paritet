@@ -3,6 +3,7 @@ $(function () {
     // Variables
     var pirHamburger = $('.pir-hamburger');
     var pirMenu = $('.pir-menu');
+    var searchMenu = $('.pir-search-site-mob');
     var bodyDoc = $('body');
     var pirNavWrap = $('.pir-nav-wrap');
     var pirHead = $('.pir-head');
@@ -30,7 +31,7 @@ $(function () {
     var pirLogo = $('.pir-head').find('.pir-logo');
 
 
-    $(document).on('click', '.pir-search-site__btn', function (){
+    $(document).on('click', '.pir-search-site__btn-desk', function (){
         var  formSearch = $('.pir-search-site');
         formSearch.show();
     })
@@ -280,6 +281,41 @@ $(function () {
         }
 
     });
+
+    $(document).on('click', '.pir-search-site__btn-mob', function (e) {
+        e.preventDefault();
+        if (!searchMenu.hasClass('pir-menu__active')) {
+            $('.pir-search-site-mob__close').addClass('pir-hamburger--open');
+            searchMenu.addClass('pir-menu__active');
+            bodyDoc.css({
+                overflow: 'hidden'
+            });
+            searchMenu.animate({
+                left: '0',
+                opacity: '1',
+            }, 500);
+            $(this).css({
+                color: '#000'
+            })
+        } else {
+            searchMenu.removeClass('pir-menu__active');
+            bodyDoc.css({
+                overflow: 'auto'
+            });
+            searchMenu.animate({
+                left: '-100%',
+                opacity: '0',
+            }, 500);
+
+        }
+       var searh = $('.sf-input-text');
+        console.log(searh)
+        searh.focus();
+    });
+    $(document).on('click', '.pir-search-site-mob__close', function (){
+        var searh = $('.sf-input-text');
+        searh.blur();
+    })
     // end hamburger header menu
 
     //swipe menu header
