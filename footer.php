@@ -224,5 +224,22 @@
 
 
 </script>
+<div class="notification-cookie-wrap">
+    <!--<div class="notification-cookie-most">-->
+    <!---->
+    <!--    <p>-->
+    <!--        Акционерам ПАО «ХМЗ» о порядке продажи акций в случае принятия Добровольного предложения <a class="notification-cookie-most__btn" href="/akczioneram-pao-hmz/">Подробнее...</a>-->
+    <!--    </p>-->
+    <!--    <div class="notification-cookie-most__btn-wrap">-->
+    <!--           <a href="/akczioneram-pao-mostotrest/" class="notification-cookie-most__btn">Подробнее</a>-->
+    <!--        <button class="notification-cookie-most__close" type="button">Закрыть</button>-->
+    <!--    </div>-->
+    <!--</div>-->
+    <div class="notification-cookie">
+        <p>Мы используем файлы cookie для улучшения работы сайта. Продолжая просматривать сайт, вы соглашаетесь с
+            условиями использования cookie</p>
+        <a href="#" class="notification-cookie__btn-true ">Закрыть</a>
+    </div>
+</div>
 </body>
 </html>
