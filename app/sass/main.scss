@@ -550,6 +550,10 @@ input.invalid {
     display: block!important;
   }
 }
+.mejs-controls{
+  background: #183d68!important;
+}
+
 @import "_feedback";
 @import "media"; // Always at the end
 @import "_typography-vars";

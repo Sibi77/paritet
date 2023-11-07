@@ -1,0 +1,21 @@
+<?php if (!defined('FW')) {
+    die('Forbidden');
+}
+/**
+ * Опции (поля) шорткода
+ * @link Список всех возможных опицй http://manual.unyson.io/en/latest/options/built-in/introduction.html
+ */
+$options = [
+    //ключ - slug опции, к которому будем обращаться во view
+    //значение - массив конфигураций для опции
+    'btn_text' => [
+        'type' => 'text',
+        'label' => __('Текст кнопки', '{domain}'),
+
+    ],
+    'btn_link' => [
+        'type' => 'text',
+        'label' => __('Ссылка', '{domain}'),
+
+    ],
+];
