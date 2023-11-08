@@ -1,0 +1,52 @@
+.pir-video{
+  padding: rem(70) 0;
+  &__title{
+    font-family: $title-font;
+    font-size: rem(30);
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    color: var(--pir-new-primary-color);
+    margin-bottom: rem(50);
+  }
+  &__text{
+    p{
+      font-size: rem(18);
+      font-style: normal;
+      font-weight: 400;
+      line-height: rem(28);
+      &:last-child{
+        margin-bottom: 59px;
+      }
+    }
+  }
+  &__btn{
+    font-size: rem(14);
+    font-style: normal;
+    font-weight: 600;
+    line-height: rem(0); /* 100% */
+    letter-spacing: 0.42px;
+    text-transform: uppercase;
+    border: none;
+    //margin-top: rem(59);
+  }
+  &__wrap{
+    display: flex;
+    flex-wrap: nowrap;
+    @include media-breakpoint-down(sm){
+      flex-wrap: wrap;
+    }
+  }
+  &__left{
+    margin-right: rem(90);
+    @include media-breakpoint-down(lg){
+      margin-right: rem(50);
+    }
+    @include media-breakpoint-down(sm){
+      margin-right: 0;
+    }
+  }
+}
+.video-test{
+  border-radius: rem(8)!important;
+}
