@@ -18,12 +18,12 @@
     padding-top: rem(60);
     font-size: rem(44);
     line-height: rem(53);
+    padding-bottom: rem(0);
     @include media-breakpoint-down(sm){
       font-weight: 500;
       font-size: rem(34);
       line-height: rem(41);
       padding-top: rem(50);
-      padding-bottom: rem(30);
     }
   }
   .pir-btn {
@@ -81,6 +81,12 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+  .owl-item{
+    padding-top: rem(40);
+    @include media-breakpoint-down(sm){
+      padding-top: rem(30);
+    }
+  }
   }
   &__item{
     display: flex;
@@ -97,6 +103,7 @@
     margin-right: rem(20);
     transition: 200ms ease;
     margin-bottom: rem(40);
+    overflow: auto;
     &:last-child {
       margin-right: 0;
       @include media-breakpoint-down(lg) {
@@ -116,6 +123,7 @@
     &:hover{
       transform: scale(1.03);
       transition: 300ms ease;
+      border-radius: rem(8);
     }
   }
   &__logo{
