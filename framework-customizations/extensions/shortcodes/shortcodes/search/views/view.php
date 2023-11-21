@@ -12,7 +12,7 @@
 
 
 <div class="pir-container">
-    <div class="pir-search">
+    <div class="pir-search <?php if ($atts['search_margin']) { ?> search_margin_not<?php } ?>">
         <p class="pir-search__desk">
             <?= $atts['search_desk'] ?>
         </p>

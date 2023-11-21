@@ -25,7 +25,6 @@
                         деятельности по ведению реестра
                     </li>
                     <li><a href="http://partad.ru/Information/PartadMembers/" target="_blank">Член ПАРТАД</a></li>
-                    <li><a href="http://new.nfa.ru/associations/reestr-sro-nfa/" target="_blank">Член СРО НФА</a></li>
                 </ul>
                 <h4>Личный кабинет</h4>
                 <a href="https://pir.paritet.ru/" target="_blank" class="pir-btn">Войти в кабинет</a>
@@ -172,7 +171,7 @@
     </div>
     <div class="pir-footer__сopyright-d">
         <div class="container container-md">
-            <span> © 1995–2022, АО «РДЦ ПАРИТЕТ»</span>
+            <span> © 1995–2023, АО «РДЦ ПАРИТЕТ»</span>
         </div>
     </div>
 </footer>
@@ -224,22 +223,6 @@
 
 
 </script>
-<div class="notification-cookie-wrap">
-    <!--<div class="notification-cookie-most">-->
-    <!---->
-    <!--    <p>-->
-    <!--        Акционерам ПАО «ХМЗ» о порядке продажи акций в случае принятия Добровольного предложения <a class="notification-cookie-most__btn" href="/akczioneram-pao-hmz/">Подробнее...</a>-->
-    <!--    </p>-->
-    <!--    <div class="notification-cookie-most__btn-wrap">-->
-    <!--           <a href="/akczioneram-pao-mostotrest/" class="notification-cookie-most__btn">Подробнее</a>-->
-    <!--        <button class="notification-cookie-most__close" type="button">Закрыть</button>-->
-    <!--    </div>-->
-    <!--</div>-->
-    <div class="notification-cookie">
-        <p>Мы используем файлы cookie для улучшения работы сайта. Продолжая просматривать сайт, вы соглашаетесь с
-            условиями использования cookie</p>
-        <a href="#" class="notification-cookie__btn-true ">Закрыть</a>
-    </div>
-</div>
+
 </body>
 </html>

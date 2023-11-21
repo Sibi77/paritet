@@ -15,6 +15,12 @@ $options = [
         'label' => __('Описание', '{domain}'),
         'value' => 'Для поиска документа введите в поле поиска часть наименования документа'
     ],
+    'search_margin' => [
+        'type' => 'checkbox',
+        'value' => false, // checked/unchecked
+        'label' => __('Нижний отступ компонента', '{domain}'),
+        'text' => __('Убрать нижний отступ', '{domain}'),
+    ],
     'search_placeholder'     => [
         'type'  => 'text',
         'label' => __('Плейсхолдер', '{domain}'),
