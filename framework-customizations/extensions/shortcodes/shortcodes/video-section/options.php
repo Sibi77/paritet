@@ -12,7 +12,7 @@ $options = [
     ],
 
     'pir_video_link'     => [
-        'type' => 'wp-editor',
+        'type' => 'text',
         'label' => __('Ссылка на видео', '{domain}'),
     ],
 

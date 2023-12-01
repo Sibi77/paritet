@@ -16,10 +16,12 @@
 
   }
   &__desk{
+    display: block;
     font-size: rem(17);
     margin-top: rem(15);
     margin-bottom: 0;
     line-height: rem(32);
     color: var(--pir-label-color);
   }
+
 }

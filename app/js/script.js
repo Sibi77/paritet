@@ -60,11 +60,9 @@ $(function () {
                 searchForm.off()
             }
 
-        console.log(searchForm);
-        console.log(searchInput);
+
         $(document).on('submit', searchForm, function (){
             e.preventDefault();
-            console.log(111)
         })
     }
     pirSearchSubmit();
@@ -80,13 +78,13 @@ $(function () {
     //         headerWrapTitle.each(function () {
     //             var $span = $( this ).wrapInner( '<span>' ).children( 'span' );
     //
-    //             console.log($span.width())
+    //
     //            if($span.width() > 601 ){
     //                headerWrapText.css({
     //                    width: 'auto'
     //                });
     //            } else {
-    //                console.log('false')
+    //
     //                headerWrapText.css( 'width', $span.width() );
     //            }
     //         });
@@ -309,7 +307,6 @@ $(function () {
 
         }
        var searh = $('.sf-input-text');
-        console.log(searh)
         searh.focus();
     });
     $(document).on('click', '.pir-search-site-mob__close', function (){
@@ -669,17 +666,39 @@ $(function () {
     });
     //end animated anchor scroll
     tableCounter.text(tableData.length);
-    //search table
-    $(document).on('keyup', '.pir-search__search', function () {
-        _this = this;
-        $.each(tableData, function () {
-            if ($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1)
-                $(this).hide();
-            else
-                $(this).show();
-        });
-    });
 
+    $('.pir-search__search').keyup(function(){
+        var search = $(this).val();
+        tableData.hide();
+
+
+        var len = $('.pir-table :not(.notfound) td:contains("'+search+'")').length;
+
+
+        if(len > 0){
+            $('.pir-table:not(.notfound) td:contains("'+search+'")').each(function(){
+                $(this).closest('tr').show();
+            });
+        }else{
+            $('.notfound').show();
+        }
+        var numOfVisibleRows = $('.pir-table__table tr:visible').length;
+        tableCounter.text(numOfVisibleRows -1);
+        if( !$(this).val() ) {
+            $('.notfound').hide();
+        }
+        if($(this).val().trim() === ''){
+            $('.notfound').hide();
+        }
+
+
+    });
+        // Case-insensitive searching (Note - remove the below script for Case sensitive search )
+        $.expr[":"].contains = $.expr.createPseudo(function(arg) {
+        return function( elem ) {
+        return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    };
+    });
 
     function counterFactsItem(e) {
 

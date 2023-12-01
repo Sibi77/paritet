@@ -15,10 +15,13 @@
                <tr>
                    <?php foreach($atts['table_header'] as $tablehead):?>
                        <td><?= $tablehead['title'] ?></td>
+
                    <?php endforeach; ?>
                </tr>
+
                </thead>
                <tbody>
+
                <?php foreach($atts['table_body'] as $tablebody):?>
                    <tr>
                        <?php foreach($tablebody['table_row'] as $tablerow):?>
@@ -45,7 +48,9 @@
 
                </tbody>
            </table>
+           <div class="notfound">Ничего не найдено</div>
        </div>
 
     </div>
 </div>
+

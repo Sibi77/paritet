@@ -11,16 +11,18 @@
   }
   &__text{
     p{
+      display: block!important;
       font-size: rem(18);
       font-style: normal;
       font-weight: 400;
       line-height: rem(28);
       &:last-child{
-        margin-bottom: 59px;
+        margin-bottom: 0;
       }
     }
   }
   &__btn{
+    margin-top: rem(59);
     font-size: rem(14);
     font-style: normal;
     font-weight: 600;

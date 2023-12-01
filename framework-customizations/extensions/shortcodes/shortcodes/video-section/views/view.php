@@ -5,7 +5,7 @@
   * Верстка шорткода
   * весь контент лежит в переменной $atts
   */
-
+$videoLink = $atts['pir_video_link']
 ?>
 
 <section class="pir-video">
@@ -15,17 +15,17 @@
         <div class="pir-video__wrap">
             <div class="pir-video__left">
                 <div class="pir-video__video">
-                    <?php echo do_shortcode( '[presto_player id=6187]' ); ?>
+                    <?php echo do_shortcode($videoLink); ?>
                 </div>
             </div>
             <div class="pir-video__right">
                 <div class="pir-video__text">
-                    <p >
-                        Быстро и профессионально зарегистрируем новое АО и выпуск ценных бумаг. Никаких госпошлин, очередей и ожидания.
-                    </p>
-                    <p>Вам не нужно тратить время на посещение Банка России и ФНС</p>
+                    <?= $atts['pir_video_text']?>
                 </div>
-                <a href="#" class="pir-btn pir-video__btn">Зарегистрировать АО</a>
+                <?php if( !empty( $atts['pir_video_btn_link'] )): ?>
+                    <a href="<?= $atts['pir_video_btn_link']?>" class="pir-btn pir-video__btn"> <?= $atts['pir_video_btn']?></a>
+                    <?php endif; ?>
+
             </div>
         </div>
     </div>

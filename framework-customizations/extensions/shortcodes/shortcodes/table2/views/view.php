@@ -7,7 +7,14 @@
   */
 
 ?>
+<div class="pir-table">
+    <div class="pir-container">
+        <div class="table-calc__tab-mob">
+            <?= $atts['table_v2'] ?>
+            <div class="notfound">Ничего не найдено</div>
+        </div>
 
-<div class="pir-container">
-    <?= $atts['table_v2'] ?>
+
+    </div>
+
 </div>
