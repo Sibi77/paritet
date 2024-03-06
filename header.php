@@ -27,6 +27,7 @@
 
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
+
 <head>
     <meta http-equiv="Cache-Control" content="private">
     <meta charset="<?php bloginfo('charset'); ?>">
@@ -41,9 +42,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap"
           rel="stylesheet">
-    <meta name="google-site-verification" content="oZGZKlE7z8-U5pM7cxQPVH-ns-aQ9fxrM2cKv17U6SE"/>
-    <meta name="yandex-verification" content="a28474b19f40a45f"/>
+    
     <?php wp_head(); ?>
+<!--<script type="text/javascript"> (function ab(){ var request = new XMLHttpRequest(); request.open('GET', "https://scripts.botfaqtor.ru/one/117313", false); request.send(); if(request.status == 200) eval(request.responseText); })(); </script>-->
+
 </head>
 <div class="swipe-menu"></div>
 

@@ -81,23 +81,7 @@
 
   }
 
-  .pir-feedback__agreement {
-    font-size: rem(14);
-    line-height: rem(21);
-    color: var(--pir-label-color);
-    max-width: rem(645);
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    @include media-breakpoint-down(lg) {
-      margin-bottom: rem(30);
-      margin-top: rem(10);
-    }
-    @include media-breakpoint-down(sm){
-      font-size: rem(14);
-      line-height: rem(22);
-    }
-  }
+
 
   .form-btn-wrpap {
     display: flex;
@@ -288,3 +272,175 @@
   left: 50%;
 }
 
+.pir-big-form{
+  position: relative;
+  &__title{
+    font-family: $title-font;
+    text-align: center;
+    font-size: rem(44);
+    line-height: rem(53);
+    width: 100%;
+    font-weight: 500;
+    margin-bottom: rem(30);
+    color: var(--pir-new-primary-color);
+    @include media-breakpoint-down(sm){
+      font-size: rem(34);
+      line-height: rem(41);
+      margin-bottom: rem(15);
+    }
+  }
+  &__text{
+    text-align: center;
+    color: var(--pir-main-text-color);
+    font-size: rem(16);
+    line-height: rem(24);
+    margin-bottom: rem(28);
+    @include media-breakpoint-down(lg) {
+      font-weight: normal;
+    }
+    @include media-breakpoint-down(sm) {
+      font-size: rem(14);
+      line-height: rem(22);
+      margin-top: 8px;
+      margin-bottom: rem(20);
+    }
+  }
+  &__wrap-input{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    p{
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+    label {
+      font-size: rem(16);
+      line-height: rem(24);
+      font-weight: normal;
+      margin-bottom: rem(4);
+      padding-left: rem(3);
+      width: 95%;
+      sup {
+        display: none;
+      }
+
+      @include media-breakpoint-down(sm) {
+        font-size: 12px;
+        line-height: 18px;
+        color: var(--pir-main-text-color);
+      }
+    }
+    input{
+      display: block;
+      width: 100%;
+      border: 1px solid var(--light-grey);
+      box-sizing: border-box;
+      border-radius: rem(5);
+      padding: rem(10) rem(12);
+      transition: 300ms ease;
+      height: rem(50);
+      font-size: rem(16);
+      line-height: rem(28);
+      &::placeholder {
+        font-size: rem(16);
+        font-style: normal;
+        @include media-breakpoint-down(sm){
+          font-size: rem(14);
+          height: rem(40);
+        }
+      }
+
+      &:focus {
+        transition: 300ms ease;
+        box-shadow: var(--pir-box-shadow);
+        border: 1px solid var(--pir-color-link);
+      }
+
+      @include media-breakpoint-down(sm) {
+        height: rem(40);
+        font-size: rem(14);
+        line-height: rem(28);
+      }
+    }
+  }
+  &__textarea{
+    width: 100%;
+    font-size: rem(16);
+    line-height: rem(20);
+    font-weight: normal;
+    margin-bottom: 0;
+    padding-left: rem(3);
+    @include media-breakpoint-down(sm) {
+      font-size: 12px;
+      line-height: 18px;
+      color: var(--pir-main-text-color);
+    }
+    textarea {
+      width: 100%;
+      border: 1px solid #DDDDDD;
+      box-sizing: border-box;
+      border-radius: rem(5);
+      padding: rem(10);
+      min-height: rem(50);
+      height: rem(50);
+      margin-bottom: rem(14);
+      transition: 300ms ease;
+      font-size: rem(16);
+      line-height: rem(28);
+      @include media-breakpoint-down(sm) {
+        min-height: rem(40);
+        height: rem(40);
+        font-size: rem(14);
+        line-height: rem(16)
+      }
+
+      sup {
+        display: none;
+      }
+
+      &:focus {
+        transition: 300ms ease;
+        box-shadow: var(--pir-box-shadow);
+        border: 1px solid var(--pir-color-link);
+      }
+    }
+
+  }
+  .pir-btn {
+    margin-right: auto;
+    margin-left: auto;
+    height: rem(49);
+    font-size: rem(16);
+    line-height: rem(1);
+    @include media-breakpoint-down(lg) {
+      letter-spacing: 0.03em;
+      padding: rem(18) rem(30);
+    }
+    @include media-breakpoint-down(sm){
+      font-size: rem(16);
+      line-height: rem(20);
+      width: 100%;
+      padding: rem(14) 0;
+      display: inline-block;
+      text-align: center;
+    }
+  }
+}
+.pir-feedback__agreement {
+  font-size: rem(14);
+  line-height: rem(21);
+  color: var(--pir-label-color);
+  max-width: rem(645);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  @include media-breakpoint-down(lg) {
+    margin-bottom: rem(30);
+    margin-top: rem(10);
+  }
+  @include media-breakpoint-down(sm){
+    font-size: rem(14);
+    line-height: rem(22);
+  }
+}

@@ -175,4 +175,140 @@ require get_template_directory() . '/includes/custom-functions.php';
 
 
 
+function paritet_get_api() {
 
+    // это ключ-идентификатор значения транзитного кэша
+    $transient_key = 'true_subscribers11111111111111111515112';
+
+    // сразу же обращаемся к транзитному кэшу и пытаемся получить значение из кэша
+    $transient = get_transient( $transient_key );
+
+    // Если значение в транзитном кэша существует, то мы возвращаем его и на этом всё
+    if( false !== $transient ) {
+
+        return $transient;
+
+        // В кэше пусто? Тогда обращаемся к API
+    } else {
+
+        // Обращаемся к API
+        $response = wpgetapi_endpoint( 'disclo_pir', 'test4', array('debug' => false) );
+        // Сохраняем ответ из API в транзитный кэш
+        set_transient( $transient_key, $response, 86400 );
+
+        // Возвращаем результат
+        return $response;
+
+    }
+
+}
+
+
+
+
+
+
+function issuerPost(){
+    $issuer_get = paritet_get_api();
+    foreach ( $issuer_get['items'] as $item) {
+        if($item['section'] == 'Issuers'){
+            $issuer_id = $item['id'];// id эмитента
+            $issuer_title = $item['content']['issuer']['shortName'] . ' ' .'id '.$issuer_id; //Заголовок поста
+            $issuer_short_mane = $item['content']['issuer']['shortName']; //Краткое наименование
+            $issuer_full_name = $item['content']['issuer']['fullName'];// Полное наименование
+            $issuer_inn = $item['content']['issuer']['inn']; //Инн эмитента
+            $issuer_ogrn = $item['content']['issuer']['ogrn']; //ОГРН эмитента
+            $issuer_address = $item['content']['issuer']['address']; // Адресс эмитента
+            $issuer_contract_date = $item['content']['issuer']['registryContractDate']; //Дата заключения договора на ведение реестра
+            $issuer_act_date = $item['content']['issuer']['registryIncomingActDate']; //Дата акта приема реестра
+            $issuer_pub_reason = $item['publicationReason']; // Причина публикации'
+            $issuer_date_publish = $item['publishedAt'];
+
+        }
+
+        $my_post = array(
+            'post_title'  => $issuer_title,
+            'post_status' => 'publish',
+            'post_content' => $item,
+            'post_type' => 'post',
+            'post_category' => array(18)
+        );
+
+        $posts = get_posts(
+            [
+                'post_type'              => 'post',
+                'title'                  => $issuer_title,
+                'post_status'            => 'publish',
+                'post_category'          => array(18),
+                'orderby'                => 'post_date ID',
+                'order'                  => 'ASC',
+            ]
+        );
+
+        if ( ! empty( $posts ) ) {
+        }
+        else {
+            $post_id = wp_insert_post($my_post);
+            if( $post_id ) update_post_meta( $post_id, '_wp_page_template', 'disclosure-single.php' );
+            update_field( 'issuer_id', $issuer_id, $post_id );
+            update_field( 'short_name', $issuer_short_mane, $post_id );
+            update_field( 'full_name', $issuer_full_name, $post_id );
+            update_field( 'inn', $issuer_inn, $post_id );
+            update_field( 'ogrn', $issuer_ogrn, $post_id );
+            update_field( 'address', $issuer_address, $post_id );
+            update_field( 'date_conclusion', $issuer_contract_date, $post_id );
+            update_field( 'date_acceptance', $issuer_act_date, $post_id );
+            update_field( 'reason_public', $issuer_pub_reason, $post_id );
+            update_field( 'published', $issuer_date_publish, $post_id );
+        }
+
+
+
+    }
+}
+function historyPost(){
+    $issuer_get = paritet_get_api();
+    foreach ( $issuer_get['items'] as $item) {
+
+        if($item['section'] == 'Issuers'){
+            $issuer_id1 = $item['id'];
+            $str_id =  strval($issuer_id1);
+            foreach ($item['history'] as $history){
+//                echo '<pre>';
+//               print_r($history['content']['issuer']['shortName']);
+
+                $issuer_id = $history['id'];// id эмитента
+                $issuer_title = $history['title']. ' ' .'id '.$issuer_id; //Заголовок поста
+                $my_post = array(
+                    'post_title'  => $issuer_title,
+                    'post_status' => 'publish',
+                    'post_type' => 'post',
+                    'post_category' => array(20),
+                );
+                $posts = get_posts(
+                    [
+                        'post_type'              => 'post',
+                        'title'                  => $issuer_title,
+                        'post_status'            => 'publish',
+                        'post_category'          => array(20),
+                        'orderby'                => 'post_date ID',
+                        'order'                  => 'ASC',
+                    ]
+                );
+
+                if ( ! empty( $posts ) ) {
+                }
+                else {
+
+                    $post_id = wp_insert_post($my_post);
+                    if( $post_id ) update_post_meta( $post_id, '_wp_page_template', 'disclosure-history.php' );
+                    wp_set_object_terms($post_id , $str_id, 'post_tag', false);
+
+                }
+            }
+        }
+
+    }
+}
+historyPost();
+issuerPost();

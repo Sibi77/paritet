@@ -193,7 +193,12 @@
 </div>
 
 <?php wp_footer(); ?>
+
 <script type="text/javascript">
+    window.addEventListener('load', function () {
+        let btn = document.querySelector('presto-player#presto-player-1')
+        btn.setAttribute("onclick", "ym(61912495, 'reachGoal','click_play')");
+    })
     document.addEventListener('wpcf7mailsent', function sendMail(event) {
         if ('2838' == event.detail.contactFormId) {
             gtag('event', 'send', {
@@ -223,6 +228,7 @@
 
 
 </script>
+
 
 </body>
 </html>

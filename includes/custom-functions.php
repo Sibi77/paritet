@@ -119,7 +119,7 @@ function true_breadcrumbs(){
 
             the_category( ', ' ); echo $separator; the_title();
 
-        } elseif ( is_page() ){ // страницы WordPress 
+        } elseif ( is_page() ){ // страницы WordPress
 
             global $post;
 // если у текущей страницы существует родительская
@@ -222,4 +222,13 @@ function true_search() {
 
     wp_send_json( $results );
 
+
+
+
 }
+
+
+
+
+
+

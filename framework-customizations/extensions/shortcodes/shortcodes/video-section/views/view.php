@@ -15,7 +15,8 @@ $videoLink = $atts['pir_video_link']
         <div class="pir-video__wrap">
             <div class="pir-video__left">
                 <div class="pir-video__video">
-                    <?php echo do_shortcode($videoLink); ?>
+
+                    <?= $atts['pir_video_link']?>
                 </div>
             </div>
             <div class="pir-video__right">
