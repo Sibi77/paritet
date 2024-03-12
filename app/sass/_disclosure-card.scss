@@ -1,0 +1,33 @@
+.disclosure-card{
+  position: relative;
+  width: 100%;
+  padding: rem(80) 0;
+
+  &__title{
+    font-family: $title-font;
+    color: var(--pir-new-primary-color);
+    font-size: rem(40);
+    line-height: rem(40);
+    font-weight: 600;
+    margin-bottom: rem(40);
+  }
+  &__item{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin-bottom: rem(24);
+  }
+  &__header{
+    font-size: rem(14);
+    font-weight: 400;
+    color: #4D5256;
+    line-height: rem(18);
+    margin-bottom: rem(16);
+  }
+  &__content{
+    font-size: rem(18);
+    line-height: rem(27);
+    font-weight: 400;
+    color: #292C2E;
+  }
+}

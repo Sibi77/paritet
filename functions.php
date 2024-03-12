@@ -65,31 +65,31 @@ add_action('after_setup_theme', 'pir_setup');
 /**
  * Enqueues script with WordPress and adds version number that is a timestamp of the file modified date.
  *
- * @param string      $handle    Name of the script. Should be unique.
- * @param string|bool $src       Path to the script from the theme directory of WordPress. Example: '/js/myscript.js'.
- * @param array       $deps      Optional. An array of registered script handles this script depends on. Default empty array.
- * @param bool        $in_footer Optional. Whether to enqueue the script before </body> instead of in the <head>.
+ * @param string $handle Name of the script. Should be unique.
+ * @param string|bool $src Path to the script from the theme directory of WordPress. Example: '/js/myscript.js'.
+ * @param array $deps Optional. An array of registered script handles this script depends on. Default empty array.
+ * @param bool $in_footer Optional. Whether to enqueue the script before </body> instead of in the <head>.
  *                               Default 'false'.
  */
-function enqueue_versioned_script( $handle, $src = false, $deps = array(), $in_footer = false ) {
-    wp_enqueue_script( $handle, get_stylesheet_directory_uri() . $src, $deps, filemtime( get_stylesheet_directory() . $src ), $in_footer );
+function enqueue_versioned_script($handle, $src = false, $deps = array(), $in_footer = false)
+{
+    wp_enqueue_script($handle, get_stylesheet_directory_uri() . $src, $deps, filemtime(get_stylesheet_directory() . $src), $in_footer);
 }
 
 /**
  * Enqueues stylesheet with WordPress and adds version number that is a timestamp of the file modified date.
  *
- * @param string      $handle Name of the stylesheet. Should be unique.
- * @param string|bool $src    Path to the stylesheet from the theme directory of WordPress. Example: '/css/mystyle.css'.
- * @param array       $deps   Optional. An array of registered stylesheet handles this stylesheet depends on. Default empty array.
- * @param string      $media  Optional. The media for which this stylesheet has been defined.
+ * @param string $handle Name of the stylesheet. Should be unique.
+ * @param string|bool $src Path to the stylesheet from the theme directory of WordPress. Example: '/css/mystyle.css'.
+ * @param array $deps Optional. An array of registered stylesheet handles this stylesheet depends on. Default empty array.
+ * @param string $media Optional. The media for which this stylesheet has been defined.
  *                            Default 'all'. Accepts media types like 'all', 'print' and 'screen', or media queries like
  *                            '(orientation: portrait)' and '(max-width: 640px)'.
  */
-function enqueue_versioned_style( $handle, $src = false, $deps = array(), $media = 'all' ) {
-    wp_enqueue_style( $handle, get_stylesheet_directory_uri() . $src, $deps = array(), filemtime( get_stylesheet_directory() . $src ), $media );
+function enqueue_versioned_style($handle, $src = false, $deps = array(), $media = 'all')
+{
+    wp_enqueue_style($handle, get_stylesheet_directory_uri() . $src, $deps = array(), filemtime(get_stylesheet_directory() . $src), $media);
 }
-
-
 
 
 function pir_scripts()
@@ -118,7 +118,7 @@ function pir_scripts()
     wp_enqueue_style('pir-owl-carousel', get_template_directory_uri() . '/css/owl.carousel.min.css');
     wp_enqueue_style('pir-owl-carousel-theme', get_template_directory_uri() . '/css/owl.theme.default.min.css');
 //    wp_enqueue_style('pir-style', get_template_directory_uri() . '/css/main.min.css');
-    enqueue_versioned_style( 'pir-style', '/css/main.min.css' );
+    enqueue_versioned_style('pir-style', '/css/main.min.css');
 
     /*
      * Подключаем скрипты:
@@ -141,7 +141,7 @@ function pir_scripts()
     wp_enqueue_script('pir-formValid', get_template_directory_uri() . '/js/jquery.validate.min.js', [], '', true);
     wp_enqueue_script('pir-libPhones', get_template_directory_uri() . '/js/libphonenumber.js', [], '', true);
     wp_enqueue_script('pir-intlTelInput', get_template_directory_uri() . '/js/intlTelInput.min.js', [], '', true);
-    enqueue_versioned_script( 'pir-scripts', '/js/script.min.js', array( 'jquery'), true );
+    enqueue_versioned_script('pir-scripts', '/js/script.min.js', array('jquery'), true);
 //    wp_enqueue_script('pir-scripts', get_template_directory_uri() . '/js/script.min.js', [], '', true);
     wp_localize_script('pir-scripts', 'lawData', array('themePath' => get_template_directory_uri()));
 
@@ -169,22 +169,73 @@ add_action('wp_enqueue_scripts', 'pir_scripts');
  */
 
 
-
-
 require get_template_directory() . '/includes/custom-functions.php';
 
 
 
-function paritet_get_api() {
+
+function getPirApiDisclosure(){
+//    $login = 'public1';
+//    $pass = 'public1';
+//    $args2 = array(
+//        'headers' => array(
+//            'Authorization' => 'Basic ' . base64_encode( $login . ':' . $pass )
+//        )
+//    );
+    $args1 = array(
+        'headers' => array(
+            'accept' => 'text/plain',
+            'Content-Type'=> 'application/json'
+        ),
+        'body' => array(
+            'password' => '777777rR',
+            'userName'=> 'public1'
+        )
+    );
+
+    $response2222 = wp_remote_get( 'https://master.paritet.ru:9443/api/ClientApi/Login', $args1 );
+
+//  echo '<pre>';
+//  print_r($response2222);
+
+    $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
+    $response1 =json_decode( $response1 );
+
+    $args = array(
+        'headers' => array(
+            'accept'=> 'application/json',
+            'Authorization' => 'Bearer ' .$response1->jwtToken
+        )
+    );
+
+    $response = wp_remote_get( 'https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full', $args );
+    $response = wp_remote_retrieve_body($response);
+    $response =  json_decode( $response );
+
+
+
+    foreach ($response->items as $item){
+        if ($item->section == 'Issuers') {
+
+            $issuer_status = $item->status; // cтатус эмитента
+            echo '<pre>';
+             print_r($item);
+        }
+    }
+
+}
+//getPirApiDisclosure();
+function paritet_get_api()
+{
 
     // это ключ-идентификатор значения транзитного кэша
-    $transient_key = 'true_subscribers11111111111111111515112';
+    $transient_key = 'pir123';
 
     // сразу же обращаемся к транзитному кэшу и пытаемся получить значение из кэша
-    $transient = get_transient( $transient_key );
+    $transient = get_transient($transient_key);
 
     // Если значение в транзитном кэша существует, то мы возвращаем его и на этом всё
-    if( false !== $transient ) {
+    if (false !== $transient) {
 
         return $transient;
 
@@ -192,9 +243,22 @@ function paritet_get_api() {
     } else {
 
         // Обращаемся к API
-        $response = wpgetapi_endpoint( 'disclo_pir', 'test4', array('debug' => false) );
+
+        $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
+        $response1 =json_decode( $response1 );
+
+        $args = array(
+            'headers' => array(
+                'accept'=> 'application/json',
+                'Authorization' => 'Bearer ' .$response1->jwtToken
+            )
+        );
+
+        $response = wp_remote_get( 'https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full', $args );
+        $response = wp_remote_retrieve_body($response);
+        $response =  json_decode( $response );
         // Сохраняем ответ из API в транзитный кэш
-        set_transient( $transient_key, $response, 86400 );
+        set_transient($transient_key, $response, 20);
 
         // Возвращаем результат
         return $response;
@@ -203,112 +267,168 @@ function paritet_get_api() {
 
 }
 
+function checkPost(){
+    $params = array(
+        'posts_per_page' => -1, // все посты
+        'post_status' => 'publish',
+        'cat'	=> 18
+    );
+    $tes =  get_posts($params);
+    $issuer_get1 = paritet_get_api();
+    $companies = array();
+    $companies1 = array();
 
 
+    foreach ($issuer_get1->items as $item){
+        if ($item->section == 'Issuers'){
+            $issuer_status = $item->status; // cтатус эмитента
+            $issuer_id = $item->id;// id эмитента
+            $issuer_title = $item->content->issuer->shortName . ' ' . 'id ' . $issuer_id . 'status' . $issuer_status;
 
-
-
-function issuerPost(){
-    $issuer_get = paritet_get_api();
-    foreach ( $issuer_get['items'] as $item) {
-        if($item['section'] == 'Issuers'){
-            $issuer_id = $item['id'];// id эмитента
-            $issuer_title = $item['content']['issuer']['shortName'] . ' ' .'id '.$issuer_id; //Заголовок поста
-            $issuer_short_mane = $item['content']['issuer']['shortName']; //Краткое наименование
-            $issuer_full_name = $item['content']['issuer']['fullName'];// Полное наименование
-            $issuer_inn = $item['content']['issuer']['inn']; //Инн эмитента
-            $issuer_ogrn = $item['content']['issuer']['ogrn']; //ОГРН эмитента
-            $issuer_address = $item['content']['issuer']['address']; // Адресс эмитента
-            $issuer_contract_date = $item['content']['issuer']['registryContractDate']; //Дата заключения договора на ведение реестра
-            $issuer_act_date = $item['content']['issuer']['registryIncomingActDate']; //Дата акта приема реестра
-            $issuer_pub_reason = $item['publicationReason']; // Причина публикации'
-            $issuer_date_publish = $item['publishedAt'];
+            array_push($companies, $issuer_title);
 
         }
+    }
+    foreach ($tes as $te){
 
-        $my_post = array(
-            'post_title'  => $issuer_title,
-            'post_status' => 'publish',
-            'post_content' => $item,
-            'post_type' => 'post',
-            'post_category' => array(18)
+        $title = $te->post_title;
+        array_push($companies1, $title);
+    }
+//    echo '<pre>';
+//    print_r(count($companies));
+//    print_r(count($companies1));
+
+    if ( count($companies) !== count($companies1)){
+        $paramssss = array(
+            'posts_per_page' => -1, // все записи
+            'post_type'	=> 'post', // записи, этот параметр можно не указывать, так как post - стоит по умолчанию
+            'cat'	=> 18
         );
-
-        $posts = get_posts(
-            [
-                'post_type'              => 'post',
-                'title'                  => $issuer_title,
-                'post_status'            => 'publish',
-                'post_category'          => array(18),
-                'orderby'                => 'post_date ID',
-                'order'                  => 'ASC',
-            ]
-        );
-
-        if ( ! empty( $posts ) ) {
-        }
-        else {
-            $post_id = wp_insert_post($my_post);
-            if( $post_id ) update_post_meta( $post_id, '_wp_page_template', 'disclosure-single.php' );
-            update_field( 'issuer_id', $issuer_id, $post_id );
-            update_field( 'short_name', $issuer_short_mane, $post_id );
-            update_field( 'full_name', $issuer_full_name, $post_id );
-            update_field( 'inn', $issuer_inn, $post_id );
-            update_field( 'ogrn', $issuer_ogrn, $post_id );
-            update_field( 'address', $issuer_address, $post_id );
-            update_field( 'date_conclusion', $issuer_contract_date, $post_id );
-            update_field( 'date_acceptance', $issuer_act_date, $post_id );
-            update_field( 'reason_public', $issuer_pub_reason, $post_id );
-            update_field( 'published', $issuer_date_publish, $post_id );
-        }
-
-
+        $q = new WP_Query( $paramssss );
+        if( $q->have_posts() ) : // если посты по заданным параметрам найдены
+            while( $q->have_posts() ) : $q->the_post();
+                wp_delete_post( $q->post->ID, true ); // второй параметр функции true означает, что пост будут удаляться, минуя корзину
+            endwhile;
+        endif;
+        wp_reset_postdata();
+    } else{
 
     }
 }
-function historyPost(){
+function issuerPost()
+{
     $issuer_get = paritet_get_api();
-    foreach ( $issuer_get['items'] as $item) {
+    foreach ($issuer_get->items as $item) {
+        if ($item->section == 'Issuers') {
 
-        if($item['section'] == 'Issuers'){
-            $issuer_id1 = $item['id'];
-            $str_id =  strval($issuer_id1);
-            foreach ($item['history'] as $history){
+            $issuer_status = $item->status; // cтатус эмитента
+            $issuer_id = $item->id;// id эмитента
+
+            $issuer_title = $item->content->issuer->shortName . ' ' . 'id ' . $issuer_id . 'status' . $issuer_status; //Заголовок поста
+
+            $check_title= $issuer_title;
+            $issuer_short_mane = $item->content->issuer->shortName; //Краткое наименование
+            $issuer_full_name = $item->content->issuer->fullName;// Полное наименование
+            $issuer_inn = $item->content->issuer->inn; //Инн эмитента
+            $issuer_ogrn = $item->content->issuer->ogrn; //ОГРН эмитента
+            $issuer_address = $item->content->issuer->address; // Адресс эмитента
+            $issuer_contract_date = $item->content->issuer->registryContractDate; //Дата заключения договора на ведение реестра
+            $issuer_act_date = $item->content->issuer->registryIncomingActDate; //Дата акта приема реестра
+            $issuer_pub_reason = $item->publicationReason; // Причина публикации'
+            $issuer_date_publish = substr($item->publishedAt, 0, 10); // когда опублткованно
+            $my_post = array(
+                'post_title' => $issuer_title,
+                'post_status' => 'publish',
+                'post_content' => $item,
+                'post_type' => 'post',
+                'post_category' => array(18)
+            );
+            $posts = get_posts(
+                [
+                    'post_type' => 'post',
+                    'title' => $issuer_title,
+                    'post_status' => 'publish',
+                    'post_category' => array(18),
+                    'orderby' => 'post_date ID',
+                    'order' => 'ASC',
+                ]
+            );
+
+
+
+            if (!empty($posts)) {
+            } else {
+
+                $post_id = wp_insert_post($my_post);
+                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-single.php');
+                wp_set_object_terms($post_id, $issuer_status, 'post_tag', false);
+                update_field('issuer_id', $issuer_id, $post_id);
+                update_field('short_name', $issuer_short_mane, $post_id);
+                update_field('full_name', $issuer_full_name, $post_id);
+                update_field('inn', $issuer_inn, $post_id);
+                update_field('ogrn', $issuer_ogrn, $post_id);
+                update_field('address', $issuer_address, $post_id);
+                update_field('date_conclusion', $issuer_contract_date, $post_id);
+                update_field('date_acceptance', $issuer_act_date, $post_id);
+                update_field('reason_public', $issuer_pub_reason, $post_id);
+                update_field('published', $issuer_date_publish, $post_id);
+            }
+
+
+        }
+
+    }
+}
+
+function issuerHistoryPost()
+{
+    $issuer_get = paritet_get_api();
+    foreach ($issuer_get->items as $item) {
+
+        if ($item->section == 'Issuers') {
+            $issuer_id1 = $item->id;
+            $str_id = strval($issuer_id1);
+            foreach ($item->history as $history) {
 //                echo '<pre>';
-//               print_r($history['content']['issuer']['shortName']);
+//               print_r($history['content']['issuer']);
 
-                $issuer_id = $history['id'];// id эмитента
-                $issuer_title = $history['title']. ' ' .'id '.$issuer_id; //Заголовок поста
+                $issuer_id = $history->id;// id эмитента
+                $issuer_title = $history->title . ' ' . 'id ' . $issuer_id; //Заголовок поста
+                $issuer_short_name = $history->content->issuer->shortName;
+                $issuer_full_name = $history->content->issuer->fullName;
+//                                echo '<pre>';
+//               print_r($issuer_full_name);
                 $my_post = array(
-                    'post_title'  => $issuer_title,
+                    'post_title' => $issuer_title,
                     'post_status' => 'publish',
                     'post_type' => 'post',
                     'post_category' => array(20),
                 );
                 $posts = get_posts(
                     [
-                        'post_type'              => 'post',
-                        'title'                  => $issuer_title,
-                        'post_status'            => 'publish',
-                        'post_category'          => array(20),
-                        'orderby'                => 'post_date ID',
-                        'order'                  => 'ASC',
+                        'post_type' => 'post',
+                        'title' => $issuer_title,
+                        'post_status' => 'publish',
+                        'post_category' => array(20),
+                        'orderby' => 'post_date ID',
+                        'order' => 'ASC',
                     ]
                 );
 
-                if ( ! empty( $posts ) ) {
-                }
-                else {
+                if (!empty($posts)) {
+
+                } else {
 
                     $post_id = wp_insert_post($my_post);
-                    if( $post_id ) update_post_meta( $post_id, '_wp_page_template', 'disclosure-history.php' );
-                    wp_set_object_terms($post_id , $str_id, 'post_tag', false);
-
+                    if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-history.php');
+                    wp_set_object_terms($post_id, $str_id, 'post_tag', false);
+                    update_field('history_short_name', $issuer_short_name, $post_id);
+                    update_field('history_full_name', $issuer_full_name, $post_id);
                 }
             }
         }
 
     }
 }
-historyPost();
-issuerPost();
+//issuerHistoryPost();
+

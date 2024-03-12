@@ -11,7 +11,14 @@
 
 
 
+<?php
+$args = array(
+    'cat'      => array(6,7),
+    'posts_per_page' => -1
 
+);
+query_posts($args);
+?>
 <a href="<?php the_permalink(); ?>" <?php post_class('pir-news__wrap'); ?>
    style="background-color: <?php the_field('color_picker_news'); ?>">
 

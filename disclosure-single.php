@@ -5,69 +5,101 @@ Template Post Type: post, issuers
  */
 get_header();
 ?>
-
+<div class="pir-container">
+    <div class="no-section">
+        <div class="pir-breadcrumbs">
+            <a class="home-page" href="/">Главная</a> <i class="angle-arrow-right"></i><?= get_field("full_name"); ?>
+        </div>
+    </div>
+</div>
 <section class="disclosure-card">
     <div class="pir-container">
-        <div class="no-section">
-            <div class="pir-breadcrumbs">
-                <a class="home-page" href="/">Главная</a> <i class="angle-arrow-right"></i><?= get_field("full_name"); ?>
-            </div>
-        </div>
-        <h2 class="pir-title-h1"><?= get_field("short_name"); ?></h2>
+
+        <?php
+       ?>
+        <h1 class="disclosure-card__title"><?= get_field("short_name"); ?></h1>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Полное наименование</div>
             <div class="disclosure-card__content"><?= get_field("full_name"); ?></div>
         </div>
-        <br>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Краткое наименование</div>
             <div class="disclosure-card__content"><?= get_field("short_name"); ?></div>
         </div>
-        <br>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Адресс</div>
             <div class="disclosure-card__content"><?= get_field("address"); ?></div>
         </div>
-        <br>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">ИНН</div>
             <div class="disclosure-card__content"><?= get_field("inn"); ?></div>
         </div>
-        <br>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Опубликовано</div>
             <div class="disclosure-card__content"><?= get_field("published"); ?></div>
         </div>
     </div>
-</section>
-<div class="pir-table">
-    <div class="pir-container">
-        <h2 class="pir-content__title">История изменений</h2>
-        <div class="table-calc__tab-mob">
-            <?php
-            $id =  get_field("issuer_id");
-            global $post;
+    <div class="pir-table">
+        <div class="pir-container">
+            <h2 class="pir-content__title"">История изменений</h2>
+            <div class="pir-table">
+                <div class="pir-container">
+                    <div class="table-calc__tab-mob">
+                        <table class="pir-table__table">
+                            <thead>
+                            <tr>
+                                <td>
+                                    Наименование
+                                </td>
+                                <td>
+                                    Опубликовано
+                                </td>
 
-            $myposts = get_posts( [
-                'category_name' => 'history',
-                'post_type' => 'post',
-                'tag' => $id,
-            ] );
+                                <td>Перенесено в архив</td>
 
-            foreach( $myposts as $post ){setup_postdata( $post ); ?>
-                <div class="article-elem">
-                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                            </tr>
+
+                            </thead>
+                            <tbody>
+                            <?php
+                            $id =  get_field("issuer_id");
+                            global $post;
+
+                            $myposts = get_posts( [
+                                'category_name' => 'history',
+                                'post_type' => 'post',
+                                'tag' => $id,
+                            ] );
+
+                            foreach( $myposts as $post ){setup_postdata( $post ); ?>
+                                <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
+                                    <td><?php the_title(); ?></td>
+                                    <td>13.10.2023</td>
+                                    <td>15.11.2023</td>
+
+                                </tr>
+                                <?php
+
+                            }
+                            if (empty($myposts)) {
+                                echo '<tr>' . '<td>Нет истории</td>' . '</tr>';
+                            }
+                            wp_reset_postdata();
+                            ?>
+
+
+                            </tbody>
+                        </table>
+                        <div class="notfound">Ничего не найдено</div>
+                    </div>
+
                 </div>
-                <?php
-
-            }
-            wp_reset_postdata();
-            ?>
+            </div>
 
         </div>
-
     </div>
-</div>
+</section>
+
 
 <?php get_footer(); ?>
 
