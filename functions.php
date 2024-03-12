@@ -266,6 +266,95 @@ function paritet_get_api()
     }
 
 }
+function paritet_get_api_file($id)
+{
+
+    // это ключ-идентификатор значения транзитного кэша
+    $transient_key = 'pir11223';
+
+    // сразу же обращаемся к транзитному кэшу и пытаемся получить значение из кэша
+    $transient = get_transient($transient_key);
+
+    // Если значение в транзитном кэша существует, то мы возвращаем его и на этом всё
+    if (false !== $transient) {
+
+        return $transient;
+
+        // В кэше пусто? Тогда обращаемся к API
+    } else {
+
+        // Обращаемся к API
+
+        $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
+        $response1 =json_decode( $response1 );
+
+        $args = array(
+            'headers' => array(
+                'accept'=> 'application/json',
+                'Authorization' => 'Bearer ' .$response1->jwtToken
+            )
+        );
+
+        $response = wp_remote_get( 'https://master.paritet.ru:9443/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$id, $args );
+        $response = wp_remote_retrieve_body($response);
+        $response =  json_decode( $response );
+        // Сохраняем ответ из API в транзитный кэш
+        set_transient($transient_key, $response, 20);
+
+        // Возвращаем результат
+        return $response;
+
+
+    }
+
+}
+function paritet_get_download_file()
+{
+
+    // это ключ-идентификатор значения транзитного кэша
+    $transient_key = 'pir112233';
+
+    // сразу же обращаемся к транзитному кэшу и пытаемся получить значение из кэша
+    $transient = get_transient($transient_key);
+
+    // Если значение в транзитном кэша существует, то мы возвращаем его и на этом всё
+    if (false !== $transient) {
+
+        return $transient;
+
+        // В кэше пусто? Тогда обращаемся к API
+    } else {
+
+        // Обращаемся к API
+
+        $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
+        $response1 =json_decode( $response1 );
+
+        $args = array(
+            'headers' => array(
+                'accept'=> 'application/json',
+                'Authorization' => 'Bearer ' .$response1->jwtToken
+            )
+        );
+
+        $response = wp_remote_get( 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?id=', $args );
+        $response = wp_remote_retrieve_body($response);
+        $response =  json_decode( $response );
+        // Сохраняем ответ из API в транзитный кэш
+        set_transient($transient_key, $response, 20);
+
+        // Возвращаем результат
+        return $response;
+
+
+    }
+
+}
+
+
+
+
+
 
 function checkPost(){
     $params = array(
@@ -321,12 +410,13 @@ function issuerPost()
     foreach ($issuer_get->items as $item) {
         if ($item->section == 'Issuers') {
 
-            $issuer_status = $item->status; // cтатус эмитента
+            $issuer_status = $item->status;
+            $issuer_delete_reason = $item->deleteReason;
+            // cтатус эмитента
+            $tag_status = $issuer_status. ', '.$issuer_delete_reason;
             $issuer_id = $item->id;// id эмитента
 
-            $issuer_title = $item->content->issuer->shortName . ' ' . 'id ' . $issuer_id . 'status' . $issuer_status; //Заголовок поста
-
-            $check_title= $issuer_title;
+            $issuer_title = $item->content->issuer->shortName . ' ' . 'id ' . $issuer_id; //Заголовок поста
             $issuer_short_mane = $item->content->issuer->shortName; //Краткое наименование
             $issuer_full_name = $item->content->issuer->fullName;// Полное наименование
             $issuer_inn = $item->content->issuer->inn; //Инн эмитента
@@ -336,6 +426,7 @@ function issuerPost()
             $issuer_act_date = $item->content->issuer->registryIncomingActDate; //Дата акта приема реестра
             $issuer_pub_reason = $item->publicationReason; // Причина публикации'
             $issuer_date_publish = substr($item->publishedAt, 0, 10); // когда опублткованно
+
             $my_post = array(
                 'post_title' => $issuer_title,
                 'post_status' => 'publish',
@@ -361,7 +452,7 @@ function issuerPost()
 
                 $post_id = wp_insert_post($my_post);
                 if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-single.php');
-                wp_set_object_terms($post_id, $issuer_status, 'post_tag', false);
+                wp_set_object_terms($post_id, array($issuer_status,$issuer_delete_reason), 'post_tag', false);
                 update_field('issuer_id', $issuer_id, $post_id);
                 update_field('short_name', $issuer_short_mane, $post_id);
                 update_field('full_name', $issuer_full_name, $post_id);
@@ -389,15 +480,21 @@ function issuerHistoryPost()
             $issuer_id1 = $item->id;
             $str_id = strval($issuer_id1);
             foreach ($item->history as $history) {
-//                echo '<pre>';
-//               print_r($history['content']['issuer']);
+
 
                 $issuer_id = $history->id;// id эмитента
                 $issuer_title = $history->title . ' ' . 'id ' . $issuer_id; //Заголовок поста
                 $issuer_short_name = $history->content->issuer->shortName;
                 $issuer_full_name = $history->content->issuer->fullName;
-//                                echo '<pre>';
-//               print_r($issuer_full_name);
+                $issuer_inn = $history->content->issuer->inn;
+                $issuer_ogrn = $history->content->issuer->ogrn;
+                $issuer_addres = $history->content->issuer->address;
+                $issuer_date_conclusion = $history->content->issuer->registryContractDate;
+                $issuer_date_acceptance = $history->content->issuer->registryIncomingActDate;
+                $issuer_reason_public = $history->publicationReason;
+                $issuer_published = substr($history->publishedAt, 0, 10);
+                $issuer_moved_archives = substr($history->deletedAt, 0, 10);
+
                 $my_post = array(
                     'post_title' => $issuer_title,
                     'post_status' => 'publish',
@@ -424,6 +521,14 @@ function issuerHistoryPost()
                     wp_set_object_terms($post_id, $str_id, 'post_tag', false);
                     update_field('history_short_name', $issuer_short_name, $post_id);
                     update_field('history_full_name', $issuer_full_name, $post_id);
+                    update_field('history_inn', $issuer_inn, $post_id);
+                    update_field('history_ogrn', $issuer_ogrn, $post_id);
+                    update_field('history_address', $issuer_addres, $post_id);
+                    update_field('history_date_conclusion', $issuer_date_conclusion, $post_id);
+                    update_field('history_date_acceptance', $issuer_date_acceptance, $post_id);
+                    update_field('history_reason_public', $issuer_reason_public, $post_id);
+                    update_field('history_published', $issuer_published, $post_id);
+                    update_field('history_moved_archives', $issuer_moved_archives, $post_id);
                 }
             }
         }

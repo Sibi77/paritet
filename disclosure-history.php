@@ -26,16 +26,36 @@ get_header();
             <div class="disclosure-card__content"><?= get_field("history_full_name"); ?></div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Адресс</div>
-            <div class="disclosure-card__content"><?= get_field("address"); ?></div>
+            <div class="disclosure-card__header">ИНН</div>
+            <div class="disclosure-card__content"><?= get_field("history_inn"); ?></div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">ИНН</div>
-            <div class="disclosure-card__content"><?= get_field("inn"); ?></div>
+            <div class="disclosure-card__header">ОГРН</div>
+            <div class="disclosure-card__content"><?= get_field("history_ogrn"); ?></div>
+        </div>
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Адрес</div>
+            <div class="disclosure-card__content"><?= get_field("history_address"); ?></div>
+        </div>
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Дата заключения договора на ведение реестра</div>
+            <div class="disclosure-card__content"><?= get_field("history_date_conclusion"); ?></div>
+        </div>
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Дата акта приема реестра</div>
+            <div class="disclosure-card__content"><?= get_field("history_date_acceptance"); ?></div>
+        </div>
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Причина публикации</div>
+            <div class="disclosure-card__content"><?= get_field("history_reason_public"); ?></div>
         </div>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Опубликовано</div>
-            <div class="disclosure-card__content"><?= get_field("published"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("history_published"); ?></div>
+        </div>
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Перенесено в архив</div>
+            <div class="disclosure-card__content"><?= get_field("history_moved_archives"); ?></div>
         </div>
     </div>
 </section>
