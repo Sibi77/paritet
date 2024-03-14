@@ -170,103 +170,63 @@ add_action('wp_enqueue_scripts', 'pir_scripts');
 
 
 require get_template_directory() . '/includes/custom-functions.php';
-
 require_once ABSPATH . 'wp-admin/includes/image.php';
 require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once ABSPATH . 'wp-admin/includes/media.php';
 
-
-//echo '<pre>';
-//print_r($filedown);
-function paritet_get_api_file($id)
-{
-
-    // это ключ-идентификатор значения транзитного кэша
-    $transient_key = 'pir11223';
-
-    // сразу же обращаемся к транзитному кэшу и пытаемся получить значение из кэша
-    $transient = get_transient($transient_key);
-
-    // Если значение в транзитном кэша существует, то мы возвращаем его и на этом всё
-    if (false !== $transient) {
-
-        return $transient;
-
-        // В кэше пусто? Тогда обращаемся к API
-    } else {
-
-        // Обращаемся к API
-
-        $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
-        $response1 =json_decode( $response1 );
-
-        $args = array(
-            'headers' => array(
-                'accept'=> 'application/json',
-                'Authorization' => 'Bearer ' .$response1->jwtToken
-            )
-        );
-
-        $response = wp_remote_get( 'https://master.paritet.ru:9443/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$id, $args );
-        $response = wp_remote_retrieve_body($response);
-        $response =  json_decode( $response );
-        // Сохраняем ответ из API в транзитный кэш
-        set_transient($transient_key, $response, 20);
-
-        // Возвращаем результат
-        return $response;
-
-
-    }
-
-}
-function paritet_get_download_file()
-{
-
-    // это ключ-идентификатор значения транзитного кэша
-    $transient_key = 'pir112233';
-
-    // сразу же обращаемся к транзитному кэшу и пытаемся получить значение из кэша
-    $transient = get_transient($transient_key);
-
-    // Если значение в транзитном кэша существует, то мы возвращаем его и на этом всё
-    if (false !== $transient) {
-
-        return $transient;
-
-        // В кэше пусто? Тогда обращаемся к API
-    } else {
-
-        // Обращаемся к API
-
-        $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
-        $response1 =json_decode( $response1 );
-
-        $args = array(
-            'headers' => array(
-                'accept'=> 'application/json',
-                'Authorization' => 'Bearer ' .$response1->jwtToken
-            )
-        );
-
-        $response = wp_remote_get( 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?id=', $args );
-        $response = wp_remote_retrieve_body($response);
-        $response =  json_decode( $response );
-        // Сохраняем ответ из API в транзитный кэш
-        set_transient($transient_key, $response, 20);
-
-        // Возвращаем результат
-        return $response;
-
-
-    }
-
-}
-//paritet_get_api_file(2);
-//echo '<pre>';
-//print_r(paritet_get_api_file(2));
 $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
-function paritet_get_api($url)
+function download_url_with_headers($url, $headers = []) // функция для для загрузки файлов по api
+{
+    // WARNING: The file is not automatically deleted, the script must unlink() the file.
+    if ( ! $url ) {
+        return new WP_Error( 'http_no_url', __( 'Invalid URL Provided.' ) );
+
+    }
+
+    $url_filename = basename( parse_url( $url, PHP_URL_PATH ) );
+
+    $tmpfname = wp_tempnam( $url_filename );
+
+    if ( ! $tmpfname ) {
+        return new WP_Error( 'http_no_file', __( 'Could not create Temporary file.' ) );
+    }
+
+    $response = wp_remote_get(
+        $url,
+        array(
+            'timeout'  => 600,
+            'stream'   => true,
+            'filename' => $tmpfname,
+            'headers'  => $headers
+        )
+    );
+
+    if ( is_wp_error( $response ) ) {
+        unlink( $tmpfname );
+        return $response;
+    }
+
+    $response_code = wp_remote_retrieve_response_code( $response );
+
+    if ( 200 != $response_code ) {
+        $data = array(
+            'code' => $response_code,
+        );
+
+        $tmpf = fopen( $tmpfname, 'rb' );
+        if ( $tmpf ) {
+            $response_size = apply_filters( 'download_url_error_max_body_size', KB_IN_BYTES );
+            $data['body']  = fread( $tmpf, $response_size );
+            fclose( $tmpf );
+        }
+
+        unlink( $tmpfname );
+        return new WP_Error( 'http_404', trim( wp_remote_retrieve_response_message( $response ) ), $data );
+    }
+
+    return $tmpfname;
+}
+function paritet_get_api($url)// API Полный список раскрытий
 {
 
     // это ключ-идентификатор значения транзитного кэша
@@ -320,8 +280,8 @@ function paritet_get_api($url)
 //    }
 
 }
-
-function checkPost(){
+function issuerCheckPost()//репликация эмитентов
+{
     $params = array(
         'posts_per_page' => -1, // все посты
         'post_status' => 'publish',
@@ -369,7 +329,7 @@ function checkPost(){
 
     }
 }
-function issuerPost()
+function issuerPost()// создание эмитентов
 {
     $issuer_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
     foreach ($issuer_get->items as $item) {
@@ -414,71 +374,19 @@ function issuerPost()
         }
     }
 }
-
-function download_url_with_headers($url, $headers = []) {
-    // WARNING: The file is not automatically deleted, the script must unlink() the file.
-    if ( ! $url ) {
-        return new WP_Error( 'http_no_url', __( 'Invalid URL Provided.' ) );
-
-    }
-
-    $url_filename = basename( parse_url( $url, PHP_URL_PATH ) );
-
-    $tmpfname = wp_tempnam( $url_filename );
-
-    if ( ! $tmpfname ) {
-        return new WP_Error( 'http_no_file', __( 'Could not create Temporary file.' ) );
-    }
-
-    $response = wp_remote_get(
-        $url,
-        array(
-            'timeout'  => 600,
-            'stream'   => true,
-            'filename' => $tmpfname,
-            'headers'  => $headers
-        )
-    );
-
-    if ( is_wp_error( $response ) ) {
-        unlink( $tmpfname );
-        return $response;
-    }
-
-    $response_code = wp_remote_retrieve_response_code( $response );
-
-    if ( 200 != $response_code ) {
-        $data = array(
-            'code' => $response_code,
-        );
-
-        $tmpf = fopen( $tmpfname, 'rb' );
-        if ( $tmpf ) {
-            $response_size = apply_filters( 'download_url_error_max_body_size', KB_IN_BYTES );
-            $data['body']  = fread( $tmpf, $response_size );
-            fclose( $tmpf );
-        }
-
-        unlink( $tmpfname );
-        return new WP_Error( 'http_404', trim( wp_remote_retrieve_response_message( $response ) ), $data );
-    }
-
-    return $tmpfname;
-}
-
-function rules_regulations()
+function rules_regulations() //правила и положения
 {
     $rules_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
     $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
     $response1 =json_decode( $response1 );
     foreach ($rules_get->items as $item) {
         if ($item->section == 'Rules') {
-
+            echo '<pre>';
+            print_r($item);
             $rules_id = $item->id;
             $rules_name = $item->title;//title
             $rules_status = $item->status;
             $rules_delete_reason = $item->deleteReason;
-            // cтатус эмитента
             $tag_status = $rules_status. ', '.$rules_delete_reason;
 
             $rules_title = $item->title . ' ' . 'id ' . $rules_id; //Заголовок поста
@@ -565,9 +473,8 @@ function rules_regulations()
 
     }
 }
-
-
-function issuerHistoryPost(){
+function issuerHistoryPost()//Истории эмитентов
+{
     $issuer_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
     foreach ($issuer_get->items as $item) {
 
@@ -630,7 +537,7 @@ function issuerHistoryPost(){
 
     }
 }
-function disclosureBasicInfoHistory()
+function disclosureBasicInfoHistory()// Истории для раздела основные сведения
 {
     $basic_info = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
     foreach ($basic_info->items as $item) {
@@ -720,11 +627,3 @@ function disclosureBasicInfoHistory()
 
     }
 }
-
-
-
-// во фронтэнде нужны эти файлы
-
-
-
-

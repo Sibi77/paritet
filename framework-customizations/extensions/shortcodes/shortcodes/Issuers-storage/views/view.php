@@ -36,7 +36,7 @@
                  <?php
 
 
-                 checkPost();
+                 issuerCheckPost();
                  issuerPost();
                  issuerHistoryPost();
 
