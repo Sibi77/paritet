@@ -52,7 +52,7 @@
 ////
 ////            } else{
 ////                $post_id = wp_insert_post($my_post);
-////                if( $post_id ) update_post_meta( $post_id, '_wp_page_template', 'disclosure-basic-info.php' );
+////                if( $post_id ) update_post_meta( $post_id, '_wp_page_template', 'disclosure-basic-history.php' );
 ////                wp_set_object_terms($post_id , $issuer_status, 'post_tag', false);
 //////                update_field( 'issuer_id', $issuer_id, $post_id );
 ////
@@ -64,7 +64,7 @@
 //    }
 //}
 //baseInfo();
-
+disclosureBasicInfoHistory();
 ?>
 
 
@@ -75,7 +75,7 @@
         foreach ($issuer_get->items as $item) {
 
             if ($item->section == 'Main') {
-
+                $base_info_id = $item->id;
                 $base_info_published_at = $item->publishedAt;
                 $base_info_publication_reason = $item->publicationReason;
                 $base_info_title = $item->content->registrar->shortName . ' ' . 'id ';
@@ -106,13 +106,14 @@
         ?>
         <h1 class="disclosure-card__title">Основные сведения</h1>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Полное наименование</div>
-            <div class="disclosure-card__content"><?= $base_info_full_name ?></div>
-        </div>
-        <div class="disclosure-card__item">
             <div class="disclosure-card__header">Краткое наименование</div>
             <div class="disclosure-card__content"><?= $base_info_short_name ?></div>
         </div>
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Полное наименование</div>
+            <div class="disclosure-card__content"><?= $base_info_full_name ?></div>
+        </div>
+
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Краткое наименование на английском</div>
             <div class="disclosure-card__content"><?= $base_info_short_name_eng ?></div>
@@ -168,6 +169,65 @@
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Причина публикации</div>
             <div class="disclosure-card__content"><?= $base_info_publication_reason ?></div>
+        </div>
+    </div>
+    <div class="pir-table">
+        <div class="pir-container">
+            <h2 class="pir-content__title"">История изменений</h2>
+            <div class="pir-table">
+                <div class="pir-container">
+                    <div class="table-calc__tab-mob">
+                        <table class="pir-table__table">
+                            <thead>
+                            <tr>
+                                <td>
+                                    Наименование
+                                </td>
+                                <td>
+                                    Опубликовано
+                                </td>
+
+                                <td>Перенесено в архив</td>
+
+                            </tr>
+
+                            </thead>
+                            <tbody>
+                            <?php
+                            $id =  $base_info_id;
+                            global $post;
+
+                            $myposts = get_posts( [
+                                'category_name' => 'base_info',
+                                'post_type' => 'post',
+                                'tag' => $id,
+                            ] );
+
+                            foreach( $myposts as $post ){setup_postdata( $post ); ?>
+                                <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
+                                    <td><?php the_title(); ?></td>
+                                    <td>13.10.2023</td>
+                                    <td>15.11.2023</td>
+
+                                </tr>
+                                <?php
+
+                            }
+                            if (empty($myposts)) {
+                                echo '<tr>' . '<td>Нет истории</td>' . '</tr>';
+                            }
+                            wp_reset_postdata();
+                            ?>
+
+
+                            </tbody>
+                        </table>
+                        <div class="notfound">Ничего не найдено</div>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     </div>
 </section>

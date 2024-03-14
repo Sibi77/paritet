@@ -171,101 +171,13 @@ add_action('wp_enqueue_scripts', 'pir_scripts');
 
 require get_template_directory() . '/includes/custom-functions.php';
 
+require_once ABSPATH . 'wp-admin/includes/image.php';
+require_once ABSPATH . 'wp-admin/includes/file.php';
+require_once ABSPATH . 'wp-admin/includes/media.php';
 
 
-
-function getPirApiDisclosure(){
-//    $login = 'public1';
-//    $pass = 'public1';
-//    $args2 = array(
-//        'headers' => array(
-//            'Authorization' => 'Basic ' . base64_encode( $login . ':' . $pass )
-//        )
-//    );
-    $args1 = array(
-        'headers' => array(
-            'accept' => 'text/plain',
-            'Content-Type'=> 'application/json'
-        ),
-        'body' => array(
-            'password' => '777777rR',
-            'userName'=> 'public1'
-        )
-    );
-
-    $response2222 = wp_remote_get( 'https://master.paritet.ru:9443/api/ClientApi/Login', $args1 );
-
-//  echo '<pre>';
-//  print_r($response2222);
-
-    $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
-    $response1 =json_decode( $response1 );
-
-    $args = array(
-        'headers' => array(
-            'accept'=> 'application/json',
-            'Authorization' => 'Bearer ' .$response1->jwtToken
-        )
-    );
-
-    $response = wp_remote_get( 'https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full', $args );
-    $response = wp_remote_retrieve_body($response);
-    $response =  json_decode( $response );
-
-
-
-    foreach ($response->items as $item){
-        if ($item->section == 'Issuers') {
-
-            $issuer_status = $item->status; // cтатус эмитента
-            echo '<pre>';
-             print_r($item);
-        }
-    }
-
-}
-//getPirApiDisclosure();
-function paritet_get_api()
-{
-
-    // это ключ-идентификатор значения транзитного кэша
-    $transient_key = 'pir123';
-
-    // сразу же обращаемся к транзитному кэшу и пытаемся получить значение из кэша
-    $transient = get_transient($transient_key);
-
-    // Если значение в транзитном кэша существует, то мы возвращаем его и на этом всё
-    if (false !== $transient) {
-
-        return $transient;
-
-        // В кэше пусто? Тогда обращаемся к API
-    } else {
-
-        // Обращаемся к API
-
-        $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
-        $response1 =json_decode( $response1 );
-
-        $args = array(
-            'headers' => array(
-                'accept'=> 'application/json',
-                'Authorization' => 'Bearer ' .$response1->jwtToken
-            )
-        );
-
-        $response = wp_remote_get( 'https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full', $args );
-        $response = wp_remote_retrieve_body($response);
-        $response =  json_decode( $response );
-        // Сохраняем ответ из API в транзитный кэш
-        set_transient($transient_key, $response, 20);
-
-        // Возвращаем результат
-        return $response;
-
-    }
-
-}
+//echo '<pre>';
+//print_r($filedown);
 function paritet_get_api_file($id)
 {
 
@@ -350,11 +262,64 @@ function paritet_get_download_file()
     }
 
 }
+//paritet_get_api_file(2);
+//echo '<pre>';
+//print_r(paritet_get_api_file(2));
+$response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
+function paritet_get_api($url)
+{
 
+    // это ключ-идентификатор значения транзитного кэша
+//    $transient_key = 'pir123';
 
+    // сразу же обращаемся к транзитному кэшу и пытаемся получить значение из кэша
+//    $transient = get_transient($transient_key);
+    $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
+    $response1 =json_decode( $response1 );
 
+    $args = array(
+        'headers' => array(
+            'accept'=> 'application/json',
+            'Authorization' => 'Bearer ' .$response1->jwtToken
+        )
+    );
 
+    $response = wp_remote_get( $url, $args );
+    $response = wp_remote_retrieve_body($response);
+    $response =  json_decode( $response );
+    return $response;
+    // Если значение в транзитном кэша существует, то мы возвращаем его и на этом всё
+//    if (false !== $transient) {
+//
+//        return $transient;
+//
+//        // В кэше пусто? Тогда обращаемся к API
+//    } else {
+//
+//        // Обращаемся к API
+//
+//        $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
+//        $response1 =json_decode( $response1 );
+//
+//        $args = array(
+//            'headers' => array(
+//                'accept'=> 'application/json',
+//                'Authorization' => 'Bearer ' .$response1->jwtToken
+//            )
+//        );
+//
+//        $response = wp_remote_get( $url, $args );
+//        $response = wp_remote_retrieve_body($response);
+//        $response =  json_decode( $response );
+//        // Сохраняем ответ из API в транзитный кэш
+//        set_transient($transient_key, $response, 20);
+//
+//        // Возвращаем результат
+//
+//    return $response;
+//    }
 
+}
 
 function checkPost(){
     $params = array(
@@ -363,7 +328,7 @@ function checkPost(){
         'cat'	=> 18
     );
     $tes =  get_posts($params);
-    $issuer_get1 = paritet_get_api();
+    $issuer_get1 = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
     $companies = array();
     $companies1 = array();
 
@@ -406,7 +371,7 @@ function checkPost(){
 }
 function issuerPost()
 {
-    $issuer_get = paritet_get_api();
+    $issuer_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
     foreach ($issuer_get->items as $item) {
         if ($item->section == 'Issuers') {
 
@@ -451,7 +416,7 @@ function issuerPost()
             } else {
 
                 $post_id = wp_insert_post($my_post);
-                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-single.php');
+                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-issuer-single.php');
                 wp_set_object_terms($post_id, array($issuer_status,$issuer_delete_reason), 'post_tag', false);
                 update_field('issuer_id', $issuer_id, $post_id);
                 update_field('short_name', $issuer_short_mane, $post_id);
@@ -471,9 +436,172 @@ function issuerPost()
     }
 }
 
-function issuerHistoryPost()
+function download_url_with_headers($url, $headers = []) {
+    // WARNING: The file is not automatically deleted, the script must unlink() the file.
+    if ( ! $url ) {
+        return new WP_Error( 'http_no_url', __( 'Invalid URL Provided.' ) );
+
+    }
+
+    $url_filename = basename( parse_url( $url, PHP_URL_PATH ) );
+
+    $tmpfname = wp_tempnam( $url_filename );
+
+    if ( ! $tmpfname ) {
+        return new WP_Error( 'http_no_file', __( 'Could not create Temporary file.' ) );
+    }
+
+    $response = wp_remote_get(
+        $url,
+        array(
+            'timeout'  => 600,
+            'stream'   => true,
+            'filename' => $tmpfname,
+            'headers'  => $headers
+        )
+    );
+
+    if ( is_wp_error( $response ) ) {
+        unlink( $tmpfname );
+        return $response;
+    }
+
+    $response_code = wp_remote_retrieve_response_code( $response );
+
+    if ( 200 != $response_code ) {
+        $data = array(
+            'code' => $response_code,
+        );
+
+        $tmpf = fopen( $tmpfname, 'rb' );
+        if ( $tmpf ) {
+            $response_size = apply_filters( 'download_url_error_max_body_size', KB_IN_BYTES );
+            $data['body']  = fread( $tmpf, $response_size );
+            fclose( $tmpf );
+        }
+
+        unlink( $tmpfname );
+        return new WP_Error( 'http_404', trim( wp_remote_retrieve_response_message( $response ) ), $data );
+    }
+
+    return $tmpfname;
+}
+
+function rules_regulations()
 {
-    $issuer_get = paritet_get_api();
+    $rules_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
+    $response1 =json_decode( $response1 );
+    foreach ($rules_get->items as $item) {
+        if ($item->section == 'Rules') {
+
+            $get_files = paritet_get_api('https://master.paritet.ru:9443/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$item->id);
+            $first = 1;
+            $down_link_orig = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?';
+            $down_link = '';
+            foreach ($get_files->files as $file){
+
+                if($first != 1){
+                    $down_link = $down_link.'&';
+                }else{
+                    $down_link = $down_link_orig;
+                }
+                $first = 0;
+                $down_link = $down_link.'id=';
+                $down_link = $down_link.$file->id;
+
+            }
+//            $down_link = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?id=c89637a3-d67f-4810-4329-08dc3857a490';
+//            $down_link = 'https://www.ad-system.ru/img/logo_big.png';
+//            $response2 = wp_remote_get($down_link, array(
+//              'headers' => array(
+//                  'accept'=> 'application/json',
+//                   'Authorization' => 'Bearer ' .$response1->jwtToken
+//               )
+//            ));
+//            $image_data = wp_remote_retrieve_body($response2);
+//            print_r($down_link);
+            $headers = [
+                'accept'=> '*/*',
+                'Authorization' => 'Bearer ' .$response1->jwtToken
+            ];
+            $image_data = download_url_with_headers($down_link, $headers);
+//            $image_data = download_url($down_link);
+            print_r($image_data);
+
+//            print_r($down_link);
+            $file_array = [
+                'name'     => 'test.zip',
+                'tmp_name' => $image_data,
+                'error'    => 0,
+                'size'     => filesize($image_data),
+            ];
+
+            $image_id = media_handle_sideload($file_array, 0, 'desc');
+            echo '<pre>';
+            print_r($image_id);
+            if( is_wp_error( $image_id ) ) {
+                print_r($image_id->get_error_messages());
+            }
+//            $filepath = ABSPATH . 'wp-content/uploads/' . 'logo.png';
+//            print_r($filepath);
+
+//            copy($image_data, $filepath);
+            @unlink($file_array['tmp_name']);
+
+
+
+
+            $rules_id = $item->id;
+            $rules_name = $item->title;//title
+            $rules_status = $item->status;
+            $rules_delete_reason = $item->deleteReason;
+            // cтатус эмитента
+            $tag_status = $rules_status. ', '.$rules_delete_reason;
+
+            $rules_title = $item->title . ' ' . 'id ' . $rules_id; //Заголовок поста
+
+//            $issuer_date_publish = substr($item->publishedAt, 0, 10); // когда опублткованно
+
+            $my_post = array(
+                'post_title' => $rules_title,
+                'post_status' => 'publish',
+                'post_type' => 'post',
+                'post_category' => array(63)
+            );
+            $posts = get_posts(
+                [
+                    'post_type' => 'post',
+                    'title' => $rules_title,
+                    'post_status' => 'publish',
+                    'post_category' => array(63),
+                    'orderby' => 'post_date ID',
+                    'order' => 'ASC',
+                ]
+            );
+
+
+
+            if (!empty($posts)) {
+            } else {
+                $post_id = wp_insert_post($my_post);
+                $url = "http://s.wordpress.org/style/images/wp3-logo.png";
+                $desc = "The WordPress Logo";
+                $image = media_sideload_image( $url, $post_id, $desc );
+                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-rules-single.php');
+
+                wp_set_object_terms($post_id, array($rules_status), 'post_tag', false);
+            }
+
+
+        }
+
+    }
+}
+
+
+function issuerHistoryPost(){
+    $issuer_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
     foreach ($issuer_get->items as $item) {
 
         if ($item->section == 'Issuers') {
@@ -517,7 +645,7 @@ function issuerHistoryPost()
                 } else {
 
                     $post_id = wp_insert_post($my_post);
-                    if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-history.php');
+                    if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-issuer-history.php');
                     wp_set_object_terms($post_id, $str_id, 'post_tag', false);
                     update_field('history_short_name', $issuer_short_name, $post_id);
                     update_field('history_full_name', $issuer_full_name, $post_id);
@@ -535,5 +663,101 @@ function issuerHistoryPost()
 
     }
 }
-//issuerHistoryPost();
+function disclosureBasicInfoHistory()
+{
+    $basic_info = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    foreach ($basic_info->items as $item) {
+
+        if ($item->section == 'Main') {
+            $basic_info_id1 = $item->id;
+            $str_id = strval($basic_info_id1);
+            foreach ($item->history as $history) {
+
+                $basic_info_id = $history->id;// id
+                $basic_info_title = $history->title . ' ' . 'id ' . $basic_info_id; //Заголовок поста
+                $basic_info_short_name = $history->content->registrar->shortName;// Краткое имя
+                $basic_info_full_name = $history->content->registrar->fullName;// Полное имя
+                $basic_info_short_name_eng = $history->content->registrar->shortNameEng;// Краткое имя на англ
+                $basic_info_full_name_eng = $history->content->registrar->fullNameEng; // Полное имя на англ
+                $basic_info_inn = $history->content->registrar->inn; // ИНН
+                $basic_info_kpp = $history->content->registrar->kpp;// КПП
+                $basic_info_ogrn = $history->content->registrar->ogrn; // Огрн
+                $basic_info_address = $history->content->registrar->address; // Адрес
+                $basic_info_phone = $history->content->registrar->phone; //Телефон
+                $basic_info_fax = $history->content->registrar->fax; //факс
+                $basic_info_email = $history->content->registrar->email;// email
+                $basic_info_site = $history->content->registrar->webSite;// веб-сайт
+                $basic_info_media = $history->content->registrar->socialMedia;// социальные сети
+                    $basic_info_bank_recipient = $history->content->registrar->bank->recipient;//реквизиты банка
+                    $basic_info_bank_rs = $history->content->registrar->bank->rs;//реквизиты банка
+                    $basic_info_bank_bic = $history->content->registrar->bank->bic;//реквизиты банка
+                    $basic_info_bank_ks = $history->content->registrar->bank->ks;//реквизиты банка
+                    $basic_info_bank_name = $history->content->registrar->bank->name;//реквизиты банка
+                    $basic_info_bank_inn = $history->content->registrar->bank->inn;//реквизиты банка
+                    $basic_info_bank_kpp = $history->content->registrar->bank->kpp; //реквизиты банка
+                $basic_info_pub_reason = $history->publicationReason; // Причина публикации раскрытия
+                $basic_info_del_reason = $history->deleteReason; // Причина Удаления
+                $basic_info_pub_at = substr($history->publishedAt, 0, 10); // Опубликовано
+                $my_post = array(
+                    'post_title' => $basic_info_title,
+                    'post_status' => 'publish',
+                    'post_type' => 'post',
+                    'post_category' => array(48),
+                );
+                $posts = get_posts(
+                    [
+                        'post_type' => 'post',
+                        'title' => $basic_info_title,
+                        'post_status' => 'publish',
+                        'post_category' => array(48),
+                        'orderby' => 'post_date ID',
+                        'order' => 'ASC',
+                    ]
+                );
+
+                if (!empty($posts)) {
+
+                } else {
+
+                    $post_id = wp_insert_post($my_post);
+                    if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-basic-history.php');
+                    wp_set_object_terms($post_id, $str_id, 'post_tag', false);
+                    update_field('basic_info_id', $basic_info_id, $post_id);
+                    update_field('basic_info_name', $basic_info_short_name, $post_id);
+                    update_field('basic_info_full_name', $basic_info_full_name, $post_id);
+                    update_field('basic_info_short_name_en', $basic_info_short_name_eng, $post_id);
+                    update_field('basic_info_full_name_en', $basic_info_full_name_eng, $post_id);
+                    update_field('basic_info_inn', $basic_info_inn, $post_id);
+                    update_field('basic_info_kpp', $basic_info_kpp, $post_id);
+                    update_field('basic_info_ogrn', $basic_info_ogrn, $post_id);
+                    update_field('basic_info_address', $basic_info_address, $post_id);
+                    update_field('basic_info_phone', $basic_info_phone, $post_id);
+                    update_field('basic_info_fax', $basic_info_fax, $post_id);
+                    update_field('basic_info_email', $basic_info_email, $post_id);
+                    update_field('basic_info_site', $basic_info_site, $post_id);
+                    update_field('basic_info_social', $basic_info_media, $post_id);
+                        update_field('basic_info_bank_recipient', $basic_info_bank_recipient, $post_id);
+                        update_field('basic_info_bank_rs', $basic_info_bank_rs, $post_id);
+                        update_field('basic_info_bank_bic', $basic_info_bank_bic, $post_id);
+                        update_field('basic_info_bank_ks', $basic_info_bank_ks, $post_id);
+                        update_field('basic_info_bank_name', $basic_info_bank_name, $post_id);
+                        update_field('basic_info_bank_inn', $basic_info_bank_inn, $post_id);
+                        update_field('basic_info_bank_kpp', $basic_info_bank_kpp, $post_id);
+                    update_field('basic_info_published', $basic_info_pub_at, $post_id);
+                    update_field('basic_info_reason_public', $basic_info_pub_reason, $post_id);
+                    update_field('basic_info_reason_del', $basic_info_del_reason, $post_id);
+
+                }
+            }
+        }
+
+    }
+}
+
+
+
+// во фронтэнде нужны эти файлы
+
+
+
 
