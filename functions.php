@@ -374,24 +374,8 @@ function issuerPost()
     $issuer_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
     foreach ($issuer_get->items as $item) {
         if ($item->section == 'Issuers') {
-
-            $issuer_status = $item->status;
-            $issuer_delete_reason = $item->deleteReason;
-            // cтатус эмитента
-            $tag_status = $issuer_status. ', '.$issuer_delete_reason;
             $issuer_id = $item->id;// id эмитента
-
             $issuer_title = $item->content->issuer->shortName . ' ' . 'id ' . $issuer_id; //Заголовок поста
-            $issuer_short_mane = $item->content->issuer->shortName; //Краткое наименование
-            $issuer_full_name = $item->content->issuer->fullName;// Полное наименование
-            $issuer_inn = $item->content->issuer->inn; //Инн эмитента
-            $issuer_ogrn = $item->content->issuer->ogrn; //ОГРН эмитента
-            $issuer_address = $item->content->issuer->address; // Адресс эмитента
-            $issuer_contract_date = $item->content->issuer->registryContractDate; //Дата заключения договора на ведение реестра
-            $issuer_act_date = $item->content->issuer->registryIncomingActDate; //Дата акта приема реестра
-            $issuer_pub_reason = $item->publicationReason; // Причина публикации'
-            $issuer_date_publish = substr($item->publishedAt, 0, 10); // когда опублткованно
-
             $my_post = array(
                 'post_title' => $issuer_title,
                 'post_status' => 'publish',
@@ -410,29 +394,24 @@ function issuerPost()
                 ]
             );
 
-
-
             if (!empty($posts)) {
             } else {
 
                 $post_id = wp_insert_post($my_post);
                 if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-issuer-single.php');
-                wp_set_object_terms($post_id, array($issuer_status,$issuer_delete_reason), 'post_tag', false);
-                update_field('issuer_id', $issuer_id, $post_id);
-                update_field('short_name', $issuer_short_mane, $post_id);
-                update_field('full_name', $issuer_full_name, $post_id);
-                update_field('inn', $issuer_inn, $post_id);
-                update_field('ogrn', $issuer_ogrn, $post_id);
-                update_field('address', $issuer_address, $post_id);
-                update_field('date_conclusion', $issuer_contract_date, $post_id);
-                update_field('date_acceptance', $issuer_act_date, $post_id);
-                update_field('reason_public', $issuer_pub_reason, $post_id);
-                update_field('published', $issuer_date_publish, $post_id);
+                wp_set_object_terms($post_id, array( $item->status,$item->deleteReason), 'post_tag', false);
+                update_field('issuer_id', $item->id, $post_id);
+                update_field('short_name', $item->content->issuer->shortName, $post_id);//Краткое наименование
+                update_field('full_name', $item->content->issuer->fullName, $post_id);// Полное наименование
+                update_field('inn', $item->content->issuer->inn, $post_id);//Инн эмитента
+                update_field('ogrn', $item->content->issuer->ogrn, $post_id);//ОГРН эмитента
+                update_field('address', $item->content->issuer->address, $post_id);// Адресс эмитента
+                update_field('date_conclusion', $item->content->issuer->registryContractDate, $post_id);//Дата заключения на ведение реестра
+                update_field('date_acceptance', $item->content->issuer->registryIncomingActDate, $post_id);//Дата приема реестра
+                update_field('reason_public', $item->publicationReason, $post_id);// Причина публикации'
+                update_field('published', substr($item->publishedAt, 0, 10), $post_id);// когда опублткованно
             }
-
-
         }
-
     }
 }
 
@@ -495,63 +474,6 @@ function rules_regulations()
     foreach ($rules_get->items as $item) {
         if ($item->section == 'Rules') {
 
-            $get_files = paritet_get_api('https://master.paritet.ru:9443/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$item->id);
-            $first = 1;
-            $down_link_orig = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?';
-            $down_link = '';
-            foreach ($get_files->files as $file){
-
-                if($first != 1){
-                    $down_link = $down_link.'&';
-                }else{
-                    $down_link = $down_link_orig;
-                }
-                $first = 0;
-                $down_link = $down_link.'id=';
-                $down_link = $down_link.$file->id;
-
-            }
-//            $down_link = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?id=c89637a3-d67f-4810-4329-08dc3857a490';
-//            $down_link = 'https://www.ad-system.ru/img/logo_big.png';
-//            $response2 = wp_remote_get($down_link, array(
-//              'headers' => array(
-//                  'accept'=> 'application/json',
-//                   'Authorization' => 'Bearer ' .$response1->jwtToken
-//               )
-//            ));
-//            $image_data = wp_remote_retrieve_body($response2);
-//            print_r($down_link);
-            $headers = [
-                'accept'=> '*/*',
-                'Authorization' => 'Bearer ' .$response1->jwtToken
-            ];
-            $image_data = download_url_with_headers($down_link, $headers);
-//            $image_data = download_url($down_link);
-            print_r($image_data);
-
-//            print_r($down_link);
-            $file_array = [
-                'name'     => 'test.zip',
-                'tmp_name' => $image_data,
-                'error'    => 0,
-                'size'     => filesize($image_data),
-            ];
-
-            $image_id = media_handle_sideload($file_array, 0, 'desc');
-            echo '<pre>';
-            print_r($image_id);
-            if( is_wp_error( $image_id ) ) {
-                print_r($image_id->get_error_messages());
-            }
-//            $filepath = ABSPATH . 'wp-content/uploads/' . 'logo.png';
-//            print_r($filepath);
-
-//            copy($image_data, $filepath);
-            @unlink($file_array['tmp_name']);
-
-
-
-
             $rules_id = $item->id;
             $rules_name = $item->title;//title
             $rules_status = $item->status;
@@ -560,8 +482,6 @@ function rules_regulations()
             $tag_status = $rules_status. ', '.$rules_delete_reason;
 
             $rules_title = $item->title . ' ' . 'id ' . $rules_id; //Заголовок поста
-
-//            $issuer_date_publish = substr($item->publishedAt, 0, 10); // когда опублткованно
 
             $my_post = array(
                 'post_title' => $rules_title,
@@ -584,13 +504,60 @@ function rules_regulations()
 
             if (!empty($posts)) {
             } else {
-                $post_id = wp_insert_post($my_post);
-                $url = "http://s.wordpress.org/style/images/wp3-logo.png";
-                $desc = "The WordPress Logo";
-                $image = media_sideload_image( $url, $post_id, $desc );
-                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-rules-single.php');
 
+
+                $post_id = wp_insert_post($my_post);
+//                $image = media_sideload_image( $url, $post_id, $desc );
+                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-rules-single.php');
                 wp_set_object_terms($post_id, array($rules_status), 'post_tag', false);
+
+                //Добавление файла
+                $get_files = paritet_get_api('https://master.paritet.ru:9443/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$item->id);
+                if(!empty($get_files) ){
+                    $first = 1;
+                    $down_link_orig = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?';
+                    $down_link = '';
+                    $title_file = $item->id;
+                    foreach ($get_files->files as $file){
+                        echo '<pre>';
+                        print_r($file);
+                        $file_name = $file->fileName;
+                        if($first != 1){
+                            $down_link = $down_link.'&';
+                            $file_name = $title_file.'.zip';
+                        }else{
+                            $down_link = $down_link_orig;
+                        }
+                        $first = 0;
+                        $down_link = $down_link.'id=';
+                        $down_link = $down_link.$file->id;
+
+                    }
+
+                    $headers = [
+                        'accept'=> '*/*',
+                        'Authorization' => 'Bearer ' .$response1->jwtToken
+                    ];
+
+                    $image_data = download_url_with_headers($down_link, $headers);
+
+                    $file_array = [
+                        'name'     => $file_name,
+                        'tmp_name' => $image_data,
+                        'error'    => 0,
+                        'size'     => filesize($image_data),
+                    ];
+
+                    $image_id = media_handle_sideload($file_array, $post_id, 'desc');
+                    if( is_wp_error( $image_id ) ) {
+                        print_r($image_id->get_error_messages());
+                    }
+                    @unlink($file_array['tmp_name']);
+                }
+
+//            $down_link = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?id=c89637a3-d67f-4810-4329-08dc3857a490';
+//            $down_link = 'https://www.ad-system.ru/img/logo_big.png';
+
             }
 
 

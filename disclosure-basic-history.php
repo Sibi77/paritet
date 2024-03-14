@@ -68,7 +68,7 @@ get_header();
             <div class="disclosure-card__content"><a href="<?= get_field("basic_info_social"); ?>"><?= get_field("basic_info_social"); ?></a></div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Банковские реквезиты</div>
+            <div class="disclosure-card__header">Банковские реквизиты</div>
 
             <div class="disclosure-card__content">Получатель: <?= get_field("basic_info_bank_recipient"); ?></div>
             <div class="disclosure-card__content">Расчетный счет: <?= get_field("basic_info_bank_rs"); ?></div>

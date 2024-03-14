@@ -2,7 +2,9 @@
   position: relative;
   width: 100%;
   padding: rem(80) 0;
-
+  .pir-container{
+    position: relative;
+  }
   &__title{
     font-family: $title-font;
     color: var(--pir-new-primary-color);
@@ -29,5 +31,30 @@
     line-height: rem(27);
     font-weight: 400;
     color: #292C2E;
+  }
+  &__download-doc{
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    right: 0;
+    top: 0;
+    background: var(--pir-new-primary-color);
+    padding: rem(20) rem(30);
+    color: #fff;
+    text-align: center;
+    border-radius: rem(3);
+    &:hover{
+      color: #FA4811;
+    }
+  }
+  &__title-doc{
+    font-size: rem(24);
+    line-height: rem(31);
+    width: rem(240);
+  }
+  &__wrap{
+    display: flex;
+    justify-content: space-between;
   }
 }

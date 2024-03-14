@@ -71,7 +71,7 @@ disclosureBasicInfoHistory();
 <section class="disclosure-card">
     <div class="pir-container">
         <?php
-        $issuer_get = paritet_get_api();
+        $issuer_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
         foreach ($issuer_get->items as $item) {
 
             if ($item->section == 'Main') {

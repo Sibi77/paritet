@@ -34,7 +34,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta property="og:image" content="path/to/image.jpg">
-    <link rel="icon" href="<?php bloginfo('template_directory'); ?>/img/favicon/favicon.ico">
+    <link rel="icon" href="/<?php bloginfo('template_directory'); ?>img/favicon/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180"
           href="<?php bloginfo('template_directory'); ?>/img/favicon/apple-touch-icon-180x180.png">
     <link rel="profile" href="http://gmpg.org/xfn/11">

@@ -16,42 +16,51 @@
             <table class="pir-table__table">
                 <thead>
                 <tr>
-
-
+                    <td>НАИМЕНОВАНИЕ ДОКУМЕНТА</td>
+                    <td>Действует</td>
+                    <td>Опубликовано</td>
+                    <td></td>
                 </tr>
 
                 </thead>
                 <tbody>
 
-                 <?php
+                <?php
 
 
-                 rules_regulations();
+                rules_regulations();
+
+                $args = array(
+                    'cat' => 63,
+                    'tag' => 'Published',
+                    'posts_per_page' => -1
+
+                );
+                query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
+                while (have_posts()) : the_post(); ?>
+
+                    <tr>
+
+                        <td>  <a class="pir-table__download" href="<?php the_permalink(); ?>">
+                                <img src="<?php bloginfo('template_directory'); ?>/img/icons/pdf.svg" alt="Документ">
+                                <?php the_title(); ?></a></td>
+                        <td>14.02.2023</td>
+                        <td>01.04.2023</td>
+                        <td>
+                            <?php
+                            $media = get_attached_media('');
+                            ?>
+                            <?php foreach ($media as $url) {
+                            } ?>
+                            <a href="<?= $url->guid; ?>" download><img src="<?php bloginfo('template_directory'); ?>/img/icons/download.svg" alt="Скачать документ"></a>
+                        </td>
+                    </tr>
 
 
-                 $args = array(
-                     'cat'      => 63,
-                     'tag' => 'Published',
-                     'posts_per_page' => -1
-
-                 );
-                 query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
-                 while (have_posts()) : the_post();?>
-                 <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
-                     <td>
-                         <img src="//localhost/wp-content/uploads/2020/03/pdf.svg" alt="doc">
-                         <?php the_title(); ?>
-                     </td>
-                     <td>14.02.2023	</td>
-                     <td>01.04.2023 </td>
-<!--                     <td>--><?php //= get_field("published"); ?><!--</td>-->
-                 </tr>
-
-
-                     <!--здесь выводится миниатюра записи-->
-                     <?php endwhile;
-                     wp_reset_query();
-                 ?>
+                    <!--здесь выводится миниатюра записи-->
+                <?php endwhile;
+                wp_reset_query();
+                ?>
 
 
                 </tbody>
