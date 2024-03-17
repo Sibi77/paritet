@@ -205,9 +205,9 @@ disclosureBasicInfoHistory();
 
                             foreach( $myposts as $post ){setup_postdata( $post ); ?>
                                 <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
-                                    <td><?php the_title(); ?></td>
-                                    <td>13.10.2023</td>
-                                    <td>15.11.2023</td>
+                                    <td><?= get_field("basic_info_history_title"); ?></td>
+                                    <td><?= get_field("basic_info_published"); ?></td>
+                                    <td><?= get_field("basic_info_del_at"); ?></td>
 
                                 </tr>
                                 <?php

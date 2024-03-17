@@ -41,7 +41,7 @@
                  issuerHistoryPost();
 
                  $args = array(
-                     'cat'      => 18,
+                     'category_name' => 'issuers',
                      'tag' => 'Transferred',
                      'posts_per_page' => -1
 

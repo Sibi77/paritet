@@ -175,6 +175,30 @@ require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once ABSPATH . 'wp-admin/includes/media.php';
 
 $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
+
+function translit($value)//перевод с кирилицы на латиницу
+{
+    $converter = array(
+        'а' => 'a',    'б' => 'b',    'в' => 'v',    'г' => 'g',    'д' => 'd',
+        'е' => 'e',    'ё' => 'e',    'ж' => 'zh',   'з' => 'z',    'и' => 'i',
+        'й' => 'y',    'к' => 'k',    'л' => 'l',    'м' => 'm',    'н' => 'n',
+        'о' => 'o',    'п' => 'p',    'р' => 'r',    'с' => 's',    'т' => 't',
+        'у' => 'u',    'ф' => 'f',    'х' => 'h',    'ц' => 'c',    'ч' => 'ch',
+        'ш' => 'sh',   'щ' => 'sch',  'ь' => '',     'ы' => 'y',    'ъ' => '',
+        'э' => 'e',    'ю' => 'yu',   'я' => 'ya',
+
+        'А' => 'A',    'Б' => 'B',    'В' => 'V',    'Г' => 'G',    'Д' => 'D',
+        'Е' => 'E',    'Ё' => 'E',    'Ж' => 'Zh',   'З' => 'Z',    'И' => 'I',
+        'Й' => 'Y',    'К' => 'K',    'Л' => 'L',    'М' => 'M',    'Н' => 'N',
+        'О' => 'O',    'П' => 'P',    'Р' => 'R',    'С' => 'S',    'Т' => 'T',
+        'У' => 'U',    'Ф' => 'F',    'Х' => 'H',    'Ц' => 'C',    'Ч' => 'Ch',
+        'Ш' => 'Sh',   'Щ' => 'Sch',  'Ь' => '',     'Ы' => 'Y',    'Ъ' => '',
+        'Э' => 'E',    'Ю' => 'Yu',   'Я' => 'Ya',
+    );
+
+    $value = strtr($value, $converter);
+    return $value;
+}
 function download_url_with_headers($url, $headers = []) // функция для для загрузки файлов по api
 {
     // WARNING: The file is not automatically deleted, the script must unlink() the file.
@@ -285,20 +309,18 @@ function issuerCheckPost()//репликация эмитентов
     $params = array(
         'posts_per_page' => -1, // все посты
         'post_status' => 'publish',
-        'cat'	=> 18
+        'category_name' => 'issuers'
     );
     $tes =  get_posts($params);
     $issuer_get1 = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+
     $companies = array();
     $companies1 = array();
-
-
     foreach ($issuer_get1->items as $item){
         if ($item->section == 'Issuers'){
             $issuer_status = $item->status; // cтатус эмитента
             $issuer_id = $item->id;// id эмитента
             $issuer_title = $item->content->issuer->shortName . ' ' . 'id ' . $issuer_id . 'status' . $issuer_status;
-
             array_push($companies, $issuer_title);
 
         }
@@ -308,15 +330,12 @@ function issuerCheckPost()//репликация эмитентов
         $title = $te->post_title;
         array_push($companies1, $title);
     }
-//    echo '<pre>';
-//    print_r(count($companies));
-//    print_r(count($companies1));
 
     if ( count($companies) !== count($companies1)){
         $paramssss = array(
             'posts_per_page' => -1, // все записи
             'post_type'	=> 'post', // записи, этот параметр можно не указывать, так как post - стоит по умолчанию
-            'cat'	=> 18
+            'category_name' => 'issuers'
         );
         $q = new WP_Query( $paramssss );
         if( $q->have_posts() ) : // если посты по заданным параметрам найдены
@@ -333,9 +352,13 @@ function issuerPost()// создание эмитентов
 {
     $issuer_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
     foreach ($issuer_get->items as $item) {
+
         if ($item->section == 'Issuers') {
+//            echo '<pre>';
+//            print_r($item);
             $issuer_id = $item->id;// id эмитента
             $issuer_title = $item->content->issuer->shortName . ' ' . 'id ' . $issuer_id; //Заголовок поста
+            $issuer_title = translit($issuer_title);
             $my_post = array(
                 'post_title' => $issuer_title,
                 'post_status' => 'publish',
@@ -359,7 +382,7 @@ function issuerPost()// создание эмитентов
 
                 $post_id = wp_insert_post($my_post);
                 if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-issuer-single.php');
-                wp_set_object_terms($post_id, array( $item->status,$item->deleteReason), 'post_tag', false);
+                wp_set_object_terms($post_id, array( $item->status,$item->deleteReason, $item->publicationReason), 'post_tag', false);
                 update_field('issuer_id', $item->id, $post_id);
                 update_field('short_name', $item->content->issuer->shortName, $post_id);//Краткое наименование
                 update_field('full_name', $item->content->issuer->fullName, $post_id);// Полное наименование
@@ -372,105 +395,6 @@ function issuerPost()// создание эмитентов
                 update_field('published', substr($item->publishedAt, 0, 10), $post_id);// когда опублткованно
             }
         }
-    }
-}
-function rules_regulations() //правила и положения
-{
-    $rules_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
-    $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
-    $response1 =json_decode( $response1 );
-    foreach ($rules_get->items as $item) {
-        if ($item->section == 'Rules') {
-            echo '<pre>';
-            print_r($item);
-            $rules_id = $item->id;
-            $rules_name = $item->title;//title
-            $rules_status = $item->status;
-            $rules_delete_reason = $item->deleteReason;
-            $tag_status = $rules_status. ', '.$rules_delete_reason;
-
-            $rules_title = $item->title . ' ' . 'id ' . $rules_id; //Заголовок поста
-
-            $my_post = array(
-                'post_title' => $rules_title,
-                'post_status' => 'publish',
-                'post_type' => 'post',
-                'post_category' => array(63)
-            );
-            $posts = get_posts(
-                [
-                    'post_type' => 'post',
-                    'title' => $rules_title,
-                    'post_status' => 'publish',
-                    'post_category' => array(63),
-                    'orderby' => 'post_date ID',
-                    'order' => 'ASC',
-                ]
-            );
-
-
-
-            if (!empty($posts)) {
-            } else {
-
-
-                $post_id = wp_insert_post($my_post);
-//                $image = media_sideload_image( $url, $post_id, $desc );
-                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-rules-single.php');
-                wp_set_object_terms($post_id, array($rules_status), 'post_tag', false);
-
-                //Добавление файла
-                $get_files = paritet_get_api('https://master.paritet.ru:9443/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$item->id);
-                if(!empty($get_files) ){
-                    $first = 1;
-                    $down_link_orig = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?';
-                    $down_link = '';
-                    $title_file = $item->id;
-                    foreach ($get_files->files as $file){
-                        echo '<pre>';
-                        print_r($file);
-                        $file_name = $file->fileName;
-                        if($first != 1){
-                            $down_link = $down_link.'&';
-                            $file_name = $title_file.'.zip';
-                        }else{
-                            $down_link = $down_link_orig;
-                        }
-                        $first = 0;
-                        $down_link = $down_link.'id=';
-                        $down_link = $down_link.$file->id;
-
-                    }
-
-                    $headers = [
-                        'accept'=> '*/*',
-                        'Authorization' => 'Bearer ' .$response1->jwtToken
-                    ];
-
-                    $image_data = download_url_with_headers($down_link, $headers);
-
-                    $file_array = [
-                        'name'     => $file_name,
-                        'tmp_name' => $image_data,
-                        'error'    => 0,
-                        'size'     => filesize($image_data),
-                    ];
-
-                    $image_id = media_handle_sideload($file_array, $post_id, 'desc');
-                    if( is_wp_error( $image_id ) ) {
-                        print_r($image_id->get_error_messages());
-                    }
-                    @unlink($file_array['tmp_name']);
-                }
-
-//            $down_link = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?id=c89637a3-d67f-4810-4329-08dc3857a490';
-//            $down_link = 'https://www.ad-system.ru/img/logo_big.png';
-
-            }
-
-
-        }
-
     }
 }
 function issuerHistoryPost()//Истории эмитентов
@@ -486,6 +410,7 @@ function issuerHistoryPost()//Истории эмитентов
 
                 $issuer_id = $history->id;// id эмитента
                 $issuer_title = $history->title . ' ' . 'id ' . $issuer_id; //Заголовок поста
+                $issuer_title = translit($issuer_title);
                 $issuer_short_name = $history->content->issuer->shortName;
                 $issuer_full_name = $history->content->issuer->fullName;
                 $issuer_inn = $history->content->issuer->inn;
@@ -537,6 +462,251 @@ function issuerHistoryPost()//Истории эмитентов
 
     }
 }
+function rulesCheckPost()//репликация правил и положений
+{
+    $params = array(
+        'posts_per_page' => -1, // все посты
+        'post_status' => 'publish',
+        'category_name' => 'disclosure-rules'
+    );
+    $tes =  get_posts($params);
+    $issuer_get1 = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    $companies = array();
+    $companies1 = array();
+
+
+    foreach ($issuer_get1->items as $item){
+        if ($item->section == 'Rules'){
+            $rules_status = $item->status; // cтатус эмитента
+            $rules_id = $item->id;// id эмитента
+            $rules_status = $item->title . ' ' . 'id ' . $rules_id . 'status' . $rules_status;
+
+            array_push($companies, $rules_status);
+
+        }
+    }
+    foreach ($tes as $te){
+
+        $title = $te->post_title;
+        array_push($companies1, $title);
+    }
+
+    if ( count($companies) !== count($companies1)){
+        $paramssss = array(
+            'posts_per_page' => -1, // все записи
+            'post_type'	=> 'post', // записи, этот параметр можно не указывать, так как post - стоит по умолчанию
+            'category_name' => 'disclosure-rules'
+        );
+        $q = new WP_Query( $paramssss );
+        if( $q->have_posts() ) : // если посты по заданным параметрам найдены
+            while( $q->have_posts() ) : $q->the_post();
+                wp_delete_post( $q->post->ID, true ); // второй параметр функции true означает, что пост будут удаляться, минуя корзину
+            endwhile;
+        endif;
+        wp_reset_postdata();
+    } else{
+
+    }
+}
+function rules_regulations() //правила и положения
+{
+    $rules_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
+    $response1 =json_decode( $response1 );
+    foreach ($rules_get->items as $item) {
+        if ($item->section == 'Rules') {
+//            echo '<pre>';
+//            print_r($item);
+            $rules_id = $item->id;
+            $rules_name = $item->title;//title
+            $rules_status = $item->status;
+            $rules_delete_reason = $item->deleteReason;
+            $tag_status = $rules_status. ', '.$rules_delete_reason;
+
+            $rules_title = $item->title . ' ' . 'id ' . $rules_id; //Заголовок поста
+            $rules_title = translit($rules_title);
+
+            $my_post = array(
+                'post_title' => $rules_title,
+                'post_status' => 'publish',
+                'post_type' => 'post',
+                'post_category' => array(63)
+            );
+            $posts = get_posts(
+                [
+                    'post_type' => 'post',
+                    'title' => $rules_title,
+                    'post_status' => 'publish',
+                    'post_category' => array(63),
+                    'orderby' => 'post_date ID',
+                    'order' => 'ASC',
+                ]
+            );
+
+            if (!empty($posts)) {
+            } else {
+
+                $post_id = wp_insert_post($my_post);
+//                $image = media_sideload_image( $url, $post_id, $desc );
+                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-rules-single.php');
+                wp_set_object_terms($post_id, array($rules_status), 'post_tag', false);
+                update_field('rules_id', $item->id, $post_id); // id API
+                update_field('rules_title', $item->title, $post_id); // Заголовок
+                update_field('rules_more_info', $item->content->document->description, $post_id); // Дополнительная информация
+                update_field('rules_valid', $item->content->document->validFromDate, $post_id); // действует С...
+                update_field('rules_valid_to', $item->content->document->validToDate, $post_id); // действительный до...
+                update_field('rules_reason_public', $item->publicationReason, $post_id); // Причина публикации
+                update_field('rules_publish',substr($item->publishedAt, 0, 10), $post_id); // Опубликовано
+                //Добавление файла
+                $get_files = paritet_get_api('https://master.paritet.ru:9443/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$item->id);
+
+                if(!empty($get_files) ){
+                    $first = 1;
+                    $down_link_orig = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?';
+                    $down_link = '';
+                    $title_file = $item->id;
+                    foreach ($get_files->files as $file){
+                        echo '<pre>';
+                        print_r($file);
+                        $file_name = $file->fileName;
+                        if($first != 1){
+                            $down_link = $down_link.'&';
+                            $file_name = $title_file.'.zip';
+                        }else{
+                            $down_link = $down_link_orig;
+                        }
+                        $first = 0;
+                        $down_link = $down_link.'id=';
+                        $down_link = $down_link.$file->id;
+
+                    }
+
+                    $headers = [
+                        'accept'=> '*/*',
+                        'Authorization' => 'Bearer ' .$response1->jwtToken
+                    ];
+
+                    $image_data = download_url_with_headers($down_link, $headers);
+
+                    $file_array = [
+                        'name'     => $file_name,
+                        'tmp_name' => $image_data,
+                        'error'    => 0,
+                        'size'     => filesize($image_data),
+                    ];
+
+                    $image_id = media_handle_sideload($file_array, $post_id, 'desc');
+                    if( is_wp_error( $image_id ) ) {
+                        print_r($image_id->get_error_messages());
+                    }
+                    @unlink($file_array['tmp_name']);
+                }
+
+            }
+
+
+        }
+
+    }
+}
+function rules_history_post()//Истории эмитентов
+{
+    $issuer_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
+    $response1 =json_decode( $response1 );
+    foreach ($issuer_get->items as $item) {
+
+        if ($item->section == 'Rules') {
+            $rules_history_id1 = $item->id;
+            $str_id = strval($rules_history_id1);
+            foreach ($item->history as $history) {
+                $rules_history_id = $history->id;// id эмитента
+                $rules_history_title = $history->title . ' ' . 'id ' . $rules_history_id; //Заголовок поста
+                $rules_history_title = translit($rules_history_title);
+                $my_post = array(
+                    'post_title' => $rules_history_title,
+                    'post_status' => 'publish',
+                    'post_type' => 'post',
+                    'post_category' => array(77),
+                );
+                $posts = get_posts(
+                    [
+                        'post_type' => 'post',
+                        'title' => $rules_history_title,
+                        'post_status' => 'publish',
+                        'post_category' => array(77),
+                        'orderby' => 'post_date ID',
+                        'order' => 'ASC',
+                    ]
+                );
+
+                if (!empty($posts)) {
+
+                } else {
+
+                    $post_id = wp_insert_post($my_post);
+                    if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-rules-history.php');
+                    wp_set_object_terms($post_id, $str_id, 'post_tag', false);
+                    update_field('rules_history_title', $history->title, $post_id);
+                    update_field('rules_history_id', $history->id, $post_id);
+                    update_field('rules_history_more_info', $history->content->document->description, $post_id);
+                    update_field('rules_history_valid', $history->content->document->validFromDate, $post_id);
+                    update_field('rules_history_valid_to', $history->content->document->validToDate, $post_id);
+                    update_field('rules_history_reason_public', $history->publicationReason, $post_id);
+                    update_field('rules_history_del_reason', $history->deleteReason, $post_id);
+                    update_field('rules_history_publish',substr($history->publishedAt, 0, 10) , $post_id);
+                    $get_files = paritet_get_api('https://master.paritet.ru:9443/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$rules_history_id);
+
+                    if(!empty($get_files) ){
+                        $first = 1;
+                        $down_link_orig = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?';
+                        $down_link = '';
+                        $title_file = $history->id;
+
+                        foreach ($get_files->files as $file){
+                            echo '<pre>';
+                            print_r($file);
+                            $file_name = $file->fileName;
+                            if($first != 1){
+                                $down_link = $down_link.'&';
+                                $file_name = $title_file.'.zip';
+                            }else{
+                                $down_link = $down_link_orig;
+                            }
+                            $first = 0;
+                            $down_link = $down_link.'id=';
+                            $down_link = $down_link.$file->id;
+
+                        }
+
+                        $headers = [
+                            'accept'=> '*/*',
+                            'Authorization' => 'Bearer ' .$response1->jwtToken
+                        ];
+
+                        $image_data = download_url_with_headers($down_link, $headers);
+
+                        $file_array = [
+                            'name'     => $file_name,
+                            'tmp_name' => $image_data,
+                            'error'    => 0,
+                            'size'     => filesize($image_data),
+                        ];
+
+                        $image_id = media_handle_sideload($file_array, $post_id, 'desc');
+                        if( is_wp_error( $image_id ) ) {
+                            print_r($image_id->get_error_messages());
+                        }
+                        @unlink($file_array['tmp_name']);
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+//rules_history_post();
 function disclosureBasicInfoHistory()// Истории для раздела основные сведения
 {
     $basic_info = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
@@ -549,6 +719,7 @@ function disclosureBasicInfoHistory()// Истории для раздела о�
 
                 $basic_info_id = $history->id;// id
                 $basic_info_title = $history->title . ' ' . 'id ' . $basic_info_id; //Заголовок поста
+                $basic_info_title = translit($basic_info_title);
                 $basic_info_short_name = $history->content->registrar->shortName;// Краткое имя
                 $basic_info_full_name = $history->content->registrar->fullName;// Полное имя
                 $basic_info_short_name_eng = $history->content->registrar->shortNameEng;// Краткое имя на англ
@@ -572,6 +743,8 @@ function disclosureBasicInfoHistory()// Истории для раздела о�
                 $basic_info_pub_reason = $history->publicationReason; // Причина публикации раскрытия
                 $basic_info_del_reason = $history->deleteReason; // Причина Удаления
                 $basic_info_pub_at = substr($history->publishedAt, 0, 10); // Опубликовано
+                $basic_info_del_at = substr($history->deletedAt, 0, 10); // Перенесено в архив
+                $basic_info_history_title = $history->title;
                 $my_post = array(
                     'post_title' => $basic_info_title,
                     'post_status' => 'publish',
@@ -596,6 +769,7 @@ function disclosureBasicInfoHistory()// Истории для раздела о�
                     $post_id = wp_insert_post($my_post);
                     if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-basic-history.php');
                     wp_set_object_terms($post_id, $str_id, 'post_tag', false);
+                    update_field('basic_info_history_title', $basic_info_history_title, $post_id);
                     update_field('basic_info_id', $basic_info_id, $post_id);
                     update_field('basic_info_name', $basic_info_short_name, $post_id);
                     update_field('basic_info_full_name', $basic_info_full_name, $post_id);
@@ -620,6 +794,7 @@ function disclosureBasicInfoHistory()// Истории для раздела о�
                     update_field('basic_info_published', $basic_info_pub_at, $post_id);
                     update_field('basic_info_reason_public', $basic_info_pub_reason, $post_id);
                     update_field('basic_info_reason_del', $basic_info_del_reason, $post_id);
+                    update_field('basic_info_del_at', $basic_info_del_at, $post_id);
 
                 }
             }
@@ -627,3 +802,50 @@ function disclosureBasicInfoHistory()// Истории для раздела о�
 
     }
 }
+function OfficialsHistory()// Должностные лица история
+{
+    $officials_info = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    foreach ($officials_info->items as $item) {
+
+        if ($item->section == 'Officials') {
+            $officials_info_id1 = $item->id;
+            $str_id = strval($officials_info_id1);
+            foreach ($item->history as $history) {
+
+                $officials_info_id = $history->id;// id
+                $officials_info_title = $history->title . ' ' . 'id ' . $officials_info_id; //Заголовок поста
+                $officials_info_title = translit($officials_info_title);
+                $officials_info_short_name = $history->content->official->fullName;// Полное имя
+                $my_post = array(
+                    'post_title' => $officials_info_title,
+                    'post_status' => 'publish',
+                    'post_type' => 'post',
+                    'post_category' => array(80),
+                );
+                $posts = get_posts(
+                    [
+                        'post_type' => 'post',
+                        'title' => $officials_info_title,
+                        'post_status' => 'publish',
+                        'post_category' => array(80),
+                        'orderby' => 'post_date ID',
+                        'order' => 'ASC',
+                    ]
+                );
+
+                if (!empty($posts)) {
+
+                } else {
+
+                    $post_id = wp_insert_post($my_post);
+                    if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-officials-history.php');
+                    wp_set_object_terms($post_id, $str_id, 'post_tag', false);
+//                    update_field('basic_info_history_title', $basic_info_history_title, $post_id);
+
+                }
+            }
+        }
+
+    }
+}
+

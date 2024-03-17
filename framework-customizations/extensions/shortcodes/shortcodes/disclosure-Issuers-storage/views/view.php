@@ -41,8 +41,8 @@
                  issuerHistoryPost();
 
                  $args = array(
-                     'cat'      => 18,
-                     'tag' => 'MovedToArchive',
+                     'category_name' => 'issuers',
+                     'tag' => array('MovedToArchive', 'TransferredForStorage'),
                      'posts_per_page' => -1
 
                  );

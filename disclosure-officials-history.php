@@ -1,7 +1,7 @@
 <?php
 /*
-Template Name: base info history
-Template Post Type: post, base-info
+Template Name: officials history
+Template Post Type: post, officials_history
  */
 get_header();
 ?>

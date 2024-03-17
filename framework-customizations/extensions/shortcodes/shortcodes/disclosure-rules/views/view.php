@@ -26,12 +26,12 @@
                 <tbody>
 
                 <?php
-
+                rulesCheckPost();
 
                 rules_regulations();
 
                 $args = array(
-                    'cat' => 63,
+                    'category_name' => 'rules',
                     'tag' => 'Published',
                     'posts_per_page' => -1
 
@@ -43,9 +43,9 @@
 
                         <td>  <a class="pir-table__download" href="<?php the_permalink(); ?>">
                                 <img src="<?php bloginfo('template_directory'); ?>/img/icons/pdf.svg" alt="Документ">
-                                <?php the_title(); ?></a></td>
-                        <td>14.02.2023</td>
-                        <td>01.04.2023</td>
+                                <?= get_field("rules_title"); ?></a></td>
+                        <td><?= get_field("rules_valid"); ?></td>
+                        <td><?= get_field("rules_publish"); ?></td>
                         <td>
                             <?php
                             $media = get_attached_media('');

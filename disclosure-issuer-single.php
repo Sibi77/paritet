@@ -66,16 +66,18 @@ get_header();
                             global $post;
 
                             $myposts = get_posts( [
+                                'posts_per_page' => -1,
                                 'category_name' => 'history',
                                 'post_type' => 'post',
+                                'order'    => 'DESC',
                                 'tag' => $id,
                             ] );
 
                             foreach( $myposts as $post ){setup_postdata( $post ); ?>
-                                <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
-                                    <td><?php the_title(); ?></td>
-                                    <td>13.10.2023</td>
-                                    <td>15.11.2023</td>
+                                <tr>
+                                    <td><a class="pir-table__download" href="<?php the_permalink(); ?>"><?php the_field("history_short_name") ?></a></td>
+                                    <td><?php the_field("history_published") ?></td>
+                                    <td><?php the_field("history_moved_archives") ?></td>
 
                                 </tr>
                                 <?php

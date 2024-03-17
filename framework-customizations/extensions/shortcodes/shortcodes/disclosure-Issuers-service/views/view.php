@@ -41,9 +41,10 @@
                  issuerHistoryPost();
 
                  $args = array(
-                     'cat'      => 18,
+                     'posts_per_page' => -1,
+                     'category_name' => 'issuers',
                      'tag' => 'Published',
-                     'posts_per_page' => -1
+
 
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
