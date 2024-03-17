@@ -705,6 +705,51 @@ function rules_history_post()//Истории эмитентов
 
     }
 }
+function transferAgents()// создание трансфер агентов
+{
+    $transferAgents_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    foreach ($transferAgents_get->items as $item) {
+        if ($item->section == 'TransferAgents') {
+            $transfer_id = $item->id;// id эмитента
+            $transfer_title = $item->content->company->shortName . ' ' . 'id ' . $transfer_id; //Заголовок поста
+            $transfer_title = translit($transfer_title);
+            $my_post = array(
+                'post_title' => $transfer_title,
+                'post_status' => 'publish',
+                'post_type' => 'post',
+                'post_category' => array(81)
+            );
+            $posts = get_posts(
+                [
+                    'post_type' => 'post',
+                    'title' => $transfer_title,
+                    'post_status' => 'publish',
+                    'post_category' => array(81),
+                    'orderby' => 'post_date ID',
+                    'order' => 'ASC',
+                ]
+            );
+
+            if (!empty($posts)) {
+            } else {
+
+                $post_id = wp_insert_post($my_post);
+                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-transfer-agents.php');
+                wp_set_object_terms($post_id, array( $item->status,$item->deleteReason, $item->publicationReason), 'post_tag', false);
+                update_field('transfer_id', $item->id, $post_id);
+                update_field('transfer_short_name', $item->content->company->shortName, $post_id);//Краткое наименование
+                update_field('transfer_full_name', $item->content->company->fullName, $post_id);// Полное наименование
+                update_field('transfer_inn', $item->content->company->inn, $post_id);//Инн
+                update_field('transfer_ogrn', $item->content->company->ogrn, $post_id);//ОГРН
+                update_field('transfer_address', $item->content->company->address, $post_id);// Адресс
+                update_field('transfer_phone', $item->content->company->phone, $post_id);// Телефон
+                update_field('transfer_fax', $item->content->company->fax, $post_id);// Факс
+                update_field('transfer_reason_public', $item->publicationReason, $post_id);// Причина публикации'
+                update_field('transfer_published', substr($item->publishedAt, 0, 10), $post_id);// когда опублткованно
+            }
+        }
+    }
+}
 
 //rules_history_post();
 function disclosureBasicInfoHistory()// Истории для раздела основные сведения
@@ -840,7 +885,7 @@ function OfficialsHistory()// Должностные лица история
                     $post_id = wp_insert_post($my_post);
                     if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-officials-history.php');
                     wp_set_object_terms($post_id, $str_id, 'post_tag', false);
-//                    update_field('basic_info_history_title', $basic_info_history_title, $post_id);
+                    update_field('officials_id', $officials_info_id, $post_id);
 
                 }
             }
