@@ -32,7 +32,7 @@
 
                  <?php
 
-
+                 transferAgentsCheckPost();
                  transferAgents();
 //                 issuerHistoryPost();
 
