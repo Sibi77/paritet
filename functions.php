@@ -304,12 +304,12 @@ function paritet_get_api($url)// API Полный список раскрыти�
 //    }
 
 }
-function issuerCheckPost()//репликация эмитентов
+function checkPost($categoryName, $sectionApi)//репликация постов
 {
     $params = array(
         'posts_per_page' => -1, // все посты
         'post_status' => 'publish',
-        'category_name' => 'issuers'
+        'category_name' => $categoryName
     );
     $tes =  get_posts($params);
     $issuer_get1 = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
@@ -317,12 +317,8 @@ function issuerCheckPost()//репликация эмитентов
     $companies = array();
     $companies1 = array();
     foreach ($issuer_get1->items as $item){
-        if ($item->section == 'Issuers'){
-            $issuer_status = $item->status; // cтатус эмитента
-            $issuer_id = $item->id;// id эмитента
-            $issuer_title = $item->content->issuer->shortName . ' ' . 'id ' . $issuer_id . 'status' . $issuer_status;
-            array_push($companies, $issuer_title);
-
+        if ($item->section == $sectionApi){
+            array_push($companies, $item->title);
         }
     }
     foreach ($tes as $te){
@@ -335,7 +331,7 @@ function issuerCheckPost()//репликация эмитентов
         $paramssss = array(
             'posts_per_page' => -1, // все записи
             'post_type'	=> 'post', // записи, этот параметр можно не указывать, так как post - стоит по умолчанию
-            'category_name' => 'issuers'
+            'category_name' => $categoryName
         );
         $q = new WP_Query( $paramssss );
         if( $q->have_posts() ) : // если посты по заданным параметрам найдены
@@ -459,52 +455,6 @@ function issuerHistoryPost()//Истории эмитентов
                 }
             }
         }
-
-    }
-}
-function rulesCheckPost()//репликация правил и положений
-{
-    $params = array(
-        'posts_per_page' => -1, // все посты
-        'post_status' => 'publish',
-        'category_name' => 'disclosure-rules'
-    );
-    $tes =  get_posts($params);
-    $issuer_get1 = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
-    $companies = array();
-    $companies1 = array();
-
-
-    foreach ($issuer_get1->items as $item){
-        if ($item->section == 'Rules'){
-            $rules_status = $item->status; // cтатус эмитента
-            $rules_id = $item->id;// id эмитента
-            $rules_status = $item->title . ' ' . 'id ' . $rules_id . 'status' . $rules_status;
-
-            array_push($companies, $rules_status);
-
-        }
-    }
-    foreach ($tes as $te){
-
-        $title = $te->post_title;
-        array_push($companies1, $title);
-    }
-
-    if ( count($companies) !== count($companies1)){
-        $paramssss = array(
-            'posts_per_page' => -1, // все записи
-            'post_type'	=> 'post', // записи, этот параметр можно не указывать, так как post - стоит по умолчанию
-            'category_name' => 'disclosure-rules'
-        );
-        $q = new WP_Query( $paramssss );
-        if( $q->have_posts() ) : // если посты по заданным параметрам найдены
-            while( $q->have_posts() ) : $q->the_post();
-                wp_delete_post( $q->post->ID, true ); // второй параметр функции true означает, что пост будут удаляться, минуя корзину
-            endwhile;
-        endif;
-        wp_reset_postdata();
-    } else{
 
     }
 }
@@ -705,48 +655,6 @@ function rules_history_post()//Истории эмитентов
 
     }
 }
-function transferAgentsCheckPost()//репликация трансфер агентов
-{
-    $params = array(
-        'posts_per_page' => -1, // все посты
-        'post_status' => 'publish',
-        'category_name' => 'transfer_agents'
-    );
-    $tes =  get_posts($params);
-    $transfer_get1 = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
-
-    $companies = array();
-    $companies1 = array();
-    foreach ($transfer_get1->items as $item){
-        if ($item->section == 'TransferAgents'){
-            $transfer_title = $item->title;
-            array_push($companies, $transfer_title);
-
-        }
-    }
-    foreach ($tes as $te){
-
-        $title = $te->post_title;
-        array_push($companies1, $title);
-    }
-
-    if ( count($companies) !== count($companies1)){
-        $paramssss = array(
-            'posts_per_page' => -1, // все записи
-            'post_type'	=> 'post', // записи, этот параметр можно не указывать, так как post - стоит по умолчанию
-            'category_name' => 'transfer_agents'
-        );
-        $q = new WP_Query( $paramssss );
-        if( $q->have_posts() ) : // если посты по заданным параметрам найдены
-            while( $q->have_posts() ) : $q->the_post();
-                wp_delete_post( $q->post->ID, true ); // второй параметр функции true означает, что пост будут удаляться, минуя корзину
-            endwhile;
-        endif;
-        wp_reset_postdata();
-    } else{
-
-    }
-}
 function transferAgents()// создание трансфер агентов
 {
     $transferAgents_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
@@ -792,8 +700,6 @@ function transferAgents()// создание трансфер агентов
         }
     }
 }
-
-//rules_history_post();
 function disclosureBasicInfoHistory()// Истории для раздела основные сведения
 {
     $basic_info = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');

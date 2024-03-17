@@ -35,9 +35,9 @@
 
                  <?php
 
-
-                 issuerCheckPost();
+                 checkPost('issuers', 'Issuers');
                  issuerPost();
+
                  issuerHistoryPost();
 
                  $args = array(

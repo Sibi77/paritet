@@ -26,8 +26,7 @@
                 <tbody>
 
                 <?php
-                rulesCheckPost();
-
+                checkPost('rules', 'Rules');
                 rules_regulations();
 
                 $args = array(

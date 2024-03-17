@@ -36,7 +36,7 @@
                  <?php
 
 
-                 issuerCheckPost();
+                 checkPost('issuers', 'Issuers');
                  issuerPost();
                  issuerHistoryPost();
 

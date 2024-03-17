@@ -95,13 +95,14 @@
     a{
       display: inline-flex;
       padding: rem(7) rem(20);
-      margin-right: rem(20);
-      color: var(--action-button-color);
+      margin-right: rem(8);
+      color: #292C2E;
       font-weight: 500;
       font-size: rem(13);
-      line-height: rem(16);
-      border: rem(1) solid var(--action-button-color);
+      line-height: rem(13);
+      border: rem(1) solid #DDDDDD;
       transition: 200ms ease;
+      border-radius: rem(15);
       @include media-breakpoint-down(sm){
         margin-bottom: rem(10);
         margin-right: rem(10);
@@ -109,12 +110,13 @@
       &:hover{
         transition: 200ms ease;
         color: #fff;
-        background: var(--action-button-color);
+        background: #292C2E;
       }
     }
     .active{
       color: #fff;
-      background: var(--action-button-color);
+      background: #292C2E;
+      border: rem(1) solid #292C2E;
     }
   }
 }
