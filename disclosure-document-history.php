@@ -1,7 +1,7 @@
 <?php
 /*
-Template Name: rules history
-Template Post Type: post, rules
+Template Name: document_history
+Template Post Type: post, document_history
  */
 get_header();
 
@@ -16,7 +16,7 @@ get_header();
 <section class="disclosure-card">
     <div class="pir-container">
         <div class="disclosure-card__wrap">
-            <h1 class="disclosure-card__title"><?= get_field("rules_history_title"); ?></h1>
+            <h1 class="disclosure-card__title"><?= get_field("doc_history_title"); ?></h1>
             <?php
             $media_doc = get_attached_media('');
 
@@ -37,32 +37,32 @@ get_header();
         <div class="disclosure-card__item">
 
             <div class="disclosure-card__header">Дополнительная информация</div>
-            <div class="disclosure-card__content"><?= get_field("rules_history_more_info"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("doc_history_more_info"); ?></div>
         </div>
         <div class="disclosure-card__item">
 
             <div class="disclosure-card__header">Действует с</div>
-            <div class="disclosure-card__content"><?= get_field("rules_history_valid"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("doc_history_valid"); ?></div>
         </div>
         <div class="disclosure-card__item">
 
             <div class="disclosure-card__header">Действительный до..</div>
-            <div class="disclosure-card__content"><?= get_field("rules_history_valid_to"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("doc_history_valid_to"); ?></div>
         </div>
         <div class="disclosure-card__item">
 
             <div class="disclosure-card__header">Причина публикации</div>
-            <div class="disclosure-card__content"><?= get_field("rules_history_del_reason"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("doc_history_reason_public"); ?></div>
         </div>
         <div class="disclosure-card__item">
 
             <div class="disclosure-card__header">Причина удаления</div>
-            <div class="disclosure-card__content"><?= get_field("rules_history_deleted_at"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("doc_history_del_reason"); ?></div>
         </div>
         <div class="disclosure-card__item">
 
             <div class="disclosure-card__header">Опубликовано</div>
-            <div class="disclosure-card__content"><?= get_field("rules_history_publish"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("doc_history_publish"); ?></div>
         </div>
     </div>
 </section>

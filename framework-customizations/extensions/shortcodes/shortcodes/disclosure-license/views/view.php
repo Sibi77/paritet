@@ -26,11 +26,12 @@
                 <tbody>
 
                 <?php
-                checkPost('rules', 'Rules');
-                disclosure_documents('Rules','rules','rules_history');
+                checkPost('license', 'Licenses');
+                disclosure_documents('Licenses', 'license', 'license_history');
+
 
                 $args = array(
-                    'category_name' => 'rules',
+                    'category_name' => 'license',
                     'tag' => 'Published',
                     'posts_per_page' => -1
 

@@ -13,86 +13,38 @@ get_header();
 <!--    </div></div>-->
 <section class="disclosure-card">
     <div class="pir-container">
-        <h1 class="disclosure-card__title">Основные сведения</h1>
+        <h1 class="disclosure-card__title"><?= get_field("officials_fio");?></h1>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Краткое наименование</div>
-            <div class="disclosure-card__content"><?= get_field("basic_info_name");?></div>
+            <div class="disclosure-card__header">ФИО</div>
+            <div class="disclosure-card__content"><?= get_field("officials_fio");?></div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Полное наименование</div>
-            <div class="disclosure-card__content"><?=get_field("basic_info_full_name");?></div>
+            <div class="disclosure-card__header">Должность</div>
+            <div class="disclosure-card__content"><?= get_field("officials_position");?></div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Краткое наименование на английском</div>
-            <div class="disclosure-card__content"><?= get_field("basic_info_short_name_en"); ?></div>
+            <div class="disclosure-card__header">Дата избрания</div>
+            <div class="disclosure-card__content"><?= get_field("officials_date_election");?></div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Полное наименование на английском</div>
-            <div class="disclosure-card__content"><?= get_field("basic_info_full_name_en"); ?></div>
+            <div class="disclosure-card__header">Опыт работы</div>
+            <div class="disclosure-card__content"><?= get_field("officials_work_experience");?></div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">ИНН</div>
-            <div class="disclosure-card__content"><?= get_field("basic_info_inn"); ?></div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">КПП</div>
-            <div class="disclosure-card__content"><?= get_field("basic_info_kpp"); ?></div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">ОГРН</div>
-            <div class="disclosure-card__content"><?= get_field("basic_info_ogrn"); ?></div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Адресс Указанные в ЕГРЮЛ</div>
-            <div class="disclosure-card__content"><?= get_field("basic_info_address"); ?></div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Телефон</div>
-            <div class="disclosure-card__content"><a href="tel:<?= get_field("basic_info_phone"); ?>"><?= get_field("basic_info_phone"); ?></a></div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Факс</div>
-            <div class="disclosure-card__content"><?= get_field("basic_info_fax"); ?></div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Электронная почта</div>
-            <div class="disclosure-card__content"><a href="mailto:<?= get_field("basic_info_email"); ?>"><?= get_field("basic_info_email"); ?></a>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Официальный сайт</div>
-            <div class="disclosure-card__content"><a href="/"><?= get_field("basic_info_site"); ?></a></div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Социальные сети</div>
-            <div class="disclosure-card__content"><a href="<?= get_field("basic_info_social"); ?>"><?= get_field("basic_info_social"); ?></a></div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Банковские реквизиты</div>
-
-            <div class="disclosure-card__content">Получатель: <?= get_field("basic_info_bank_recipient"); ?></div>
-            <div class="disclosure-card__content">Расчетный счет: <?= get_field("basic_info_bank_rs"); ?></div>
-            <div class="disclosure-card__content">Бик: <?= get_field("basic_info_bank_bic"); ?></div>
-            <div class="disclosure-card__content">Корреспондентский счёт: <?= get_field("basic_info_bank_ks"); ?></div>
-            <div class="disclosure-card__content">Наименования банка: <?= get_field("basic_info_bank_name"); ?></div>
-            <div class="disclosure-card__content">ИНН: <?= get_field("basic_info_bank_inn"); ?></div>
-            <div class="disclosure-card__content">КПП: <?= get_field("basic_info_bank_kpp"); ?></div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Дата публикации</div>
-            <div class="disclosure-card__content"><?= get_field("basic_info_published"); ?></div>
+            <div class="disclosure-card__header">Причина удаления</div>
+            <div class="disclosure-card__content"><?= get_field("officials_del_reason");?></div>
         </div>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Причина публикации</div>
-            <div class="disclosure-card__content"><?= get_field("basic_info_reason_public"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("officials_pub_reason");?></div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Причина Удаления</div>
-            <div class="disclosure-card__content"><?= get_field("basic_info_reason_del"); ?></div>
+            <div class="disclosure-card__header">Дата создания</div>
+            <div class="disclosure-card__content"><?= get_field("officials_created_at");?></div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Перенесено в архив</div>
-            <div class="disclosure-card__content"><?= get_field("basic_info_del_at"); ?></div>
+            <div class="disclosure-card__header">Опубликовано</div>
+            <div class="disclosure-card__content"><?= get_field("officials_published_at");?></div>
         </div>
     </div>
 </section>

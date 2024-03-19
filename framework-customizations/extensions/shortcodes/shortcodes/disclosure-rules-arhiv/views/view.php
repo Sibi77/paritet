@@ -27,12 +27,11 @@
 
                 <?php
                 checkPost('rules', 'Rules');
-                rules_regulations();
+                disclosure_documents('Rules','rules','rules_history');
 
                 $args = array(
                     'category_name' => 'rules',
                     'tag' => 'Deleted',
-                    'order'    => 'DESC',
                     'posts_per_page' => -1
 
                 );
@@ -43,12 +42,9 @@
 
                         <td>  <a class="pir-table__download" href="<?php the_permalink(); ?>">
                                 <img src="<?php bloginfo('template_directory'); ?>/img/icons/pdf.svg" alt="Документ">
-                                <?= the_field("rules_title");
-                                ?>
-
-                            </a></td>
-                        <td><?= get_field("rules_valid"); ?></td>
-                        <td><?= get_field("rules_publish"); ?></td>
+                                <?= get_field("doc_title"); ?></a></td>
+                        <td><?= get_field("doc_valid"); ?></td>
+                        <td><?= get_field("doc_publish"); ?></td>
                         <td>
                             <?php
                             $media = get_attached_media('');

@@ -122,7 +122,7 @@ OfficialsHistory();
                             </thead>
                             <tbody>
                             <?php
-//                            $id =  $base_info_id;
+                            $id =  get_field('officials_id');
                             global $post;
 
                             $myposts = get_posts( [
@@ -133,8 +133,9 @@ OfficialsHistory();
 
                             foreach( $myposts as $post ){setup_postdata( $post ); ?>
                                 <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
-                                    <td><?php /*= get_field("basic_info_history_title"); */?></td>
-
+                                    <td><?= get_field("officials_fio"); ?></td>
+                                    <td><?= get_field("officials_published_at"); ?></td>
+                                    <td><?= get_field("officials_created_at"); ?></td>
 
                                 </tr>
                                 <?php

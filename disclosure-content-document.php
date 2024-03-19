@@ -1,7 +1,7 @@
 <?php
 /*
-Template Name: rules
-Template Post Type: post, rules
+Template Name: documents
+Template Post Type: post, documents
  */
 get_header();
 ?>
@@ -15,9 +15,9 @@ get_header();
 <section class="disclosure-card">
     <div class="pir-container">
         <div class="disclosure-card__wrap">
-            <h1 class="disclosure-card__title"><?= get_field("rules_title"); ?></h1>
+            <h1 class="disclosure-card__title"><?= get_field("doc_title"); ?></h1>
             <?php
-            rules_history_post();
+
             $media_doc = get_attached_media('');
 
 
@@ -37,27 +37,27 @@ get_header();
         <div class="disclosure-card__item">
 
             <div class="disclosure-card__header">Дополнительная информация</div>
-            <div class="disclosure-card__content"><?= get_field("rules_more_info"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("doc_more_info"); ?></div>
         </div>
         <div class="disclosure-card__item">
 
             <div class="disclosure-card__header">Действует с</div>
-            <div class="disclosure-card__content"><?= get_field("rules_valid"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("doc_valid"); ?></div>
         </div>
         <div class="disclosure-card__item">
 
             <div class="disclosure-card__header">Действительный до..</div>
-            <div class="disclosure-card__content"><?= get_field("rules_valid_to"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("doc_valid_to"); ?></div>
         </div>
         <div class="disclosure-card__item">
 
             <div class="disclosure-card__header">Причина публикации</div>
-            <div class="disclosure-card__content"><?= get_field("rules_reason_public"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("doc_reason_public"); ?></div>
         </div>
         <div class="disclosure-card__item">
 
             <div class="disclosure-card__header">Опубликовано</div>
-            <div class="disclosure-card__content"><?= get_field("rules_publish"); ?></div>
+            <div class="disclosure-card__content"><?= get_field("doc_publish"); ?></div>
         </div>
         <div class="pir-table">
             <h2 class="pir-content__title"">История изменений</h2>
@@ -82,12 +82,14 @@ get_header();
                             </thead>
                             <tbody>
                             <?php
-                            $id = get_field("rules_id");
+                            $id = get_field("doc_id");
+                            $category_name_history = get_field("doc_cat_name_history");
+                            $sections_name_history = get_field("doc_section_name_history");
                             global $post;
-
+                            disclosure_doc_history($sections_name_history,$category_name_history);
                             $myposts = get_posts([
                                 'posts_per_page' => -1,
-                                'category_name' => 'rules_history',
+                                'category_name' => $category_name_history,
                                 'post_type' => 'post',
                                 'tag' => $id,
                             ]);
@@ -95,9 +97,11 @@ get_header();
                             foreach ($myposts as $post) {
                                 setup_postdata($post); ?>
                                 <tr>
-                                    <td><a class="pir-table__download" href="<?php the_permalink(); ?>"><?php the_field("rules_history_title") ?></a></td>
-                                    <td><?php the_field("rules_history_publish") ?></td>
-                                    <td><?php the_field("rules_history_deleted_at") ?></td>
+                                    <td><a class="pir-table__download"
+                                           href="<?php the_permalink(); ?>"><?php the_field("doc_history_title") ?></a>
+                                    </td>
+                                    <td><?php the_field("doc_history_publish") ?></td>
+                                    <td><?php the_field("doc_history_deleted_at") ?></td>
 
                                 </tr>
                                 <?php

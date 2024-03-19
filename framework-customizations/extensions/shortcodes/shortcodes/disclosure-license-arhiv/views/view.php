@@ -26,12 +26,12 @@
                 <tbody>
 
                 <?php
-                checkPost('rules', 'Rules');
-                disclosure_documents('Rules','rules','rules_history');
-
+                checkPost('license', 'Licenses');
+                disclosure_documents('Licenses', 'license', 'license_history');
                 $args = array(
-                    'category_name' => 'rules',
-                    'tag' => 'Published',
+                    'category_name' => 'license',
+                    'tag' => 'Deleted',
+                    'order'    => 'DESC',
                     'posts_per_page' => -1
 
                 );
@@ -42,7 +42,10 @@
 
                         <td>  <a class="pir-table__download" href="<?php the_permalink(); ?>">
                                 <img src="<?php bloginfo('template_directory'); ?>/img/icons/pdf.svg" alt="Документ">
-                                <?= get_field("doc_title"); ?></a></td>
+                                <?= the_field("doc_title");
+                                ?>
+
+                            </a></td>
                         <td><?= get_field("doc_valid"); ?></td>
                         <td><?= get_field("doc_publish"); ?></td>
                         <td>

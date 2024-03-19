@@ -26,11 +26,12 @@
                 <tbody>
 
                 <?php
-                checkPost('rules', 'Rules');
-                disclosure_documents('Rules','rules','rules_history');
+                checkPost('prices', 'Prices');
+                disclosure_documents('Prices', 'prices', 'prices_history');
+
 
                 $args = array(
-                    'category_name' => 'rules',
+                    'category_name' => 'prices',
                     'tag' => 'Published',
                     'posts_per_page' => -1
 

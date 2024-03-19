@@ -74,6 +74,8 @@ get_header();
                             ] );
 
                             foreach( $myposts as $post ){setup_postdata( $post ); ?>
+                                    <?php
+                                ?>
                                 <tr>
                                     <td><a class="pir-table__download" href="<?php the_permalink(); ?>"><?php the_field("history_short_name") ?></a></td>
                                     <td><?php the_field("history_published") ?></td>
