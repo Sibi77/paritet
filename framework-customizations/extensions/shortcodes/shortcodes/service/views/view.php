@@ -33,18 +33,11 @@
                 <tbody>
 
                  <?php
-
-                 checkPost('issuers', 'Issuers');
                  issuerPost();
-
-                 issuerHistoryPost();
-
                  $args = array(
                      'posts_per_page' => -1,
                      'category_name' => 'issuers',
                      'tag' => 'Published',
-
-
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
                  while (have_posts()) : the_post();?>

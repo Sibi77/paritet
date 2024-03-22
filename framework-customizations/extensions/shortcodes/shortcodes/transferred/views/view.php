@@ -36,9 +36,7 @@
                  <?php
 
 
-                 checkPost('issuers', 'Issuers');
-                 issuerPost();
-                 issuerHistoryPost();
+                 issuerPost('history');
 
                  $args = array(
                      'category_name' => 'issuers',

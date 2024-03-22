@@ -15,7 +15,7 @@ get_header();
 <section class="disclosure-card">
     <div class="pir-container">
         <div class="disclosure-card__wrap">
-            <h1 class="disclosure-card__title"><?= get_field("doc_title"); ?></h1>
+            <h1 class="pir-title-h1"><?= get_field("doc_title"); ?></h1>
             <?php
 
             $media_doc = get_attached_media('');

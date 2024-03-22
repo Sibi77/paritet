@@ -5,18 +5,19 @@ Template Post Type: post, officials_history
  */
 get_header();
 ?>
-<!--<div class="pir-container">-->
-<!--    <div class="no-section">-->
-<!--        <div class="pir-breadcrumbs">-->
-<!--            <a class="home-page" href="/">Главная</a> <i class="angle-arrow-right"></i>--><?php //= get_field("full_name"); ?>
-<!--        </div>-->
-<!--    </div></div>-->
+<div class="pir-container">
+    <div class="no-section">
+        <div class="pir-breadcrumbs">
+            <a class="home-page" href="/">Главная</a> <i class="angle-arrow-right"></i><?= get_field("officials_fio"); ?>
+        </div>
+    </div></div>
 <section class="disclosure-card">
     <div class="pir-container">
-        <h1 class="disclosure-card__title"><?= get_field("officials_fio");?></h1>
+        <h1 class="pir-title-h1">Должностные лица</h1>
+        <div class="disclosure-card__label">История</div>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">ФИО</div>
-            <div class="disclosure-card__content"><?= get_field("officials_fio");?></div>
+            <div class="disclosure-card__content"><?= get_field("history_officials_fio");?></div>
         </div>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Должность</div>
@@ -42,9 +43,14 @@ get_header();
             <div class="disclosure-card__header">Дата создания</div>
             <div class="disclosure-card__content"><?= get_field("officials_created_at");?></div>
         </div>
+
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Опубликовано</div>
             <div class="disclosure-card__content"><?= get_field("officials_published_at");?></div>
+        </div>
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Перенесено в архив</div>
+            <div class="disclosure-card__content"><?= get_field("history_officials_deletedAt");?></div>
         </div>
     </div>
 </section>

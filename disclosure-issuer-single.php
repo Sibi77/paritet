@@ -8,7 +8,9 @@ get_header();
 <div class="pir-container">
     <div class="no-section">
         <div class="pir-breadcrumbs">
-            <a class="home-page" href="/">Главная</a> <i class="angle-arrow-right"></i><?= get_field("full_name"); ?>
+            <a class="home-page" href="/">Главная</a>
+            <i class="angle-arrow-right"></i>
+            <?= get_field("full_name"); ?>
         </div>
     </div>
 </div>
@@ -17,7 +19,7 @@ get_header();
 
         <?php
        ?>
-        <h1 class="disclosure-card__title"><?= get_field("short_name"); ?></h1>
+        <h1 class="pir-title-h1"><?= get_field("short_name"); ?></h1>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Полное наименование</div>
             <div class="disclosure-card__content"><?= get_field("full_name"); ?></div>
@@ -39,68 +41,68 @@ get_header();
             <div class="disclosure-card__content"><?= get_field("published"); ?></div>
         </div>
     </div>
-    <div class="pir-table">
-        <div class="pir-container">
-            <h2 class="pir-content__title"">История изменений</h2>
-            <div class="pir-table">
-                <div class="pir-container">
-                    <div class="table-calc__tab-mob">
-                        <table class="pir-table__table">
-                            <thead>
-                            <tr>
-                                <td>
-                                    Наименование
-                                </td>
-                                <td>
-                                    Опубликовано
-                                </td>
+    <div class="pir-container">
+        <h2 class="pir-content__title"">История изменений</h2>
+        <div class="pir-table" style="padding-bottom: 0">
+            <div class="pir-container">
+                <div class="table-calc__tab-mob">
+                    <table class="pir-table__table">
+                        <thead>
+                        <tr>
+                            <td>
+                                Наименование
+                            </td>
+                            <td>
+                                Опубликовано
+                            </td>
 
-                                <td>Перенесено в архив</td>
+                            <td>Перенесено в архив</td>
+
+                        </tr>
+
+                        </thead>
+                        <tbody>
+                        <?php
+                        $id =  get_field("issuer_id");
+                        //                            $category_name_history = get_field("doc_cat_name_history");
+                        issuerHistoryPost('history');
+                        global $post;
+
+                        $myposts = get_posts( [
+                            'posts_per_page' => -1,
+                            'category_name' => 'history',
+                            'post_type' => 'post',
+                            'order'    => 'DESC',
+                            'tag' => $id,
+                        ] );
+
+                        foreach( $myposts as $post ){setup_postdata( $post ); ?>
+                            <?php
+                            ?>
+                            <tr>
+                                <td><a class="pir-table__download" href="<?php the_permalink(); ?>"><?php the_field("history_short_name") ?></a></td>
+                                <td><?php the_field("history_published") ?></td>
+                                <td><?php the_field("history_moved_archives") ?></td>
 
                             </tr>
-
-                            </thead>
-                            <tbody>
                             <?php
-                            $id =  get_field("issuer_id");
-                            global $post;
 
-                            $myposts = get_posts( [
-                                'posts_per_page' => -1,
-                                'category_name' => 'history',
-                                'post_type' => 'post',
-                                'order'    => 'DESC',
-                                'tag' => $id,
-                            ] );
-
-                            foreach( $myposts as $post ){setup_postdata( $post ); ?>
-                                    <?php
-                                ?>
-                                <tr>
-                                    <td><a class="pir-table__download" href="<?php the_permalink(); ?>"><?php the_field("history_short_name") ?></a></td>
-                                    <td><?php the_field("history_published") ?></td>
-                                    <td><?php the_field("history_moved_archives") ?></td>
-
-                                </tr>
-                                <?php
-
-                            }
-                            if (empty($myposts)) {
-                                echo '<tr>' . '<td>Нет истории</td>' . '</tr>';
-                            }
-                            wp_reset_postdata();
-                            ?>
+                        }
+                        if (empty($myposts)) {
+                            echo '<tr>' . '<td>Нет истории</td>' . '</tr>';
+                        }
+                        wp_reset_postdata();
+                        ?>
 
 
-                            </tbody>
-                        </table>
-                        <div class="notfound">Ничего не найдено</div>
-                    </div>
-
+                        </tbody>
+                    </table>
+                    <div class="notfound">Ничего не найдено</div>
                 </div>
-            </div>
 
+            </div>
         </div>
+
     </div>
 </section>
 

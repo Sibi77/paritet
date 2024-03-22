@@ -1,9 +1,25 @@
 .disclosure-card{
   position: relative;
   width: 100%;
-  padding: rem(80) 0;
+  padding-bottom: rem(80);
   .pir-container{
     position: relative;
+  }
+  .pir-title-h1{
+    padding-bottom: rem(20);
+  }
+  &__label {
+    font-size: rem(13);
+    margin-bottom: rem(40);
+    font-style: normal;
+    font-weight: 600;
+    line-height: rem(13);
+    letter-spacing: 0.39px;
+    color: #fff;
+    background: #292C2E;
+    border-radius: rem(15);
+    padding: rem(8.5) rem(12);
+    width: fit-content;
   }
   &__title{
     font-family: $title-font;
@@ -18,6 +34,9 @@
     flex-wrap: wrap;
     flex-direction: column;
     margin-bottom: rem(24);
+    &:last-child{
+      margin-bottom: 0;
+    }
   }
   &__header{
     font-size: rem(14);
@@ -33,8 +52,9 @@
     color: #292C2E;
   }
   &__download-doc{
-    margin-left: auto;
-    display: flex;
+    margin-top: 40px;
+    margin-left: 40px;
+    height: fit-content;    display: flex;
     flex-direction: column;
     align-items: center;
     right: 0;
