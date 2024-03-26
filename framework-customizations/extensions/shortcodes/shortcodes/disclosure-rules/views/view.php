@@ -26,7 +26,7 @@
                 <tbody>
 
                 <?php
-                checkPost('rules', 'Rules');
+//                checkPost('rules', 'Rules');
                 disclosure_documents('Rules','rules','rules_history');
 
                 $args = array(
@@ -37,23 +37,44 @@
                 );
                 query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
                 while (have_posts()) : the_post(); ?>
+                    <?php
+
+                    $media = get_attached_media('');
+                    ?>
 
                     <tr>
 
-                        <td>  <a class="pir-table__download" href="<?php the_permalink(); ?>">
-                                <img src="<?php bloginfo('template_directory'); ?>/img/icons/pdf.svg" alt="Документ">
-                                <?= get_field("doc_title"); ?></a></td>
+                        <td>
+
+                            <a class="pir-table__download" href="<?php the_permalink(); ?>">
+                                <?php foreach($media as $url):?>
+                                    <?php if($url->post_mime_type == 'application/msword') : ?>
+                                        <img src="<?php bloginfo('template_directory'); ?>/img/icons/doc.svg" alt="Документ doc">
+                                    <?php endif; ?>
+                                    <?php if($url->post_mime_type == 'application/pdf') : ?>
+                                        <img src="<?php bloginfo('template_directory'); ?>/img/icons/pdf.svg" alt="Документ pdf">
+                                    <?php endif; ?>
+
+                                <?php endforeach; ?>
+
+                                <?= get_field("doc_title"); ?>
+                            </a>
+                        </td>
                         <td><?= get_field("doc_valid"); ?></td>
                         <td><?= get_field("doc_publish"); ?></td>
                         <td>
-                            <?php
-                            $media = get_attached_media('');
+                            <?php if(!empty($media)) { ?>
+                                <?php foreach($media as $url):?>
+                                    <a href="<?= $url->guid; ?>" download><img src="<?php bloginfo('template_directory'); ?>/img/icons/download.svg" alt="Скачать документ"></a>
+                                <?php endforeach; ?>
+
+                                <?php
+                            }
                             ?>
-                            <?php foreach ($media as $url) {
-                            } ?>
-                            <a href="<?= $url->guid; ?>" download><img src="<?php bloginfo('template_directory'); ?>/img/icons/download.svg" alt="Скачать документ"></a>
+
                         </td>
                     </tr>
+
 
 
                     <!--здесь выводится миниатюра записи-->

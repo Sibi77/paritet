@@ -8,9 +8,10 @@ get_header();
 <div class="pir-container">
     <div class="no-section">
         <div class="pir-breadcrumbs">
-            <a class="home-page" href="/">Главная</a> <i class="angle-arrow-right"></i><?= get_field("officials_fio"); ?>
+            <?php true_breadcrumbs();?>
         </div>
-    </div></div>
+    </div>
+</div>
 <section class="disclosure-card">
     <div class="pir-container">
         <h1 class="pir-title-h1">Должностные лица</h1>

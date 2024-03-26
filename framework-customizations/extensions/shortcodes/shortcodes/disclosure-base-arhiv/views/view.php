@@ -24,7 +24,7 @@
                 <tbody>
 
                 <?php
-                checkPost('base_info', 'Main');
+//                checkPost('base_info', 'Main');
                 disclosureBasicInfo();
 
                 $args = array(

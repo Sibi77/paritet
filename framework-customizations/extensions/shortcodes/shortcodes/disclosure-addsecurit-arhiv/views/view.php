@@ -36,10 +36,9 @@
                 query_posts($args);
                 while (have_posts()) : the_post(); ?>
 
-                    <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
-
+                    <tr>
                         <td >
-                            <?= get_field("issuerrr_name"); ?>
+                            <a href="<?php the_permalink(); ?>"><?= get_field("issuerrr_name"); ?></a>
                         </td>
                         <td><?= get_field("issuer_registration_date"); ?></td>
                         <td><?= get_field("issuer_published_at"); ?></td>

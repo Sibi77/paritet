@@ -8,7 +8,7 @@ get_header();
 <div class="pir-container">
     <div class="no-section">
         <div class="pir-breadcrumbs">
-            <a class="home-page" href="/">Главная</a> <i class="angle-arrow-right"></i><?= get_field("full_name"); ?>
+            <?php true_breadcrumbs(); ?>
         </div>
     </div>
 </div>
@@ -23,16 +23,20 @@ get_header();
 
             foreach ($media_doc as $url) {
             } ?>
-            <a href="<?= $url->guid; ?>" download class="disclosure-card__download-doc">
-                <div class="disclosure-card__title-doc">Скачать документ</div>
-                <div class="disclosure-card__title-file"></div>
-                <div class="disclosure-card__icon-file">
-                    <img src="<?php bloginfo('template_directory'); ?>/img/icons/download.svg" alt="download">
-                </div>
 
-            </a>
-            <?php
+            <?php if (!empty($url)) { ?>
+                <a href="<?= $url->guid; ?>" class="disclosure-card__download-doc">
+                    <div class="disclosure-card__title-doc">Скачать документ</div>
+                    <div class="disclosure-card__title-file"><?= $url->post_name ?></div>
+                    <div class="disclosure-card__icon-file">
+                        <img src="<?php bloginfo('template_directory'); ?>/img/icons/download.svg" alt="download">
+                    </div>
+
+                </a>
+                <?php
+            }
             ?>
+
         </div>
         <div class="disclosure-card__item">
 
@@ -81,24 +85,32 @@ get_header();
 
                             </thead>
                             <tbody>
+
                             <?php
-                            $id = get_field("doc_id");
+                            $id = get_field("doc_parent_id");
+
                             $category_name_history = get_field("doc_cat_name_history");
                             $sections_name_history = get_field("doc_section_name_history");
                             global $post;
-                            disclosure_doc_history($sections_name_history,$category_name_history);
-                            $myposts = get_posts([
-                                'posts_per_page' => -1,
-                                'category_name' => $category_name_history,
-                                'post_type' => 'post',
-                                'tag' => $id,
-                            ]);
+                            disclosure_doc_history($sections_name_history, $category_name_history);
+                            if ($id === null) {
+                                $myposts = get_posts([
+                                    'tag' => 0,
+                                ]);
+                            } else{
+                                $myposts = get_posts([
+                                    'posts_per_page' => -1,
+                                    'category_name' => $category_name_history,
+                                    'post_type' => 'post',
+                                    'tag' => $id,
+                                ]);
+                            }
 
                             foreach ($myposts as $post) {
                                 setup_postdata($post); ?>
                                 <tr>
-                                    <td><a class="pir-table__download"
-                                           href="<?php the_permalink(); ?>"><?php the_field("doc_history_title") ?></a>
+                                    <td>
+                                        <a class="pir-table__download" href="<?php the_permalink(); ?>"><?php the_field("doc_history_title") ?></a>
                                     </td>
                                     <td><?php the_field("doc_history_publish") ?></td>
                                     <td><?php the_field("doc_history_deleted_at") ?></td>

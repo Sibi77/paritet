@@ -36,7 +36,7 @@
                  <?php
 
 
-                 issuerPost('history');
+                 issuerPost();
 
                  $args = array(
                      'category_name' => 'issuers',
@@ -46,11 +46,11 @@
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
                  while (have_posts()) : the_post();?>
-                 <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
-                     <td><?= get_field("short_name"); ?></td>
-                     <td><?= get_field("address"); ?></td>
-                     <td><?= get_field("inn"); ?></td>
-                     <td><?= get_field("published"); ?></td>
+                 <tr>
+                     <td><a href="<?php the_permalink(); ?>"><?= get_field("issuer_shortName"); ?></a></td>
+                     <td><?= get_field("issuer_address"); ?></td>
+                     <td><?= get_field("issuer_inn"); ?></td>
+                     <td><?= get_field("issuer_publishedAt"); ?></td>
                  </tr>
 
 

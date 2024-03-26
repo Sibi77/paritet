@@ -9,7 +9,7 @@ get_header();
 <div class="pir-container">
     <div class="no-section">
         <div class="pir-breadcrumbs">
-            <a class="home-page" href="/">Главная</a> <i class="angle-arrow-right"></i><?= get_field("history_short_name"); ?>
+            <?php true_breadcrumbs();?>
         </div>
     </div>
 </div>
@@ -17,26 +17,30 @@ get_header();
     <div class="pir-container">
         <div class="disclosure-card__wrap">
             <h1 class="pir-title-h1"><?= get_field("doc_history_title"); ?></h1>
-            <div class="disclosure-card__label">История</div>
+
             <?php
+
             $media_doc = get_attached_media('');
 
 
             foreach ($media_doc as $url) {
             } ?>
-            <a href="<?= $url->guid; ?>" download class="disclosure-card__download-doc">
-                <div class="disclosure-card__title-doc">Скачать документ</div>
-                <div class="disclosure-card__title-file"></div>
-                <div class="disclosure-card__icon-file">
-                    <img src="<?php bloginfo('template_directory'); ?>/img/icons/download.svg" alt="download">
-                </div>
 
-            </a>
-            <?php
+            <?php if(!empty($url)) {?>
+                <a href="<?= $url->guid; ?>"  class="disclosure-card__download-doc">
+                    <div class="disclosure-card__title-doc">Скачать документ</div>
+                    <div class="disclosure-card__title-file"><?= $url->post_name?></div>
+                    <div class="disclosure-card__icon-file">
+                        <img src="<?php bloginfo('template_directory'); ?>/img/icons/download.svg" alt="download">
+                    </div>
+
+                </a>
+                <?php
+            }
             ?>
         </div>
         <div class="disclosure-card__item">
-
+            <div class="disclosure-card__label">История</div>
             <div class="disclosure-card__header">Дополнительная информация</div>
             <div class="disclosure-card__content"><?= get_field("doc_history_more_info"); ?></div>
         </div>

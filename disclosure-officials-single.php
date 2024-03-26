@@ -8,7 +8,7 @@ get_header();
 <div class="pir-container">
     <div class="no-section">
         <div class="pir-breadcrumbs">
-            <a class="home-page" href="/">Главная</a> <i class="angle-arrow-right"></i><?= get_field("full_name"); ?>
+            <?php true_breadcrumbs();?>
         </div>
     </div>
 </div>
@@ -87,19 +87,26 @@ get_header();
                         </thead>
                         <tbody>
                         <?php
-                        OfficialsHistory('officials_history');
+                        OfficialsHistory('officials_parent_id');
                         $id =  get_field("officials_id");
                         //                            $category_name_history = get_field("doc_cat_name_history");
                         //                            issuerHistoryPost('history');
                         global $post;
+                        if ($id === null) {
+                            $myposts = get_posts([
+                                'tag' => 0
+                            ]);
+                        } else{
+                            $myposts = get_posts( [
+                                'posts_per_page' => -1,
+                                'category_name' => 'officials_history',
+                                'post_type' => 'post',
+                                'order'    => 'DESC',
+                                'tag' => $id,
+                            ] );
+                        }
 
-                        $myposts = get_posts( [
-                            'posts_per_page' => -1,
-                            'category_name' => 'officials_history',
-                            'post_type' => 'post',
-                            'order'    => 'DESC',
-                            'tag' => $id,
-                        ] );
+
 
                         foreach( $myposts as $post ){setup_postdata( $post ); ?>
                             <?php

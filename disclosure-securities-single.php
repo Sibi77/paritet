@@ -8,9 +8,7 @@ get_header();
 <div class="pir-container">
     <div class="no-section">
         <div class="pir-breadcrumbs">
-            <a class="home-page" href="/">Главная</a>
-            <i class="angle-arrow-right"></i>
-            <?= get_field("issuerrr_name"); ?>
+            <?php true_breadcrumbs();?>
         </div>
     </div>
 </div>
@@ -99,20 +97,28 @@ get_header();
                         </thead>
                         <tbody>
                         <?php
-                        $id =  get_field("issuerrr_id");
+                        $id =  get_field("issuerrr_parent_id");
                         $section_name =  get_field("security_section_name");
                         $category_name =  get_field("security_category_name");
                         //                            $category_name_history = get_field("doc_cat_name_history");
                         securitiesIssuerHistory($category_name, $section_name);
                         global $post;
 
-                        $myposts = get_posts( [
-                            'posts_per_page' => -1,
-                            'category_name' => $category_name,
-                            'post_type' => 'post',
-                            'order'    => 'DESC',
-                            'tag' => $id,
-                        ] );
+                        if ($id === null) {
+                            $myposts = get_posts([
+                                'tag' => 0
+                            ]);
+                        } else{
+                            $myposts = get_posts( [
+                                'posts_per_page' => -1,
+                                'category_name' => $category_name,
+                                'post_type' => 'post',
+                                'order'    => 'DESC',
+                                'tag' => $id,
+                            ] );
+                        }
+
+
 
                         foreach( $myposts as $post ){setup_postdata( $post ); ?>
                             <?php

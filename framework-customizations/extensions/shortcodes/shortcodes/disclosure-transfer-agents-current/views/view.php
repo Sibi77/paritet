@@ -32,8 +32,8 @@
 
                  <?php
 
-                 checkPost('transfer_agents','TransferAgents');
-                 transferAgents();
+//                 checkPost('transfer_agents','TransferAgents');
+                 transferAgents('TransferAgents', 'transfer_agents','transfer_agents_history');
 //                 issuerHistoryPost();
 
                  $args = array(
@@ -45,8 +45,8 @@
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
                  while (have_posts()) : the_post();?>
-                 <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
-                     <td><?= get_field("transfer_short_name"); ?></td>
+                 <tr>
+                     <td><a href="<?php the_permalink(); ?>"><?= get_field("transfer_short_name"); ?></a></td>
                      <td><?= get_field("transfer_inn"); ?></td>
                      <td><?= get_field("transfer_published"); ?></td>
                  </tr>

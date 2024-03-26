@@ -24,7 +24,7 @@
                 <tbody>
 
                 <?php
-                checkPost('officials', 'Officials');
+//                checkPost('officials', 'Officials');
                 officials();
 
                 $args = array(
@@ -36,10 +36,10 @@
                 query_posts($args);
                 while (have_posts()) : the_post(); ?>
 
-                    <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
+                    <tr>
 
                         <td >
-                            <?= get_field("officials_fio"); ?>
+                            <a href="<?php the_permalink(); ?>"><?= get_field("officials_fio"); ?></a>
                         </td>
                         <td><?= get_field("officials_position"); ?></td>
                         <td><?= get_field("officials_published_at"); ?></td>

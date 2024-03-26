@@ -8,7 +8,7 @@ get_header();
 <div class="pir-container">
     <div class="no-section">
         <div class="pir-breadcrumbs">
-            <a class="home-page" href="/">Главная</a> <i class="angle-arrow-right"></i><?= get_field("full_name"); ?>
+            <?php true_breadcrumbs();?>
         </div>
     </div>
 </div>
@@ -77,22 +77,31 @@ get_header();
                         </thead>
                         <tbody>
                         <?php
-                        $id =  get_field("transfer_id");
+                        $id =  get_field("transfer_parent_id");
+                        $transfer_cat = get_field('transfer_cat_name');
+                        $transfer_sections = get_field('transfer_cat_sections');
+                        transferAgentsHistory($transfer_cat,$transfer_sections);
                         global $post;
+                        if ($id === null) {
+                            $myposts = get_posts([
+                                'tag' => 0,
+                            ]);
+                        } else{
+                            $myposts = get_posts( [
+                                'posts_per_page' => -1,
+                                'category_name' => $transfer_cat,
+                                'post_type' => 'post',
+                                'order'    => 'DESC',
+                                'tag' => $id,
+                            ] );
+                        }
 
-                        $myposts = get_posts( [
-                            'posts_per_page' => -1,
-                            'category_name' => 'transfer_agents_ history',
-                            'post_type' => 'post',
-                            'order'    => 'DESC',
-                            'tag' => $id,
-                        ] );
 
                         foreach( $myposts as $post ){setup_postdata( $post ); ?>
                             <tr>
-                                <td><a class="pir-table__download" href="<?php the_permalink(); ?>"><?php the_field("transfer_short_name") ?></a></td>
-                                <td><?php the_field("transfer_published") ?></td>
-                                <td><?php the_field("transfer_moved_archives") ?></td>
+                                <td><a class="pir-table__download" href="<?php the_permalink(); ?>"><?php the_field("history_transfer_short_name") ?></a></td>
+                                <td><?php the_field("history_transfer_published") ?></td>
+                                <td><?php the_field("history_transfer_deletedAt") ?></td>
 
                             </tr>
                             <?php

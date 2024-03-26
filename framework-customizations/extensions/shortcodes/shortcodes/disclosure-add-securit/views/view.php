@@ -24,22 +24,19 @@
                 <tbody>
 
                 <?php
-//                checkPost('officials', 'Officials');
                 securitiesIssuer('AdditionalIssuesOfSecurities','additional_issues_securities', 'add_issues_history');
 
                 $args = array(
                     'category_name' => 'additional_issues_securities',
                     'tag' => 'Published',
                     'posts_per_page' => -1
-
                 );
                 query_posts($args);
                 while (have_posts()) : the_post(); ?>
 
-                    <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
-
+                    <tr>
                         <td >
-                            <?= get_field("issuerrr_name"); ?>
+                            <a href="<?php the_permalink(); ?>"><?= get_field("issuerrr_name"); ?></a>
                         </td>
                         <td><?= get_field("issuer_registration_date"); ?></td>
                         <td><?= get_field("issuer_published_at"); ?></td>
