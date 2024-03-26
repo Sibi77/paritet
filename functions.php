@@ -682,20 +682,9 @@ function issuerHistoryPost($cat_name)//Истории эмитентов +
             $issuer_parent_id = strval($item->parentDisclosureId);
             foreach ($item->history as $history) {
 
-
                 $issuer_id = $history->id;// id эмитента
                 $issuer_title = $history->title . ' ' . 'id ' . $issuer_id; //Заголовок поста
                 $posts_url_name = translit($history->content->issuer->shortName);
-                $issuer_short_name = $history->content->issuer->shortName;
-                $issuer_full_name = $history->content->issuer->fullName;
-                $issuer_inn = $history->content->issuer->inn;
-                $issuer_ogrn = $history->content->issuer->ogrn;
-                $issuer_addres = $history->content->issuer->address;
-                $issuer_date_conclusion = $history->content->issuer->registryContractDate;
-                $issuer_date_acceptance = $history->content->issuer->registryIncomingActDate;
-                $issuer_reason_public = $history->publicationReason;
-                $issuer_published = substr($history->publishedAt, 0, 10);
-                $issuer_moved_archives = substr($history->deletedAt, 0, 10);
 
                 $my_post = array(
                     'post_title' => $issuer_title,
@@ -705,6 +694,7 @@ function issuerHistoryPost($cat_name)//Истории эмитентов +
                     'post_category' => array($catId),
                     'post_parent' => $get_post_id
                 );
+
                 $posts = get_posts(
                     [
                         'post_type' => 'post',
@@ -716,14 +706,11 @@ function issuerHistoryPost($cat_name)//Истории эмитентов +
                     ]
                 );
 
-                if (!empty($posts)) {
-
-                } else {
+                if (!empty($posts)) {} else {
 
                     $post_id = wp_insert_post($my_post);
                     if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-issuer-history.php');
                     wp_set_object_terms($post_id, $issuer_parent_id, 'post_tag', false);
-
 
 
                     update_field('history_issuer_title', $history->title, $post_id);
@@ -1298,14 +1285,24 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history) //т�
                 $post_id = wp_insert_post($my_post);
                 if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-content-document.php');
                 wp_set_object_terms($post_id, array($status), 'post_tag', false);
+
                 update_field('doc_id', $item->id, $post_id); // id API
                 update_field('doc_parent_id', $item->parentDisclosureId, $post_id); // id  родительский API
                 update_field('doc_title', $item->title, $post_id); // Заголовок
-                update_field('doc_more_info', $item->content->document->description, $post_id); // Дополнительная информация
-                update_field('doc_valid', $item->content->document->validFromDate, $post_id); // действует С...
-                update_field('doc_valid_to', $item->content->document->validToDate, $post_id); // действительный до...
-                update_field('doc_reason_public', $item->publicationReason, $post_id); // Причина публикации
-                update_field('doc_publish',substr($item->publishedAt, 0, 10), $post_id); // Опубликовано
+
+                update_field('doc_publicationReason', $item->publicationReason, $post_id);
+                update_field('doc_deleteReason', $item->deleteReason, $post_id);
+                update_field('doc_source', $item->source, $post_id);
+
+                update_field('doc_description', $item->content->document->description, $post_id);
+                update_field('doc_validFromDate',$item->content->document->validFromDate, $post_id);
+                update_field('doc_validToDate',$item->content->document->validToDate, $post_id);
+
+                update_field('doc_createdAt',substr($item->createdAt, 0, 10), $post_id);
+                update_field('doc_publishedAt',substr($item->publishedAt, 0, 10), $post_id);
+                update_field('doc_deletedAt',substr($item->deletedAt, 0, 10), $post_id);
+
+
                 update_field('doc_cat_name_history', $cat_name_history, $post_id); //имя категории истории
                 update_field('doc_section_name_history', $section_name, $post_id); //имя секции (папаметр для истории)
                 //Добавление файла

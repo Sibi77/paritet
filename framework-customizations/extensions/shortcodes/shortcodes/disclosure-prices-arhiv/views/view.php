@@ -17,7 +17,7 @@
                 <thead>
                 <tr>
                     <td>НАИМЕНОВАНИЕ ДОКУМЕНТА</td>
-                    <td>Действует</td>
+                    <td>Действует с</td>
                     <td>Опубликовано</td>
                     <td></td>
                 </tr>
@@ -61,8 +61,8 @@
                                 <?= get_field("doc_title"); ?>
                             </a>
                         </td>
-                        <td><?= get_field("doc_valid"); ?></td>
-                        <td><?= get_field("doc_publish"); ?></td>
+                        <td><?= get_field("doc_validFromDate"); ?></td>
+                        <td><?= get_field("doc_publishedAt"); ?></td>
                         <td>
                             <?php if(!empty($media)) { ?>
                                 <?php foreach($media as $url):?>

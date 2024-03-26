@@ -17,7 +17,7 @@
                 <thead>
                 <tr>
                     <td>НАИМЕНОВАНИЕ ДОКУМЕНТА</td>
-                    <td>Действует</td>
+                    <td>Действует с</td>
                     <td>Опубликовано</td>
                     <td></td>
                 </tr>
@@ -38,27 +38,37 @@
                 );
                 query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
                 while (have_posts()) : the_post(); ?>
-                    <?php $media = get_attached_media(''); ?>
-                    <?php foreach ($media as $url) {} ?>
+                    <?php
+
+                    $media = get_attached_media('');
+                    ?>
+
                     <tr>
 
                         <td>
 
                             <a class="pir-table__download" href="<?php the_permalink(); ?>">
-                                <?php if($url->post_mime_type == 'application/msword') : ?>
-                                    <img src="<?php bloginfo('template_directory'); ?>/img/icons/doc.svg" alt="Документ doc">
-                                <?php endif; ?>
-                                <?php if($url->post_mime_type == 'application/pdf') : ?>
-                                    <img src="<?php bloginfo('template_directory'); ?>/img/icons/pdf.svg" alt="Документ pdf">
-                                <?php endif; ?>
+                                <?php foreach($media as $url):?>
+                                    <?php if($url->post_mime_type == 'application/msword') : ?>
+                                        <img src="<?php bloginfo('template_directory'); ?>/img/icons/doc.svg" alt="Документ doc">
+                                    <?php endif; ?>
+                                    <?php if($url->post_mime_type == 'application/pdf') : ?>
+                                        <img src="<?php bloginfo('template_directory'); ?>/img/icons/pdf.svg" alt="Документ pdf">
+                                    <?php endif; ?>
+
+                                <?php endforeach; ?>
+
                                 <?= get_field("doc_title"); ?>
                             </a>
                         </td>
-                        <td><?= get_field("doc_valid"); ?></td>
-                        <td><?= get_field("doc_publish"); ?></td>
+                        <td><?= get_field("doc_validFromDate"); ?></td>
+                        <td><?= get_field("doc_publishedAt"); ?></td>
                         <td>
-                            <?php if(!empty($url)) {?>
-                                <a href="<?= $url->guid; ?>" download><img src="<?php bloginfo('template_directory'); ?>/img/icons/download.svg" alt="Скачать документ"></a>
+                            <?php if(!empty($media)) { ?>
+                                <?php foreach($media as $url):?>
+                                    <a href="<?= $url->guid; ?>" download><img src="<?php bloginfo('template_directory'); ?>/img/icons/download.svg" alt="Скачать документ"></a>
+                                <?php endforeach; ?>
+
                                 <?php
                             }
                             ?>
