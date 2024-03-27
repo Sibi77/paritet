@@ -16,10 +16,10 @@
             <table class="pir-table__table">
                 <thead>
                 <tr>
-                    <td>НАИМЕНОВАНИЕ ДОКУМЕНТА</td>
+                    <td>НАИМЕНОВАНИЕ</td>
                     <td>Действует</td>
                     <td>Опубликовано</td>
-                    <td></td>
+                    <td style="text-align: center">Скачать</td>
                 </tr>
 
                 </thead>
@@ -47,7 +47,7 @@
 
                         <td>
 
-                            <a class="pir-table__download" href="<?php the_permalink(); ?>">
+                            <a class="pir-table-api" href="<?php the_permalink(); ?>">
                                 <?php foreach($media as $url):?>
                                     <?php if($url->post_mime_type == 'application/msword') : ?>
                                         <img src="<?php bloginfo('template_directory'); ?>/img/icons/doc.svg" alt="Документ doc">
@@ -63,16 +63,20 @@
                         </td>
                         <td><?= get_field("doc_validFromDate"); ?></td>
                         <td><?= get_field("doc_publishedAt"); ?></td>
-                        <td>
+                        <td style="text-align: center">
                             <?php if(!empty($media)) { ?>
                                 <?php foreach($media as $url):?>
-                                    <a href="<?= $url->guid; ?>" download><img src="<?php bloginfo('template_directory'); ?>/img/icons/download.svg" alt="Скачать документ"></a>
+                                    <a href="<?= $url->guid; ?>" download><img src="<?php bloginfo('template_directory'); ?>/img/icons/download.svg" class="api-download" alt="Скачать документ"></a>
                                 <?php endforeach; ?>
+
+                                <?php
+                            } ?>
+                            <?php if(empty($media)) { ?>
+                                Отсуствует
 
                                 <?php
                             }
                             ?>
-
                         </td>
                     </tr>
 

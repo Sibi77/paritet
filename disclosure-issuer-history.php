@@ -21,6 +21,7 @@ get_header();
         <h1 class="pir-title-h1"><?= get_field("history_issuer_title"); ?></h1>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Причина публикации</div>
+            <div class="disclosure-card__label">История</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("history_issuer_publicationReason") == null || get_field("history_issuer_publicationReason") == ''){
                     echo '<span class="api-undefined">Не определено</span>';
@@ -31,7 +32,7 @@ get_header();
             </div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Причина удаления</div>
+            <div class="disclosure-card__header">Причина перевода</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("history_issuer_deleteReason") == null || get_field("history_issuer_deleteReason") == ''){
                     echo '<span class="api-undefined">Не определено</span>';

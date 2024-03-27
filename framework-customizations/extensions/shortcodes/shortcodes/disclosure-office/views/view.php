@@ -37,7 +37,7 @@
 
                     <tr>
                         <td >
-                            <a href="<?php the_permalink(); ?>"> <?= get_field("office_address"); ?></a>
+                            <a href="<?php the_permalink(); ?>"> <?= get_field("office_title"); ?></a>
                         </td>
                         <td><?= get_field("office_phone"); ?></td>
                         <td><?= get_field("office_publishedAt"); ?></td>

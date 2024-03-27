@@ -95,7 +95,7 @@ get_header();
                             <?php
                             ?>
                             <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
-                                <td><?php the_field("history_office_address") ?></td>
+                                <td><?php the_field("history_office_title") ?></td>
                                 <td><?php the_field("history_office_publishedAt") ?></td>
                                 <td><?php the_field("history_office_deletedAt") ?></td>
 

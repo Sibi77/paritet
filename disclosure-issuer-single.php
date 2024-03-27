@@ -30,7 +30,7 @@ get_header();
             </div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Причина удаления</div>
+            <div class="disclosure-card__header">Причина перевода</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_deleteReason") == null || get_field("issuer_deleteReason") == ''){
                     echo '<span class="api-undefined">Не определено</span>';
@@ -244,7 +244,7 @@ get_header();
                                 Опубликовано
                             </td>
 
-                            <td>Перенесено в архив</td>
+                            <td>Удалено</td>
 
                         </tr>
 
@@ -274,7 +274,7 @@ get_header();
                             <?php
                             ?>
                             <tr>
-                                <td><a class="pir-table__download" href="<?php the_permalink(); ?>"><?php the_field("history_issuer_shortName") ?></a></td>
+                                <td><a class="pir-table__download" href="<?php the_permalink(); ?>"><?php the_field("history_issuer_title") ?></a></td>
                                 <td><?php the_field("history_issuer_publishedAt") ?></td>
                                 <td><?php the_field("history_issuer_deletedAt") ?></td>
 

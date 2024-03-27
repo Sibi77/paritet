@@ -20,9 +20,6 @@
                          Наименование
                       </td>
                     <td>
-                        Регион
-                    </td>
-                    <td>
                         инн
                     </td>
                     <td>опубликовано</td>
@@ -37,20 +34,16 @@
 
 
                  issuerPost();
-                 $tag = get_term_by('slug', ' TransferredForStorage','post_tag');
-                 $tag_id =  $tag->term_id;
                  $args = array(
                      'category_name' => 'issuers',
                      'tag' => 'Transferred',
                      'posts_per_page' => -1,
-                     'tag__not_in' => array($tag_id)
 
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
                  while (have_posts()) : the_post();?>
                  <tr>
-                     <td><a href="<?php the_permalink(); ?>"><?= get_field("issuer_shortName"); ?></a></td>
-                     <td><?= get_field("issuer_address"); ?></td>
+                     <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("issuer_title"); ?></a></td>
                      <td><?= get_field("issuer_inn"); ?></td>
                      <td><?= get_field("issuer_publishedAt"); ?></td>
                  </tr>
