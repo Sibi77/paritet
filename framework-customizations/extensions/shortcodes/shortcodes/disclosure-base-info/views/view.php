@@ -36,10 +36,9 @@
                 query_posts($args);
                 while (have_posts()) : the_post(); ?>
 
-                    <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
-
+                    <tr>
                         <td >
-                            <?= get_field("basic_info_name"); ?>
+                            <a href="<?php the_permalink(); ?>"><?= get_field("basic_info_title"); ?></a>
                         </td>
                         <td><?= get_field("basic_info_inn"); ?></td>
                         <td><?= get_field("basic_info_published"); ?></td>

@@ -37,11 +37,13 @@
 
 
                  issuerPost();
-
+                 $tag = get_term_by('slug', ' TransferredForStorage','post_tag');
+                 $tag_id =  $tag->term_id;
                  $args = array(
                      'category_name' => 'issuers',
                      'tag' => 'Transferred',
-                     'posts_per_page' => -1
+                     'posts_per_page' => -1,
+                     'tag__not_in' => array($tag_id)
 
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.

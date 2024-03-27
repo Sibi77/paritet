@@ -174,8 +174,14 @@ require_once ABSPATH . 'wp-admin/includes/image.php';
 require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once ABSPATH . 'wp-admin/includes/media.php';
 
+
 $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
 
+
+function dateConverter($date_api){
+
+    return date("Y.m.d", strtotime(substr($date_api, 0, 10)));
+} //конвертер даты
 function translit($value)//перевод с кирилицы на латиницу
 {
     $converter = array(
@@ -249,7 +255,7 @@ function download_url_with_headers($url, $headers = []) // функция для
 
     return $tmpfname;
 }
-function paritet_get_api($url)// API Полный список раскрытий
+function paritet_get_api($endpoint,$url)// API Полный список раскрытий
 {
     $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
     $response1 =json_decode( $response1 );
@@ -261,7 +267,7 @@ function paritet_get_api($url)// API Полный список раскрыти�
         )
     );
 
-    $response = wp_remote_get( $url, $args );
+    $response = wp_remote_get($endpoint.$url, $args );
     $response = wp_remote_retrieve_body($response);
     $response =  json_decode( $response );
     return $response;
@@ -294,48 +300,6 @@ function paritet_get_api($url)// API Полный список раскрыти�
 //        return $response;
 //    }
 }
-function checkPost($categoryName, $sectionApi)//репликация постов
-{
-    $params = array(
-        'posts_per_page' => -1, // все посты
-        'post_status' => 'publish',
-        'category_name' => $categoryName
-    );
-    $tes =  get_posts($params);
-    $issuer_get1 = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
-
-    $companies = array();
-    $companies1 = array();
-    foreach ($issuer_get1->data->items as $item){
-        if ($item->section == $sectionApi){
-            array_push($companies, $item->title);
-        }
-    }
-    foreach ($tes as $te){
-
-        $title = $te->post_title;
-        array_push($companies1, $title);
-    }
-
-    if ( count($companies) !== count($companies1)){
-        $paramssss = array(
-            'posts_per_page' => -1, // все записи
-            'post_type'	=> 'post', // записи, этот параметр можно не указывать, так как post - стоит по умолчанию
-            'category_name' => $categoryName
-        );
-        $q = new WP_Query( $paramssss );
-        if( $q->have_posts() ) : // если посты по заданным параметрам найдены
-            while( $q->have_posts() ) : $q->the_post();
-                wp_delete_post( $q->post->ID, true ); // второй параметр функции true означает, что пост будут удаляться, минуя корзину
-            endwhile;
-        endif;
-        wp_reset_postdata();
-    } else{
-
-    }
-}
-
-
 function securitiesIssuer($section_name, $cat_name, $cat_name_history)// Выпуски ценных бумаг +
 
 {
@@ -343,7 +307,7 @@ function securitiesIssuer($section_name, $cat_name, $cat_name_history)// Вып�
     $save_posts_id = array();
     wp_defer_term_counting( true );
     wp_defer_comment_counting( true );
-    $securities_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    $securities_get = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full');
     $catId = get_category_by_slug( $cat_name)->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -413,9 +377,9 @@ function securitiesIssuer($section_name, $cat_name, $cat_name_history)// Вып�
                 update_field('issuer_denomination', $item->content->security->denomination, $post_id);
                 update_field('issuer_issue_volume', $item->content->security->issueVolume, $post_id);
                 update_field('issuer_issue_amount', $item->content->security->issueAmount, $post_id);
-                update_field('issuer_created_at', substr($item->createdAt, 0, 10), $post_id);
+                update_field('issuer_created_at',dateConverter($item->createdAt), $post_id);
                 update_field('issuer_publication_reason', $item->publicationReason, $post_id);
-                update_field('issuer_published_at', substr($item->publishedAt, 0, 10), $post_id);
+                update_field('issuer_published_at', dateConverter($item->publishedAt), $post_id);
                 update_field('security_category_name', $cat_name_history,$post_id);
                 update_field('security_section_name', $section_name,$post_id);
 
@@ -447,7 +411,7 @@ function securitiesIssuer($section_name, $cat_name, $cat_name_history)// Вып�
 }
 function securitiesIssuerHistory($cat_name, $section_name)// Выпуски ценных история +
 {
-    $history_info = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    $history_info = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full');
     $catId = get_category_by_slug( $cat_name )->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -504,11 +468,10 @@ function securitiesIssuerHistory($cat_name, $section_name)// Выпуски це
                     update_field('history_issuer_issueVolume', $history->content->security->issueVolume, $post_id);
                     update_field('history_issuer_issueAmount', $history->content->security->issueAmount, $post_id);
                     update_field('iss_del', $history->deleteReason,$post_id);
-                    update_field('history_issuer_createdAt', substr($history->createdAt, 0, 10), $post_id);
+                    update_field('history_issuer_createdAt',dateConverter($history->createdAt), $post_id);
                     update_field('history_issuer_publicationReason', $history->publicationReason, $post_id);
-                    update_field('history_issuer_publishedAt', substr($history->publishedAt, 0, 10), $post_id);
-
-                    update_field('history_issuer_deletedAt', substr($history->deletedAt, 0, 10), $post_id);
+                    update_field('history_issuer_publishedAt',dateConverter($history->publishedAt), $post_id);
+                    update_field('history_issuer_deletedAt',dateConverter($history->deletedAt), $post_id);
 
 
                 }
@@ -522,7 +485,7 @@ function issuerPost()// создание эмитентов +
 {
     wp_defer_term_counting( true );
     wp_defer_comment_counting( true );
-    $issuer_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Issuers"}');
+    $issuer_get = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Issuers"}');
     $catId = get_category_by_slug( 'issuers' )->cat_ID;
     $save_posts_id = array();
     $now = current_datetime()->format('Y-m-d H:i:s');
@@ -602,9 +565,9 @@ function issuerPost()// создание эмитентов +
             update_field('issuer_registryContractTerminationDate', $item->content->issuer->registryContractTerminationDate, $post_id);
             update_field('issuer_registryIncomingForStorageDate', $item->content->issuer->registryIncomingForStorageDate, $post_id);
             update_field('issuer_nextRegistrar', $item->content->issuer->nextRegistrar, $post_id);
-            update_field('issuer_createdAt', substr($item->createdAt, 0, 10), $post_id);
-            update_field('issuer_publishedAt',substr($item->publishedAt, 0, 10), $post_id);
-            update_field('issuer_deletedAt',substr($item->deletedAt, 0, 10), $post_id);
+            update_field('issuer_createdAt', dateConverter($item->createdAt), $post_id);
+            update_field('issuer_publishedAt',dateConverter($item->publishedAt), $post_id);
+            update_field('issuer_deletedAt',dateConverter($item->deletedAt), $post_id);
 
             array_push($save_posts_id,$post_id);
         }
@@ -672,7 +635,7 @@ function issuerPost()// создание эмитентов +
 function issuerHistoryPost($cat_name)//Истории эмитентов +
 {   wp_defer_term_counting( true );
     wp_defer_comment_counting( true );
-    $issuer_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    $issuer_get = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full');
     $catId = get_category_by_slug( $cat_name )->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -730,9 +693,9 @@ function issuerHistoryPost($cat_name)//Истории эмитентов +
                     update_field('history_issuer_registryContractTerminationDate', $history->content->issuer->registryContractTerminationDate, $post_id);
                     update_field('history_issuer_registryIncomingForStorageDate', $history->content->issuer->registryIncomingForStorageDate, $post_id);
                     update_field('history_issuer_nextRegistrar', $history->content->issuer->nextRegistrar, $post_id);
-                    update_field('history_issuer_createdAt', substr($history->createdAt, 0, 10), $post_id);
-                    update_field('history_issuer_publishedAt',substr($history->publishedAt, 0, 10), $post_id);
-                    update_field('history_issuer_deletedAt',substr($history->deletedAt, 0, 10), $post_id);
+                    update_field('history_issuer_createdAt',dateConverter($history->createdAt), $post_id);
+                    update_field('history_issuer_publishedAt',dateConverter($history->publishedAt), $post_id);
+                    update_field('history_issuer_deletedAt',dateConverter($history->deletedAt), $post_id);
                 }
             }
 
@@ -744,7 +707,7 @@ function issuerHistoryPost($cat_name)//Истории эмитентов +
 }
 function transferAgents($section_name, $cat_name, $cat_name_history)// + создание трансфер агентов
 {
-    $transferAgents_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    $transferAgents_get = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full');
     $catId = get_category_by_slug( $cat_name )->cat_ID;
     $now = current_datetime()->format('Y-m-d H:i:s');
     $save_posts_id = array();
@@ -798,7 +761,7 @@ function transferAgents($section_name, $cat_name, $cat_name_history)// + соз�
                 update_field('transfer_phone', $item->content->company->phone, $post_id);// Телефон
                 update_field('transfer_fax', $item->content->company->fax, $post_id);// Факс
                 update_field('transfer_reason_public', $item->publicationReason, $post_id);// Причина публикации'
-                update_field('transfer_published', substr($item->publishedAt, 0, 10), $post_id);// когда опублткованно
+                update_field('transfer_published', dateConverter($item->publishedAt), $post_id);// когда опублткованно
                 update_field('transfer_cat_name', $cat_name_history, $post_id);
                 update_field('transfer_cat_sections', $section_name, $post_id);
                 array_push($save_posts_id,$post_id);
@@ -826,7 +789,7 @@ function transferAgents($section_name, $cat_name, $cat_name_history)// + соз�
 }
 function transferAgentsHistory($cat_name, $section_name)// + История трансфер-агентов
 {
-    $history_info = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    $history_info = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full');
     $catId = get_category_by_slug( $cat_name )->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -880,11 +843,9 @@ function transferAgentsHistory($cat_name, $section_name)// + История тр
                     update_field('history_transfer_phone', $history->content->company->phone, $post_id);// Телефон
                     update_field('history_transfer_fax', $history->content->company->fax, $post_id);// Факс
                     update_field('history_transfer_reason_public', $history->publicationReason, $post_id);// Причина публикации'
-                    update_field('history_transfer_published', substr($history->publishedAt, 0, 10), $post_id);// к
+                    update_field('history_transfer_published', dateConverter($history->publishedAt), $post_id);// к
                     update_field('history_transfer_deleteReason', $history->deleteReason, $post_id);//
-                    update_field('history_transfer_deletedAt', substr($history->deletedAt, 0, 10), $post_id);//
-
-
+                    update_field('history_transfer_deletedAt',dateConverter($history->deletedAt), $post_id);//
                 }
             }
         }
@@ -893,7 +854,7 @@ function transferAgentsHistory($cat_name, $section_name)// + История тр
 }
 function officials()// Должностные лица +
 {
-    $officials_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Officials"}');
+    $officials_get = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Officials"}');
     $save_posts_id = array();
     $now = current_datetime()->format('Y-m-d H:i:s');
     $catId = get_category_by_slug( 'officials' )->cat_ID;
@@ -949,8 +910,8 @@ function officials()// Должностные лица +
                 update_field('officials_work_experience', $item->content->official->workExperience, $post_id);
                 update_field('officials_del_reason', $item->deleteReason, $post_id);
                 update_field('officials_pub_reason', $item->publicationReason, $post_id);
-                update_field('officials_created_at', substr($item->createdAt, 0, 10), $post_id);
-                update_field('officials_published_at',substr($item->publishedAt, 0, 10), $post_id);
+                update_field('officials_created_at', dateConverter($item->createdAt), $post_id);
+                update_field('officials_published_at',dateConverter($item->publishedAt), $post_id);
                 array_push($save_posts_id,$post_id);
             }
         }
@@ -976,7 +937,7 @@ function officials()// Должностные лица +
 }
 function OfficialsHistory($cat_name)// Должностные лица история +
 {
-    $officials_info = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Officials"}');
+    $officials_info = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Officials"}');
     $catId = get_category_by_slug( $cat_name )->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -1024,9 +985,9 @@ function OfficialsHistory($cat_name)// Должностные лица исто�
                     update_field('history_officials_work_experience', $history->content->official->workExperience, $post_id);
                     update_field('history_officials_del_reason', $history->deleteReason, $post_id);
                     update_field('history_officials_pub_reason', $history->publicationReason, $post_id);
-                    update_field('history_officials_created_at', substr($history->createdAt, 0, 10), $post_id);
-                    update_field('history_officials_published_at',substr($history->publishedAt, 0, 10), $post_id);
-                    update_field('history_officials_deletedAt',substr($history->deletedAt, 0, 10), $post_id);
+                    update_field('history_officials_created_at', dateConverter($history->createdAt), $post_id);
+                    update_field('history_officials_published_at',dateConverter($history->publishedAt), $post_id);
+                    update_field('history_officials_deletedAt',dateConverter($history->deletedAt), $post_id);
 
 
                 }
@@ -1035,18 +996,20 @@ function OfficialsHistory($cat_name)// Должностные лица исто�
 
     }
 }
+
 function disclosureBasicInfo()// основные сведения +
 {
     $save_posts_id = array();
-    $base_info_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Main"}');
+    $base_info_get = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Main"}');
     $catId = get_category_by_slug( 'base_info' )->cat_ID;
     $now = current_datetime()->format('Y-m-d H:i:s');
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
+
     foreach ($base_info_get->data->items as $item) {
         if ($item->section == 'Main') {
-//            echo '<pre>';
-//            print_r($item);
+
+
             $base_info_id = $item->id;// id
             $base_info_title = $item->content->registrar->shortName . ' ' . 'id ' . $base_info_id; //Заголовок поста
             $base_url_name =  translit($item->content->registrar->shortName);
@@ -1085,11 +1048,11 @@ function disclosureBasicInfo()// основные сведения +
                 $post_id = wp_insert_post($my_post);
                 if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-basic-single.php');
                 wp_set_object_terms($post_id, array( $item->status,$item->deleteReason, $item->publicationReason), 'post_tag', false);
-                update_field('basic_info_title', $base_info_title, $post_id);
+                update_field('basic_info_title', $item->title, $post_id);
                 update_field('basic_info_id', $item->id, $post_id);
                 update_field('basic_info_parent_id', $item->parentDisclosureId, $post_id);
                 update_field('basic_info_name', $item->content->registrar->shortName, $post_id);
-                update_field('basic_info_full_name', $item->content->registrar->fullName);
+                update_field('basic_info_full_name', $item->content->registrar->fullName,$post_id);
                 update_field('basic_info_short_name_en', $item->content->registrar->shortNameEng, $post_id);
                 update_field('basic_info_full_name_en', $item->content->registrar->fullNameEng, $post_id);
                 update_field('basic_info_inn', $item->content->registrar->inn, $post_id);
@@ -1108,10 +1071,14 @@ function disclosureBasicInfo()// основные сведения +
                 update_field('basic_info_bank_name', $item->content->registrar->bank->name, $post_id);
                 update_field('basic_info_bank_inn', $item->content->registrar->bank->inn, $post_id);
                 update_field('basic_info_bank_kpp', $item->content->registrar->bank->kpp, $post_id);
-                update_field('basic_info_published', substr($item->publishedAt, 0, 10), $post_id);
+
+
+
+
+                update_field('basic_info_published', dateConverter($item->publishedAt), $post_id);
                 update_field('basic_info_reason_public', $item->publicationReason, $post_id);
                 update_field('basic_info_reason_del', $item->deleteReason, $post_id);
-                update_field('basic_info_del_at',substr($item->deletedAt, 0, 10), $post_id);
+                update_field('basic_info_del_at',dateConverter($item->deletedAt), $post_id);
                 array_push($save_posts_id,$post_id);
             }
         }
@@ -1137,7 +1104,7 @@ function disclosureBasicInfo()// основные сведения +
 }
 function disclosureBasicInfoHistory($cat_name)// Истории для раздела основные сведения +
 {
-    $basic_info = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Main"}');
+    $basic_info = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Main"}');
     $catId = get_category_by_slug( $cat_name )->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -1172,8 +1139,8 @@ function disclosureBasicInfoHistory($cat_name)// Истории для разд�
                 $basic_info_bank_kpp = $history->content->registrar->bank->kpp; //реквизиты банка
                 $basic_info_pub_reason = $history->publicationReason; // Причина публикации раскрытия
                 $basic_info_del_reason = $history->deleteReason; // Причина Удаления
-                $basic_info_pub_at = substr($history->publishedAt, 0, 10); // Опубликовано
-                $basic_info_del_at = substr($history->deletedAt, 0, 10); // Перенесено в архив
+                $basic_info_pub_at = dateConverter($history->publishedAt); // Опубликовано
+                $basic_info_del_at = dateConverter($history->deletedAt); // Перенесено в архив
                 $basic_info_history_title = $history->title;
                 $my_post = array(
                     'post_title' => $basic_info_title,
@@ -1236,7 +1203,7 @@ function disclosureBasicInfoHistory($cat_name)// Истории для разд�
 }
 function disclosure_documents($section_name, $cat_name, $cat_name_history) //тип контента: Документ +
 {
-    $license_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    $license_get = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full');
     $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
     $response1 =json_decode( $response1 );
     $catId = get_category_by_slug($cat_name)->cat_ID;
@@ -1298,19 +1265,19 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history) //т�
                 update_field('doc_validFromDate',$item->content->document->validFromDate, $post_id);
                 update_field('doc_validToDate',$item->content->document->validToDate, $post_id);
 
-                update_field('doc_createdAt',substr($item->createdAt, 0, 10), $post_id);
-                update_field('doc_publishedAt',substr($item->publishedAt, 0, 10), $post_id);
-                update_field('doc_deletedAt',substr($item->deletedAt, 0, 10), $post_id);
+                update_field('doc_createdAt',dateConverter($item->createdAt), $post_id);
+                update_field('doc_publishedAt',dateConverter($item->publishedAt), $post_id);
+                update_field('doc_deletedAt',dateConverter($item->deletedAt), $post_id);
 
 
                 update_field('doc_cat_name_history', $cat_name_history, $post_id); //имя категории истории
                 update_field('doc_section_name_history', $section_name, $post_id); //имя секции (папаметр для истории)
                 //Добавление файла
                 array_push($save_posts_id,$post_id);
-                $get_files = paritet_get_api('https://master.paritet.ru:9443/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$item->id);
+                $get_files = paritet_get_api('https://preprod.paritet.ru:7443','/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$item->id);
                 if(count($get_files->files) > 0 ){
                     $first = 1;
-                    $down_link_orig = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?';
+                    $down_link_orig = 'https://preprod.paritet.ru:7443/api/CloudFileApi/DownloadFile?';
                     $down_link = '';
                     $title_file = $item->id;
                     $file_name ='';
@@ -1381,7 +1348,7 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history) //т�
 }
 function disclosure_doc_history($section_name, $cat_name)// история для документов +
 {
-    $issuer_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full');
+    $issuer_get = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full');
     $response1 = wpgetapi_endpoint( 'disclo_pir', 'test', array('debug' => false) );
     $response1 =json_decode( $response1 );
     $catId = get_category_by_slug( $cat_name )->cat_ID;
@@ -1421,19 +1388,25 @@ function disclosure_doc_history($section_name, $cat_name)// история дл�
                     $post_id = wp_insert_post($my_post);
                     if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-document-history.php');
                     wp_set_object_terms($post_id, $str_id, 'post_tag', false);
-                    update_field('doc_history_title', $history->title, $post_id);
-                    update_field('doc_history_id', $history->id, $post_id);
-                    update_field('doc_history_more_info', $history->content->document->description, $post_id);
-                    update_field('doc_history_valid', $history->content->document->validFromDate, $post_id);
-                    update_field('doc_history_valid_to', $history->content->document->validToDate, $post_id);
-                    update_field('doc_history_reason_public', $history->publicationReason, $post_id);
-                    update_field('doc_history_del_reason', $history->deleteReason, $post_id);
-                    update_field('doc_history_publish',substr($history->publishedAt, 0, 10) , $post_id);
-                    $get_files = paritet_get_api('https://master.paritet.ru:9443/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$item->id);
+                    update_field('history_doc_title', $history->title, $post_id);
+
+                    update_field('history_doc_publicationReason', $history->publicationReason, $post_id);
+                    update_field('history_doc_deleteReason', $history->deleteReason, $post_id);
+                    update_field('history_doc_source', $history->source, $post_id);
+
+                    update_field('history_doc_description', $history->content->document->description, $post_id);
+                    update_field('history_doc_validFromDate',$history->content->document->validFromDate, $post_id);
+                    update_field('history_doc_validToDate',$history->content->document->validToDate, $post_id);
+
+                    update_field('history_doc_createdAt',dateConverter($history->createdAt), $post_id);
+                    update_field('history_doc_publishedAt',dateConverter($history->publishedAt), $post_id);
+                    update_field('history_doc_deletedAt',dateConverter($history->deletedAt), $post_id);
+
+                    $get_files = paritet_get_api('https://preprod.paritet.ru:7443','/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$item->id);
 
                     if(count($get_files->files) > 0 ){
                         $first = 1;
-                        $down_link_orig = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?';
+                        $down_link_orig = 'https://preprod.paritet.ru:7443/api/CloudFileApi/DownloadFile?';
                         $down_link = '';
                         $title_file = $item->id;
                         $file_name ='';
@@ -1485,7 +1458,7 @@ function office()// Филиалы и представительства +
 
 {
 
-    $office_get = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Offices"}');
+    $office_get = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Offices"}');
     $catId = get_category_by_slug( 'offices')->cat_ID;
     $now = current_datetime()->format('Y-m-d H:i:s');
     $save_posts_id = array();
@@ -1551,9 +1524,9 @@ function office()// Филиалы и представительства +
                 update_field('office_fax', $item->content->office->fax, $post_id);
                 update_field('office_head', $item->content->office->headOfOffice, $post_id);
 
-                update_field('office_createdAt', substr($item->createdAt, 0, 10), $post_id);
+                update_field('office_createdAt', dateConverter($item->createdAt), $post_id);
                 update_field('office_pub_reason', $item->publicationReason, $post_id);
-                update_field('office_publishedAt', substr($item->publishedAt, 0, 10), $post_id);
+                update_field('office_publishedAt',dateConverter($item->publishedAt) , $post_id);
 
 
 
@@ -1584,7 +1557,7 @@ function office()// Филиалы и представительства +
 }
 function officeHistory()// основные сведения история +
 {
-    $office_info = paritet_get_api('https://master.paritet.ru:9443/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Offices"}');
+    $office_info = paritet_get_api('https://preprod.paritet.ru:7443','/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Offices"}');
     $catId = get_category_by_slug( 'offices_history' )->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -1631,11 +1604,11 @@ function officeHistory()// основные сведения история +
                     update_field('history_office_phone', $history->content->office->phone, $post_id);
                     update_field('history_office_fax', $history->content->office->fax, $post_id);
                     update_field('history_office_head', $history->content->office->headOfOffice, $post_id);
-                    update_field('history_office_createdAt', substr($history->createdAt, 0, 10), $post_id);
+                    update_field('history_office_createdAt', dateConverter($history->createdAt), $post_id);
                     update_field('history_office_pub_reason', $history->publicationReason, $post_id);
                     update_field('history_office_delReason', $history->publicationReason, $post_id);
-                    update_field('history_office_deletedAt', substr($history->createdAt, 0, 10), $post_id);
-                    update_field('history_office_publishedAt', substr($history->publishedAt, 0, 10), $post_id);
+                    update_field('history_office_deletedAt', dateConverter($history->createdAt), $post_id);
+                    update_field('history_office_publishedAt', dateConverter($history->publishedAt), $post_id);
 
 
                 }
@@ -1644,4 +1617,3 @@ function officeHistory()// основные сведения история +
 
     }
 }
-

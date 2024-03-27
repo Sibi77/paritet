@@ -22,7 +22,7 @@ get_header();
             <div class="disclosure-card__header">Причина публикации</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_publicationReason") == null || get_field("issuer_publicationReason") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                   echo  get_field("issuer_publicationReason");
                 }
@@ -33,7 +33,7 @@ get_header();
             <div class="disclosure-card__header">Причина удаления</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_deleteReason") == null || get_field("issuer_deleteReason") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_deleteReason");
                 }
@@ -44,7 +44,7 @@ get_header();
             <div class="disclosure-card__header">Источник</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_source") == null || get_field("issuer_source") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_source");
                 }
@@ -55,7 +55,7 @@ get_header();
             <div class="disclosure-card__header">Краткое наименование</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_shortName") == null || get_field("issuer_shortName") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_shortName");
                 }
@@ -66,7 +66,7 @@ get_header();
             <div class="disclosure-card__header">Полное наименование</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_fullName") == null || get_field("issuer_fullName") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_fullName");
                 }
@@ -77,7 +77,7 @@ get_header();
             <div class="disclosure-card__header">ИНН</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_inn") == null || get_field("issuer_inn") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_inn");
                 }
@@ -88,7 +88,7 @@ get_header();
             <div class="disclosure-card__header">ОГРН</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_ogrn") == null || get_field("issuer_ogrn") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_ogrn");
                 }
@@ -99,7 +99,7 @@ get_header();
             <div class="disclosure-card__header">Адресс</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_address") == null || get_field("issuer_address") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_address");
                 }
@@ -110,7 +110,7 @@ get_header();
             <div class="disclosure-card__header">Телефон</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_phone") == null || get_field("issuer_phone") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_phone");
                 }
@@ -121,7 +121,7 @@ get_header();
             <div class="disclosure-card__header">Факс</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_fax") == null || get_field("issuer_fax") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_fax");
                 }
@@ -132,7 +132,7 @@ get_header();
             <div class="disclosure-card__header">Дата договора на вед. реестра</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_registryContractDate") == null || get_field("issuer_registryContractDate") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_registryContractDate");
                 }
@@ -143,7 +143,7 @@ get_header();
             <div class="disclosure-card__header">Дата акта приема реестра</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_registryIncomingActDate") == null || get_field("issuer_registryIncomingActDate") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_registryIncomingActDate");
                 }
@@ -154,7 +154,7 @@ get_header();
             <div class="disclosure-card__header">Дата акта передачи реестра</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_registryOutgoingActDate") == null || get_field("issuer_registryOutgoingActDate") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_registryOutgoingActDate");
                 }
@@ -165,7 +165,7 @@ get_header();
             <div class="disclosure-card__header">Дата прекращения договора</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_registryContractTerminationDate") == null || get_field("issuer_registryContractTerminationDate") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_registryContractTerminationDate");
                 }
@@ -176,7 +176,7 @@ get_header();
             <div class="disclosure-card__header">Дата приема на хранение</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_registryIncomingForStorageDate") == null || get_field("issuer_registryIncomingForStorageDate") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_registryIncomingForStorageDate");
                 }
@@ -187,7 +187,7 @@ get_header();
             <div class="disclosure-card__header">Передано регистратору</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_nextRegistrar") == null || get_field("issuer_nextRegistrar") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_nextRegistrar");
                 }
@@ -199,7 +199,7 @@ get_header();
             <div class="disclosure-card__header">Создано</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_createdAt") == null || get_field("issuer_createdAt") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_createdAt");
                 }
@@ -210,7 +210,7 @@ get_header();
             <div class="disclosure-card__header">Опубликовано</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_publishedAt") == null || get_field("issuer_publishedAt") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_publishedAt");
                 }
@@ -221,7 +221,7 @@ get_header();
             <div class="disclosure-card__header">Удаленно</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_deletedAt") == null || get_field("issuer_deletedAt") == ''){
-                    echo 'Не определено';
+                    echo '<span class="api-undefined">Не определено</span>';
                 }else{
                     echo  get_field("issuer_deletedAt");
                 }
