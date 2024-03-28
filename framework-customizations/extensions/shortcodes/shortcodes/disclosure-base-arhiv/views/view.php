@@ -36,10 +36,11 @@
                 query_posts($args);
                 while (have_posts()) : the_post(); ?>
 
-                    <tr  style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
+                    <tr >
 
                         <td>
-                            <?= get_field("basic_info_name"); ?>
+                            <a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("basic_info_title"); ?></a>
+
                         </td>
                         <td><?= get_field("basic_info_del_at"); ?></td>
                         <td><?= get_field("basic_info_published"); ?></td>

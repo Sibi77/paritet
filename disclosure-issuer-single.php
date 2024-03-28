@@ -134,7 +134,7 @@ get_header();
                 <?php if(get_field("issuer_registryContractDate") == null || get_field("issuer_registryContractDate") == ''){
                     echo '<span class="api-undefined">Не определено</span>';
                 }else{
-                    echo  get_field("issuer_registryContractDate");
+                    echo substr( get_field("issuer_registryContractDate"),0,10);
                 }
                 ?>
             </div>
@@ -145,7 +145,7 @@ get_header();
                 <?php if(get_field("issuer_registryIncomingActDate") == null || get_field("issuer_registryIncomingActDate") == ''){
                     echo '<span class="api-undefined">Не определено</span>';
                 }else{
-                    echo  get_field("issuer_registryIncomingActDate");
+                    echo  substr(get_field("issuer_registryIncomingActDate"),0,10);
                 }
                 ?>
             </div>
@@ -156,7 +156,7 @@ get_header();
                 <?php if(get_field("issuer_registryOutgoingActDate") == null || get_field("issuer_registryOutgoingActDate") == ''){
                     echo '<span class="api-undefined">Не определено</span>';
                 }else{
-                    echo  get_field("issuer_registryOutgoingActDate");
+                    echo  substr(get_field("issuer_registryOutgoingActDate"),0,10);
                 }
                 ?>
             </div>
@@ -167,7 +167,7 @@ get_header();
                 <?php if(get_field("issuer_registryContractTerminationDate") == null || get_field("issuer_registryContractTerminationDate") == ''){
                     echo '<span class="api-undefined">Не определено</span>';
                 }else{
-                    echo  get_field("issuer_registryContractTerminationDate");
+                    echo  substr(get_field("issuer_registryContractTerminationDate"),0,10);
                 }
                 ?>
             </div>
@@ -178,7 +178,7 @@ get_header();
                 <?php if(get_field("issuer_registryIncomingForStorageDate") == null || get_field("issuer_registryIncomingForStorageDate") == ''){
                     echo '<span class="api-undefined">Не определено</span>';
                 }else{
-                    echo  get_field("issuer_registryIncomingForStorageDate");
+                    echo substr( get_field("issuer_registryIncomingForStorageDate"),0,10);
                 }
                 ?>
             </div>
@@ -275,8 +275,8 @@ get_header();
                             ?>
                             <tr>
                                 <td><a class="pir-table__download" href="<?php the_permalink(); ?>"><?php the_field("history_issuer_title") ?></a></td>
-                                <td><?php the_field("history_issuer_publishedAt") ?></td>
-                                <td><?php the_field("history_issuer_deletedAt") ?></td>
+                                <td><?php substr(the_field("history_issuer_publishedAt"),0,10)  ?></td>
+                                <td><?php substr(the_field("history_issuer_deletedAt"),0,10) ?></td>
 
                             </tr>
                             <?php

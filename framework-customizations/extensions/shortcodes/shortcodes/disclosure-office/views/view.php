@@ -37,10 +37,10 @@
 
                     <tr>
                         <td >
-                            <a href="<?php the_permalink(); ?>"> <?= get_field("office_title"); ?></a>
+                            <a class="pir-table-api" href="<?php the_permalink(); ?>"> <?= get_field("office_title"); ?></a>
                         </td>
                         <td><?= get_field("office_phone"); ?></td>
-                        <td><?= get_field("office_publishedAt"); ?></td>
+                        <td><?= substr(get_field("office_publishedAt"),0,10); ?></td>
                     </tr>
 
 

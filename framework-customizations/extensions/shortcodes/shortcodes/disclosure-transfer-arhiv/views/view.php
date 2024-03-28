@@ -46,9 +46,9 @@
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
                  while (have_posts()) : the_post();?>
                  <tr>
-                     <td><a href="<?php the_permalink(); ?>"><?= get_field("transfer_short_name"); ?></a></td>
+                     <td><a  class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("transfer_title"); ?></a></td>
                      <td><?= get_field("transfer_inn"); ?></td>
-                     <td><?= get_field("transfer_published"); ?></td>
+                     <td><?= substr(get_field("transfer_published"), 0,10) ; ?></td>
                  </tr>
 
 

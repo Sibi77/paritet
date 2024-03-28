@@ -91,7 +91,7 @@ get_header();
                     <?php if (get_field("doc_validFromDate") == null || get_field("doc_validFromDate") == '') {
                         echo '<span class="api-undefined">Не определено</span>';
                     } else {
-                        echo get_field("doc_validFromDate");
+                        echo substr(get_field("doc_validFromDate"), 0, 10);
                     }
                     ?>
                 </div>
@@ -102,7 +102,7 @@ get_header();
                     <?php if (get_field("doc_validToDate") == null || get_field("doc_validToDate") == '') {
                         echo '<span class="api-undefined">Не определено</span>';
                     } else {
-                        echo get_field("doc_validToDate");
+                        echo substr(get_field("doc_validToDate"), 0, 10);
                     }
                     ?>
                 </div>
@@ -189,8 +189,8 @@ get_header();
                                         <a class="pir-table-api"
                                            href="<?php the_permalink(); ?>"><?php the_field("history_doc_title") ?></a>
                                     </td>
-                                    <td><?php the_field("history_doc_publishedAt") ?></td>
-                                    <td><?php the_field("history_doc_deletedAt") ?></td>
+                                    <td><?php substr(the_field("history_doc_publishedAt"), 0, 10) ?></td>
+                                    <td><?php substr(the_field("history_doc_deletedAt"),0,10)  ?></td>
 
                                 </tr>
                                 <?php

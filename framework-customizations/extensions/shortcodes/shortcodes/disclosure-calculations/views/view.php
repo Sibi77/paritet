@@ -61,8 +61,8 @@
                                 <?= get_field("doc_title"); ?>
                             </a>
                         </td>
-                        <td><?= get_field("doc_validFromDate"); ?></td>
-                        <td><?= get_field("doc_publishedAt"); ?></td>
+                        <td><?= substr(get_field("doc_validFromDate"),0,10) ; ?></td>
+                        <td><?= substr(get_field("doc_publishedAt"), 0, 10); ?></td>
                         <td style="text-align: center">
                             <?php if(!empty($media)) { ?>
                                 <?php foreach($media as $url):?>

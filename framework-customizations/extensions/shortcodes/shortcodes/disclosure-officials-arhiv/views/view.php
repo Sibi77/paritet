@@ -17,7 +17,7 @@
                 <tr>
                     <td>НАИМЕНОВАНИЕ</td>
                     <td>должность</td>
-                    <td>Опубликовано</td>
+                    <td>Опубликован</td>
                 </tr>
 
                 </thead>
@@ -38,10 +38,10 @@
 
                     <tr>
                         <td >
-                            <a href="<?php the_permalink(); ?>"><?= get_field("officials_fio"); ?></a>
+                            <a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("officials_fio"); ?></a>
                         </td>
                         <td><?= get_field("officials_position"); ?></td>
-                        <td><?= get_field("officials_published_at"); ?></td>
+                        <td><?= substr(get_field("officials_published_at"),0,10); ?></td>
                     </tr>
 
 

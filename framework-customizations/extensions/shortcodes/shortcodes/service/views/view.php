@@ -42,14 +42,16 @@
                      'posts_per_page' => -1,
                      'category_name' => 'issuers',
                      'tag' => 'Published',
-                     'tag__not_in' => array($tag_id)
+                     'tag__not_in' => array($tag_id),
+                     'orderby' => 'date',
+                     'order' => 'ASC',
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
                  while (have_posts()) : the_post();?>
                  <tr>
                      <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("issuer_title"); ?></a></td>
                      <td><?= get_field("issuer_inn"); ?></td>
-                     <td><?= get_field("issuer_publishedAt"); ?></td>
+                     <td><?= substr(get_field("issuer_publishedAt"),0,10) ; ?></td>
                  </tr>
 
 

@@ -177,11 +177,10 @@ require_once ABSPATH . 'wp-admin/includes/media.php';
 
 $response1 = wpgetapi_endpoint('disclo_pir', 'test', array('debug' => false));
 
-
 function dateConverter($date_api)
 {
     if (!empty($date_api)) {
-        return date("d.m.Y", strtotime(substr($date_api, 0, 10)));
+        return date("d.m.Y H:i", strtotime($date_api)+ 3*60*60);
     }
 } //конвертер даты
 function translit($value)//перевод с кирилицы на латиницу
@@ -369,6 +368,7 @@ function securitiesIssuer($section_name, $cat_name, $cat_name_history)// Вып�
                 if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-securities-single.php');
                 wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
                 update_field('issuerrr_id', $item->id, $post_id);
+                update_field('issuerrr_title', $item->title, $post_id);
                 update_field('issuerrr_parent_id', $item->parentDisclosureId, $post_id);
 
                 update_field('issuerrr_name', $item->content->security->issuer, $post_id);
@@ -382,9 +382,15 @@ function securitiesIssuer($section_name, $cat_name, $cat_name_history)// Вып�
                 update_field('issuer_denomination', $item->content->security->denomination, $post_id);
                 update_field('issuer_issue_volume', $item->content->security->issueVolume, $post_id);
                 update_field('issuer_issue_amount', $item->content->security->issueAmount, $post_id);
+
+                update_field('issuer_publication_reason', $item->publicationReasonName, $post_id);
+                update_field('issuerrr_delReason', $item->deleteReasonName, $post_id);
+                update_field('issuerrr_source', $item->sourceName, $post_id);
+
                 update_field('issuer_created_at', dateConverter($item->createdAt), $post_id);
-                update_field('issuer_publication_reason', $item->publicationReason, $post_id);
                 update_field('issuer_published_at', dateConverter($item->publishedAt), $post_id);
+                update_field('issuer_deleteAt', dateConverter($item->deletedAt), $post_id);
+
                 update_field('security_category_name', $cat_name_history, $post_id);
                 update_field('security_section_name', $section_name, $post_id);
 
@@ -462,6 +468,7 @@ function securitiesIssuerHistory($cat_name, $section_name)// Выпуски це
 
                     update_field('history_officials_id', $history_info_id, $post_id);
                     update_field('history_issuer_id', $history->id, $post_id);
+                    update_field('history_issuer_title', $history->title, $post_id);
                     update_field('history_issuer_name', $history->content->security->issuer, $post_id);
                     update_field('history_issuer_jscRegistrationDate', $item->content->security->jscRegistrationDate, $post_id);
                     update_field('history_issuer_securityType', $history->content->security->securityType, $post_id);
@@ -474,8 +481,12 @@ function securitiesIssuerHistory($cat_name, $section_name)// Выпуски це
                     update_field('history_issuer_issueVolume', $history->content->security->issueVolume, $post_id);
                     update_field('history_issuer_issueAmount', $history->content->security->issueAmount, $post_id);
                     update_field('iss_del', $history->deleteReason, $post_id);
+
+                    update_field('history_issuer_publicationReason', $history->publicationReasonName, $post_id);
+                    update_field('history_issuer_delReason', $history->deleteReasonName, $post_id);
+                    update_field('history_issuer_source', $history->sourceName, $post_id);
+
                     update_field('history_issuer_createdAt', dateConverter($history->createdAt), $post_id);
-                    update_field('history_issuer_publicationReason', $history->publicationReason, $post_id);
                     update_field('history_issuer_publishedAt', dateConverter($history->publishedAt), $post_id);
                     update_field('history_issuer_deletedAt', dateConverter($history->deletedAt), $post_id);
 
@@ -758,6 +769,7 @@ function transferAgents($section_name, $cat_name, $cat_name_history)// + соз�
                 if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-transfer-agents.php');
                 wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
                 update_field('transfer_id', $item->id, $post_id);
+                update_field('transfer_title', $item->title, $post_id);
                 update_field('transfer_parent_id', $item->parentDisclosureId, $post_id);
                 update_field('transfer_short_name', $item->content->company->shortName, $post_id);//Краткое наименование
                 update_field('transfer_full_name', $item->content->company->fullName, $post_id);// Полное наименование
@@ -766,8 +778,16 @@ function transferAgents($section_name, $cat_name, $cat_name_history)// + соз�
                 update_field('transfer_address', $item->content->company->address, $post_id);// Адресс
                 update_field('transfer_phone', $item->content->company->phone, $post_id);// Телефон
                 update_field('transfer_fax', $item->content->company->fax, $post_id);// Факс
-                update_field('transfer_reason_public', $item->publicationReason, $post_id);// Причина публикации'
-                update_field('transfer_published', dateConverter($item->publishedAt), $post_id);// когда опублткованно
+
+                update_field('transfer_reason_public', $item->publicationReasonName, $post_id);// Причина публикации'
+                update_field('transfer_del_reason', $item->deleteReasonName, $post_id);// Причина удаления'
+                update_field('transfer_source', $item->sourceName, $post_id);// Источник'
+
+
+                update_field('transfer_createAt', dateConverter($item->createdAt), $post_id);//Создано
+                update_field('transfer_published', dateConverter($item->publishedAt), $post_id);// Опублткованно
+                update_field('transfer_delAt', dateConverter($item->deletedAt), $post_id);//  Удалено
+
                 update_field('transfer_cat_name', $cat_name_history, $post_id);
                 update_field('transfer_cat_sections', $section_name, $post_id);
                 array_push($save_posts_id, $post_id);
@@ -842,6 +862,7 @@ function transferAgentsHistory($cat_name, $section_name)// + История тр
                     wp_set_object_terms($post_id, $str_id, 'post_tag', false);
 
                     update_field('history_transfer_id', $history->id, $post_id);
+                    update_field('history_transfer_title', $history->title, $post_id);
                     update_field('history_transfer_short_name', $history->content->company->shortName, $post_id);//Краткое наименование
                     update_field('history_transfer_full_name', $history->content->company->fullName, $post_id);// Полное наименование
                     update_field('history_transfer_inn', $history->content->company->inn, $post_id);//Инн
@@ -849,10 +870,14 @@ function transferAgentsHistory($cat_name, $section_name)// + История тр
                     update_field('history_transfer_address', $history->content->company->address, $post_id);// Адресс
                     update_field('history_transfer_phone', $history->content->company->phone, $post_id);// Телефон
                     update_field('history_transfer_fax', $history->content->company->fax, $post_id);// Факс
-                    update_field('history_transfer_reason_public', $history->publicationReason, $post_id);// Причина публикации'
-                    update_field('history_transfer_published', dateConverter($history->publishedAt), $post_id);// к
-                    update_field('history_transfer_deleteReason', $history->deleteReason, $post_id);//
-                    update_field('history_transfer_deletedAt', dateConverter($history->deletedAt), $post_id);//
+
+                    update_field('history_transfer_reason_public', $history->publicationReasonName, $post_id);// Причина публикации'
+                    update_field('history_transfer_deleteReason', $history->deleteReasonName, $post_id);//
+                    update_field('history_transfer_deleteReason', $history->sourceName, $post_id);//
+
+                    update_field('history_transfer_createAt', dateConverter($history->createdAt), $post_id);//
+                    update_field('history_transfer_source', dateConverter($history->deletedAt), $post_id);//
+                    update_field('history_transfer_published', dateConverter($history->publishedAt), $post_id);//
                 }
             }
         }
@@ -911,15 +936,21 @@ function officials()// Должностные лица +
                 if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-officials-single.php');
                 wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
                 update_field('officials_id', $officials_info_id, $post_id);
+                update_field('officials_title', $item->title, $post_id);
                 update_field('officials_parent_id', $item->parentDisclosureId, $post_id);
+
                 update_field('officials_fio', $item->content->official->fullName, $post_id);
                 update_field('officials_position', $item->content->official->position, $post_id);
                 update_field('officials_date_election', $item->content->official->electionDate, $post_id);
                 update_field('officials_work_experience', $item->content->official->workExperience, $post_id);
-                update_field('officials_del_reason', $item->deleteReason, $post_id);
-                update_field('officials_pub_reason', $item->publicationReason, $post_id);
+
+                update_field('officials_del_reason', $item->deleteReasonName, $post_id);
+                update_field('officials_pub_reason', $item->publicationReasonName, $post_id);
+                update_field('officials_source', $item->sourceName, $post_id);
+
                 update_field('officials_created_at', dateConverter($item->createdAt), $post_id);
                 update_field('officials_published_at', dateConverter($item->publishedAt), $post_id);
+                update_field('officials_del_at', dateConverter($item->deletedAt), $post_id);
                 array_push($save_posts_id, $post_id);
             }
         }
@@ -988,12 +1019,17 @@ function OfficialsHistory($cat_name)// Должностные лица исто�
                     if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-officials-history.php');
                     wp_set_object_terms($post_id, $str_id, 'post_tag', false);
                     update_field('history_officials_id', $officials_info_id, $post_id);
+                    update_field('history_officials_title', $history->title, $post_id);
+
                     update_field('history_officials_fio', $history->content->official->fullName, $post_id);
                     update_field('history_officials_position', $history->content->official->position, $post_id);
                     update_field('history_officials_date_election', $history->content->official->electionDate, $post_id);
                     update_field('history_officials_work_experience', $history->content->official->workExperience, $post_id);
-                    update_field('history_officials_del_reason', $history->deleteReason, $post_id);
-                    update_field('history_officials_pub_reason', $history->publicationReason, $post_id);
+
+                    update_field('history_officials_del_reason', $history->deleteReasonName, $post_id);
+                    update_field('history_officials_pub_reason', $history->publicationReasonName, $post_id);
+                    update_field('history_officials_source', $history->sourceName, $post_id);
+
                     update_field('history_officials_created_at', dateConverter($history->createdAt), $post_id);
                     update_field('history_officials_published_at', dateConverter($history->publishedAt), $post_id);
                     update_field('history_officials_deletedAt', dateConverter($history->deletedAt), $post_id);
@@ -1016,78 +1052,83 @@ function disclosureBasicInfo()// основные сведения +
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
 
     foreach ($base_info_get->data->items as $item) {
-        if ($item->section == 'Main') {
+        $base_info_id = $item->id;// id
+        $base_info_title = $item->content->registrar->shortName . ' ' . 'id ' . $base_info_id; //Заголовок поста
+        $base_url_name = translit($item->content->registrar->shortName);
 
 
-            $base_info_id = $item->id;// id
-            $base_info_title = $item->content->registrar->shortName . ' ' . 'id ' . $base_info_id; //Заголовок поста
-            $base_url_name = translit($item->content->registrar->shortName);
-            $my_post = array(
-                'post_title' => $base_info_title,
-                'post_name' => $base_url_name,
-                'post_status' => 'publish',
+
+
+
+
+        $my_post = array(
+            'post_title' => $base_info_title,
+            'post_name' => $base_url_name,
+            'post_status' => 'publish',
+            'post_type' => 'post',
+            'ping_status' => 'closed',
+            'comment_status' => 'closed',
+            'post_category' => array($catId),
+            'post_parent' => $get_post_id
+        );
+        $posts = get_posts(
+            [
+                'fields' => 'ids',
                 'post_type' => 'post',
-                'ping_status' => 'closed',
-                'comment_status' => 'closed',
+                'title' => $base_info_title,
+                'post_status' => 'publish',
                 'post_category' => array($catId),
-                'post_parent' => $get_post_id
-            );
-            $posts = get_posts(
-                [
-                    'fields' => 'ids',
-                    'post_type' => 'post',
-                    'title' => $base_info_title,
-                    'post_status' => 'publish',
-                    'post_category' => array($catId),
-                    'orderby' => 'post_date ID',
-                    'order' => 'ASC',
-                ]
-            );
+                'orderby' => 'post_date ID',
+                'order' => 'ASC',
+            ]
+        );
 
-            if (!empty($posts)) {
-                if ($item->status == 'Deleted' && !has_tag('Deleted', $posts[0])) {
-                    wp_add_post_tags($posts[0], 'Deleted');
-                    wp_remove_object_terms($posts[0], 'Published', 'post_tag');
+        if (!empty($posts)) {
+            if ($item->status == 'Deleted' && !has_tag('Deleted', $posts[0])) {
+                wp_add_post_tags($posts[0], 'Deleted');
+                wp_remove_object_terms($posts[0], 'Published', 'post_tag');
 //                    update_field('issuer_del_reason', $item->deleteReason, $posts[0]);//
 //                    update_field('issuer_del_at', $item->deletedAt, $posts[0]);// Причина публикации'
-                }
-                array_push($save_posts_id, $posts[0]);
-            } else {
-
-                $post_id = wp_insert_post($my_post);
-                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-basic-single.php');
-                wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
-                update_field('basic_info_title', $item->title, $post_id);
-                update_field('basic_info_id', $item->id, $post_id);
-                update_field('basic_info_parent_id', $item->parentDisclosureId, $post_id);
-                update_field('basic_info_name', $item->content->registrar->shortName, $post_id);
-                update_field('basic_info_full_name', $item->content->registrar->fullName, $post_id);
-                update_field('basic_info_short_name_en', $item->content->registrar->shortNameEng, $post_id);
-                update_field('basic_info_full_name_en', $item->content->registrar->fullNameEng, $post_id);
-                update_field('basic_info_inn', $item->content->registrar->inn, $post_id);
-                update_field('basic_info_kpp', $item->content->registrar->kpp, $post_id);
-                update_field('basic_info_ogrn', $item->content->registrar->ogrn, $post_id);
-                update_field('basic_info_address', $item->content->registrar->address, $post_id);
-                update_field('basic_info_phone', $item->content->registrar->phone, $post_id);
-                update_field('basic_info_fax', $item->content->registrar->fax, $post_id);
-                update_field('basic_info_email', $item->content->registrar->email, $post_id);
-                update_field('basic_info_site', $item->content->registrar->webSite, $post_id);
-                update_field('basic_info_social', $item->content->registrar->socialMedia, $post_id);
-                update_field('basic_info_bank_recipient', $item->content->registrar->bank->recipient, $post_id);
-                update_field('basic_info_bank_rs', $item->content->registrar->bank->rs, $post_id);
-                update_field('basic_info_bank_bic', $item->content->registrar->bank->bic, $post_id);
-                update_field('basic_info_bank_ks', $item->content->registrar->bank->ks, $post_id);
-                update_field('basic_info_bank_name', $item->content->registrar->bank->name, $post_id);
-                update_field('basic_info_bank_inn', $item->content->registrar->bank->inn, $post_id);
-                update_field('basic_info_bank_kpp', $item->content->registrar->bank->kpp, $post_id);
-
-
-                update_field('basic_info_published', dateConverter($item->publishedAt), $post_id);
-                update_field('basic_info_reason_public', $item->publicationReason, $post_id);
-                update_field('basic_info_reason_del', $item->deleteReason, $post_id);
-                update_field('basic_info_del_at', dateConverter($item->deletedAt), $post_id);
-                array_push($save_posts_id, $post_id);
             }
+            array_push($save_posts_id, $posts[0]);
+        } else {
+
+            $post_id = wp_insert_post($my_post);
+            if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-basic-single.php');
+            wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
+            update_field('basic_info_title', $item->title, $post_id);
+            update_field('basic_info_id', $item->id, $post_id);
+            update_field('basic_info_parent_id', $item->parentDisclosureId, $post_id);
+            update_field('basic_info_name', $item->content->registrar->shortName, $post_id);
+            update_field('basic_info_full_name', $item->content->registrar->fullName, $post_id);
+            update_field('basic_info_short_name_en', $item->content->registrar->shortNameEng, $post_id);
+            update_field('basic_info_full_name_en', $item->content->registrar->fullNameEng, $post_id);
+            update_field('basic_info_inn', $item->content->registrar->inn, $post_id);
+            update_field('basic_info_kpp', $item->content->registrar->kpp, $post_id);
+            update_field('basic_info_ogrn', $item->content->registrar->ogrn, $post_id);
+            update_field('basic_info_address', $item->content->registrar->address, $post_id);
+            update_field('basic_info_phone', $item->content->registrar->phone, $post_id);
+            update_field('basic_info_fax', $item->content->registrar->fax, $post_id);
+            update_field('basic_info_email', $item->content->registrar->email, $post_id);
+            update_field('basic_info_site', $item->content->registrar->webSite, $post_id);
+            update_field('basic_info_social', $item->content->registrar->socialMedia, $post_id);
+            update_field('basic_info_bank_recipient', $item->content->registrar->bank->recipient, $post_id);
+            update_field('basic_info_bank_rs', $item->content->registrar->bank->rs, $post_id);
+            update_field('basic_info_bank_bic', $item->content->registrar->bank->bic, $post_id);
+            update_field('basic_info_bank_ks', $item->content->registrar->bank->ks, $post_id);
+            update_field('basic_info_bank_name', $item->content->registrar->bank->name, $post_id);
+            update_field('basic_info_bank_inn', $item->content->registrar->bank->inn, $post_id);
+            update_field('basic_info_bank_kpp', $item->content->registrar->bank->kpp, $post_id);
+
+            update_field('basic_info_reason_public', $item->publicationReasonName, $post_id);
+            update_field('basic_info_reason_del', $item->deleteReasonName, $post_id);
+            update_field('basic_info_source', $item->sourceName, $post_id);
+
+            update_field('basic_info_createAt', dateConverter($item->createdAt), $post_id);
+            update_field('basic_info_published', dateConverter($item->publishedAt), $post_id);
+            update_field('basic_info_del_at', dateConverter($item->deletedAt), $post_id);
+
+            array_push($save_posts_id, $post_id);
         }
     }
     $posts = get_posts(
@@ -1118,92 +1159,100 @@ function disclosureBasicInfoHistory($cat_name)// Истории для разд�
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
     foreach ($basic_info->data->items as $item) {
 
-        if ($item->section == 'Main') {
-            $str_id = strval($item->parentDisclosureId);
-            foreach ($item->history as $history) {
+        $str_id = strval($item->parentDisclosureId);
+        foreach ($item->history as $history) {
 
-                $basic_info_id = $history->id;// id
-                $basic_info_title = $history->title . ' ' . 'id ' . $basic_info_id; //Заголовок поста
-                $basic_url = translit($history->title);
-                $basic_info_short_name = $history->content->registrar->shortName;// Краткое имя
-                $basic_info_full_name = $history->content->registrar->fullName;// Полное имя
-                $basic_info_short_name_eng = $history->content->registrar->shortNameEng;// Краткое имя на англ
-                $basic_info_full_name_eng = $history->content->registrar->fullNameEng; // Полное имя на англ
-                $basic_info_inn = $history->content->registrar->inn; // ИНН
-                $basic_info_kpp = $history->content->registrar->kpp;// КПП
-                $basic_info_ogrn = $history->content->registrar->ogrn; // Огрн
-                $basic_info_address = $history->content->registrar->address; // Адрес
-                $basic_info_phone = $history->content->registrar->phone; //Телефон
-                $basic_info_fax = $history->content->registrar->fax; //факс
-                $basic_info_email = $history->content->registrar->email;// email
-                $basic_info_site = $history->content->registrar->webSite;// веб-сайт
-                $basic_info_media = $history->content->registrar->socialMedia;// социальные сети
-                $basic_info_bank_recipient = $history->content->registrar->bank->recipient;//реквизиты банка
-                $basic_info_bank_rs = $history->content->registrar->bank->rs;//реквизиты банка
-                $basic_info_bank_bic = $history->content->registrar->bank->bic;//реквизиты банка
-                $basic_info_bank_ks = $history->content->registrar->bank->ks;//реквизиты банка
-                $basic_info_bank_name = $history->content->registrar->bank->name;//реквизиты банка
-                $basic_info_bank_inn = $history->content->registrar->bank->inn;//реквизиты банка
-                $basic_info_bank_kpp = $history->content->registrar->bank->kpp; //реквизиты банка
-                $basic_info_pub_reason = $history->publicationReason; // Причина публикации раскрытия
-                $basic_info_del_reason = $history->deleteReason; // Причина Удаления
-                $basic_info_pub_at = dateConverter($history->publishedAt); // Опубликовано
-                $basic_info_del_at = dateConverter($history->deletedAt); // Перенесено в архив
-                $basic_info_history_title = $history->title;
-                $my_post = array(
-                    'post_title' => $basic_info_title,
-                    'post_name' => $basic_url,
-                    'post_status' => 'publish',
+            $basic_info_id = $history->id;// id
+            $basic_info_title = $history->title . ' ' . 'id ' . $basic_info_id; //Заголовок поста
+            $basic_url = translit($history->title);
+            $basic_info_short_name = $history->content->registrar->shortName;// Краткое имя
+            $basic_info_full_name = $history->content->registrar->fullName;// Полное имя
+            $basic_info_short_name_eng = $history->content->registrar->shortNameEng;// Краткое имя на англ
+            $basic_info_full_name_eng = $history->content->registrar->fullNameEng; // Полное имя на англ
+            $basic_info_inn = $history->content->registrar->inn; // ИНН
+            $basic_info_kpp = $history->content->registrar->kpp;// КПП
+            $basic_info_ogrn = $history->content->registrar->ogrn; // Огрн
+            $basic_info_address = $history->content->registrar->address; // Адрес
+            $basic_info_phone = $history->content->registrar->phone; //Телефон
+            $basic_info_fax = $history->content->registrar->fax; //факс
+            $basic_info_email = $history->content->registrar->email;// email
+            $basic_info_site = $history->content->registrar->webSite;// веб-сайт
+            $basic_info_media = $history->content->registrar->socialMedia;// социальные сети
+            $basic_info_bank_recipient = $history->content->registrar->bank->recipient;//реквизиты банка
+            $basic_info_bank_rs = $history->content->registrar->bank->rs;//реквизиты банка
+            $basic_info_bank_bic = $history->content->registrar->bank->bic;//реквизиты банка
+            $basic_info_bank_ks = $history->content->registrar->bank->ks;//реквизиты банка
+            $basic_info_bank_name = $history->content->registrar->bank->name;//реквизиты банка
+            $basic_info_bank_inn = $history->content->registrar->bank->inn;//реквизиты банка
+            $basic_info_bank_kpp = $history->content->registrar->bank->kpp; //реквизиты банка
+
+            $basic_info_pub_reason = $history->publicationReasonName; // Причина публикации
+            $basic_info_del_reason = $history->deleteReasonName; // Причина Удаления
+            $basic_info_source = $history->sourceName; // Источник
+
+            $basic_info_create_at = dateConverter($history->createdAt); // Создано
+            $basic_info_pub_at = dateConverter($history->publishedAt); // Опубликовано
+            $basic_info_del_at = dateConverter($history->deletedAt); // Удалено
+
+            $basic_info_history_title = $history->title;
+            $my_post = array(
+                'post_title' => $basic_info_title,
+                'post_name' => $basic_url,
+                'post_status' => 'publish',
+                'post_type' => 'post',
+                'post_category' => array($catId),
+                'post_parent' => $get_post_id
+            );
+            $posts = get_posts(
+                [
                     'post_type' => 'post',
+                    'title' => $basic_info_title,
+                    'post_status' => 'publish',
                     'post_category' => array($catId),
-                    'post_parent' => $get_post_id
-                );
-                $posts = get_posts(
-                    [
-                        'post_type' => 'post',
-                        'title' => $basic_info_title,
-                        'post_status' => 'publish',
-                        'post_category' => array($catId),
-                        'orderby' => 'post_date ID',
-                        'order' => 'ASC',
-                    ]
-                );
+                    'orderby' => 'post_date ID',
+                    'order' => 'ASC',
+                ]
+            );
 
-                if (!empty($posts)) {
+            if (!empty($posts)) {
 
-                } else {
+            } else {
 
-                    $post_id = wp_insert_post($my_post);
-                    if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-basic-history.php');
-                    wp_set_object_terms($post_id, $str_id, 'post_tag', false);
-                    update_field('basic_history_title', $basic_info_history_title, $post_id);
-                    update_field('basic_history_info_id', $basic_info_id, $post_id);
-                    update_field('basic_history_info_name', $basic_info_short_name, $post_id);
-                    update_field('basic_history_info_full_name', $basic_info_full_name, $post_id);
-                    update_field('basic_history_info_short_name_en', $basic_info_short_name_eng, $post_id);
-                    update_field('basic_history_info_full_name_en', $basic_info_full_name_eng, $post_id);
-                    update_field('basic_history_info_inn', $basic_info_inn, $post_id);
-                    update_field('basic_history_info_kpp', $basic_info_kpp, $post_id);
-                    update_field('basic_history_info_ogrn', $basic_info_ogrn, $post_id);
-                    update_field('basic_history_info_address', $basic_info_address, $post_id);
-                    update_field('basic_history_info_phone', $basic_info_phone, $post_id);
-                    update_field('basic_history_info_fax', $basic_info_fax, $post_id);
-                    update_field('basic_history_info_email', $basic_info_email, $post_id);
-                    update_field('basic_history_info_site', $basic_info_site, $post_id);
-                    update_field('basic_history_info_social', $basic_info_media, $post_id);
-                    update_field('basic_history_info_bank_recipient', $basic_info_bank_recipient, $post_id);
-                    update_field('basic_history_info_bank_rs', $basic_info_bank_rs, $post_id);
-                    update_field('basic_history_info_bank_bic', $basic_info_bank_bic, $post_id);
-                    update_field('basic_history_info_bank_ks', $basic_info_bank_ks, $post_id);
-                    update_field('basic_history_info_bank_name', $basic_info_bank_name, $post_id);
-                    update_field('basic_history_info_bank_inn', $basic_info_bank_inn, $post_id);
-                    update_field('basic_history_info_bank_kpp', $basic_info_bank_kpp, $post_id);
-                    update_field('basic_history_info_published', $basic_info_pub_at, $post_id);
-                    update_field('basic_history_info_reason_public', $basic_info_pub_reason, $post_id);
-                    update_field('basic_history_info_reason_del', $basic_info_del_reason, $post_id);
-                    update_field('basic_history_info_del_at', $basic_info_del_at, $post_id);
+                $post_id = wp_insert_post($my_post);
+                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-basic-history.php');
+                wp_set_object_terms($post_id, $str_id, 'post_tag', false);
+                update_field('basic_history_title', $basic_info_history_title, $post_id);
+                update_field('basic_history_info_id', $basic_info_id, $post_id);
+                update_field('basic_history_info_name', $basic_info_short_name, $post_id);
+                update_field('basic_history_info_full_name', $basic_info_full_name, $post_id);
+                update_field('basic_history_info_short_name_en', $basic_info_short_name_eng, $post_id);
+                update_field('basic_history_info_full_name_en', $basic_info_full_name_eng, $post_id);
+                update_field('basic_history_info_inn', $basic_info_inn, $post_id);
+                update_field('basic_history_info_kpp', $basic_info_kpp, $post_id);
+                update_field('basic_history_info_ogrn', $basic_info_ogrn, $post_id);
+                update_field('basic_history_info_address', $basic_info_address, $post_id);
+                update_field('basic_history_info_phone', $basic_info_phone, $post_id);
+                update_field('basic_history_info_fax', $basic_info_fax, $post_id);
+                update_field('basic_history_info_email', $basic_info_email, $post_id);
+                update_field('basic_history_info_site', $basic_info_site, $post_id);
+                update_field('basic_history_info_social', $basic_info_media, $post_id);
+                update_field('basic_history_info_bank_recipient', $basic_info_bank_recipient, $post_id);
+                update_field('basic_history_info_bank_rs', $basic_info_bank_rs, $post_id);
+                update_field('basic_history_info_bank_bic', $basic_info_bank_bic, $post_id);
+                update_field('basic_history_info_bank_ks', $basic_info_bank_ks, $post_id);
+                update_field('basic_history_info_bank_name', $basic_info_bank_name, $post_id);
+                update_field('basic_history_info_bank_inn', $basic_info_bank_inn, $post_id);
+                update_field('basic_history_info_bank_kpp', $basic_info_bank_kpp, $post_id);
 
-                }
+
+                update_field('basic_history_info_reason_public', $basic_info_pub_reason, $post_id);
+                update_field('basic_history_info_reason_del', $basic_info_del_reason, $post_id);
+                update_field('basic_history_info_source', $basic_info_source, $post_id);
+
+                update_field('basic_history_info_published', $basic_info_pub_at, $post_id);
+                update_field('basic_history_info_create_at', $basic_info_create_at, $post_id);
+                update_field('basic_history_info_del_at', $basic_info_del_at, $post_id);
+
             }
         }
 
@@ -1293,7 +1342,7 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history) //т�
 
                     foreach ($get_files->files as $file) {
                         $file_name = $file->fileName;
-                        $post_name = $file->sourceFileName;
+                        $post_name = translit($file->sourceFileName);
                         if ($first != 1) {
                             $down_link = $down_link . '&';
                             $file_name = $title_file . '.zip';
@@ -1524,9 +1573,14 @@ function office()// Филиалы и представительства +
             update_field('office_fax', $item->content->office->fax, $post_id);
             update_field('office_head', $item->content->office->headOfOffice, $post_id);
 
+            update_field('office_pub_reason', $item->publicationReasonName, $post_id);
+            update_field('office_pub_delReason', $item->deleteReasonName, $post_id);
+            update_field('office_pub_source', $item->sourceName, $post_id);
+
             update_field('office_createdAt', dateConverter($item->createdAt), $post_id);
-            update_field('office_pub_reason', $item->publicationReason, $post_id);
             update_field('office_publishedAt', dateConverter($item->publishedAt), $post_id);
+            update_field('office_delAt', dateConverter($item->deletedAt), $post_id);
+
             array_push($save_posts_id, $post_id);
 
         }
@@ -1604,11 +1658,15 @@ function officeHistory()// основные сведения история +
                     update_field('history_office_phone', $history->content->office->phone, $post_id);
                     update_field('history_office_fax', $history->content->office->fax, $post_id);
                     update_field('history_office_head', $history->content->office->headOfOffice, $post_id);
+
+                    update_field('history_office_pub_reason', $history->publicationReasonName, $post_id);
+                    update_field('history_office_delReason', $history->deleteReasonName, $post_id);
+                    update_field('history_office_source', $history->sourceName, $post_id);
+
                     update_field('history_office_createdAt', dateConverter($history->createdAt), $post_id);
-                    update_field('history_office_pub_reason', $history->publicationReason, $post_id);
-                    update_field('history_office_delReason', $history->publicationReason, $post_id);
-                    update_field('history_office_deletedAt', dateConverter($history->createdAt), $post_id);
                     update_field('history_office_publishedAt', dateConverter($history->publishedAt), $post_id);
+                    update_field('history_office_deletedAt', dateConverter($history->createdAt), $post_id);
+
 
 
                 }

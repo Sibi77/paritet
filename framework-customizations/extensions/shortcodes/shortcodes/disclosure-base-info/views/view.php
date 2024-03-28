@@ -38,7 +38,7 @@
 
                     <tr>
                         <td >
-                            <a href="<?php the_permalink(); ?>"><?= get_field("basic_info_title"); ?></a>
+                            <a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("basic_info_title"); ?></a>
                         </td>
                         <td><?= get_field("basic_info_inn"); ?></td>
                         <td><?= get_field("basic_info_published"); ?></td>

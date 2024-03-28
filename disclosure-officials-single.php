@@ -14,54 +14,123 @@ get_header();
 </div>
 <section class="disclosure-card">
     <div class="pir-container">
-        <h1 class="pir-title-h1">Должностные лица</h1>
+        <h1 class="pir-title-h1"><?= get_field('officials_title');?></h1>
+
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Причина публикации</div>
+            <div class="disclosure-card__content">
+                <?php if(get_field("officials_pub_reason") == null || get_field("officials_pub_reason") == ''){
+                    echo '<span class="api-undefined">Не определено</span>';
+                }else{
+                    echo  get_field("officials_pub_reason");
+                }
+                ?>
+            </div>
+        </div>
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Причина Удаления</div>
+            <div class="disclosure-card__content">
+                <?php if(get_field("officials_del_reason") == null || get_field("officials_del_reason") == ''){
+                    echo '<span class="api-undefined">Не определено</span>';
+                }else{
+                    echo  get_field("officials_del_reason");
+                }
+                ?>
+            </div>
+        </div>
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Источник</div>
+            <div class="disclosure-card__content">
+                <?php if(get_field("officials_source") == null || get_field("officials_source") == ''){
+                    echo '<span class="api-undefined">Не определено</span>';
+                }else{
+                    echo  get_field("officials_source");
+                }
+                ?>
+            </div>
+        </div>
 
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">ФИО</div>
-            <div class="disclosure-card__content"><?= get_field("officials_fio");?></div>
+            <div class="disclosure-card__content">
+                <?php if(get_field("officials_fio") == null || get_field("officials_fio") == ''){
+                    echo '<span class="api-undefined">Не определено</span>';
+                }else{
+                    echo  get_field("officials_fio");
+                }
+                ?>
+            </div>
         </div>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Должность</div>
-            <div class="disclosure-card__content"><?= get_field("officials_position");?></div>
+            <div class="disclosure-card__content">
+                <?php if(get_field("officials_position") == null || get_field("officials_position") == ''){
+                    echo '<span class="api-undefined">Не определено</span>';
+                }else{
+                    echo  get_field("officials_position");
+                }
+                ?>
+            </div>
         </div>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Дата избрания</div>
-            <div class="disclosure-card__content"><?= get_field("officials_date_election");?></div>
+            <div class="disclosure-card__content">
+                <?php if(get_field("officials_date_election") == null || get_field("officials_date_election") == ''){
+                    echo '<span class="api-undefined">Не определено</span>';
+                }else{
+                    echo  substr(get_field("officials_date_election"),0,10);
+                }
+                ?>
+            </div>
         </div>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Опыт работы</div>
-            <div class="disclosure-card__content"><?= get_field("officials_work_experience");?></div>
+            <div class="disclosure-card__content">
+                <?php if(get_field("officials_work_experience") == null || get_field("officials_work_experience") == ''){
+                    echo '<span class="api-undefined">Не определено</span>';
+                }else{
+                    echo  get_field("officials_work_experience");
+                }
+                ?>
+            </div>
         </div>
+
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Причина удаления</div>
-            <div class="disclosure-card__content"><?= get_field("officials_del_reason");?></div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Причина публикации</div>
-            <div class="disclosure-card__content"><?= get_field("officials_pub_reason");?></div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Дата создания</div>
-            <div class="disclosure-card__content"><?= get_field("officials_created_at");?></div>
+            <div class="disclosure-card__header">Создано</div>
+            <div class="disclosure-card__content">
+                <?php if(get_field("officials_created_at") == null || get_field("officials_created_at") == ''){
+                    echo '<span class="api-undefined">Не определено</span>';
+                }else{
+                    echo  get_field("officials_created_at");
+                }
+                ?>
+            </div>
         </div>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Опубликовано</div>
-            <div class="disclosure-card__content"><?= get_field("officials_published_at");?></div>
+            <div class="disclosure-card__content">
+                <?php if(get_field("officials_published_at") == null || get_field("officials_published_at") == ''){
+                    echo '<span class="api-undefined">Не определено</span>';
+                }else{
+                    echo  get_field("officials_published_at");
+                }
+                ?>
+            </div>
         </div>
 
 
-        <?php if(!empty( get_field("basic_info_reason_del"))) {?>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Причина Удаления</div>
-                <div class="disclosure-card__content"><?= get_field("basic_info_reason_del"); ?></div>
+
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Удалено</div>
+            <div class="disclosure-card__content">
+                <?php if(get_field("officials_del_at") == null || get_field("officials_del_at") == ''){
+                    echo '<span class="api-undefined">Не определено</span>';
+                }else{
+                    echo  get_field("officials_del_at");
+                }
+                ?>
             </div>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Перенесено в архив</div>
-                <div class="disclosure-card__content"><?= get_field("basic_info_del_at"); ?></div>
-            </div>
-            <?php
-        }
-        ?>
+        </div>
 
 
     </div>
@@ -77,10 +146,10 @@ get_header();
                                 Наименование
                             </td>
                             <td>
-                                Опубликовано
+                                Опубликован
                             </td>
 
-                            <td>Перенесено в архив</td>
+                            <td>Удален</td>
 
                         </tr>
 
@@ -111,8 +180,8 @@ get_header();
                         foreach( $myposts as $post ){setup_postdata( $post ); ?>
                             <?php
                             ?>
-                            <tr  style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
-                                <td><?php the_field("history_officials_fio") ?></a></td>
+                            <tr>
+                                <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?php the_field("history_officials_title") ?></a></a></td>
                                 <td><?php the_field("history_officials_published_at") ?></td>
                                 <td><?php the_field("history_officials_deletedAt") ?></td>
 

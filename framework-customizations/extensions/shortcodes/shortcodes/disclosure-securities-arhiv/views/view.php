@@ -39,10 +39,10 @@
                     <tr>
 
                         <td >
-                            <a href="<?php the_permalink(); ?>"><?= get_field("issuerrr_name"); ?></a>
+                            <a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("issuerrr_title"); ?></a>
                         </td>
-                        <td><?= get_field("issuer_registration_date"); ?></td>
-                        <td><?= get_field("issuer_published_at"); ?></td>
+                        <td><?= substr(get_field("issuer_registration_date"),0,10) ; ?></td>
+                        <td><?= substr(get_field("issuer_published_at"),0,10); ?></td>
                     </tr>
 
 

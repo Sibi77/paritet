@@ -38,6 +38,8 @@
                      'category_name' => 'issuers',
                      'tag' => 'Transferred',
                      'posts_per_page' => -1,
+                     'orderby' => 'date',
+                     'order' => 'ASC',
 
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
@@ -45,7 +47,7 @@
                  <tr>
                      <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("issuer_title"); ?></a></td>
                      <td><?= get_field("issuer_inn"); ?></td>
-                     <td><?= get_field("issuer_publishedAt"); ?></td>
+                     <td><?= substr(get_field("issuer_publishedAt"),0,10) ; ?></td>
                  </tr>
 
 

@@ -45,11 +45,11 @@
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
                  while (have_posts()) : the_post();?>
-                 <tr style="cursor: pointer" onclick="document.location = '<?php the_permalink(); ?>'">
-                     <td><?= get_field("transfer_short_name"); ?></td>
-                     <td><?= get_field("transfer_inn"); ?></td>
-                     <td><?= get_field("transfer_published"); ?></td>
-                 </tr>
+                     <tr>
+                         <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("transfer_title"); ?></a></td>
+                         <td><?= get_field("transfer_inn"); ?></td>
+                         <td><?= get_field("transfer_published"); ?></td>
+                     </tr>
 
 
                      <!--здесь выводится миниатюра записи-->
