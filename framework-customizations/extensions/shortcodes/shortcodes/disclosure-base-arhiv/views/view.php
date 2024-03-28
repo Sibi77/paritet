@@ -16,7 +16,7 @@
                 <thead>
                 <tr>
                     <td>НАИМЕНОВАНИЕ</td>
-                    <td>Перенесено в архив</td>
+                    <td>Удалено</td>
                     <td>Опубликовано</td>
                 </tr>
 
@@ -42,8 +42,8 @@
                             <a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("basic_info_title"); ?></a>
 
                         </td>
-                        <td><?= get_field("basic_info_del_at"); ?></td>
-                        <td><?= get_field("basic_info_published"); ?></td>
+                        <td><?=substr( get_field("basic_info_del_at"),0,10); ?></td>
+                        <td><?= substr(get_field("basic_info_published"),0,10); ?></td>
                     </tr>
 
 

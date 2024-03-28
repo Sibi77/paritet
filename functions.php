@@ -182,7 +182,8 @@ function dateConverter($date_api)
     if (!empty($date_api)) {
         return date("d.m.Y H:i", strtotime($date_api)+ 3*60*60);
     }
-} //конвертер даты
+}//конвертер даты
+
 function translit($value)//перевод с кирилицы на латиницу
 {
     $converter = array(
@@ -372,13 +373,13 @@ function securitiesIssuer($section_name, $cat_name, $cat_name_history)// Вып�
                 update_field('issuerrr_parent_id', $item->parentDisclosureId, $post_id);
 
                 update_field('issuerrr_name', $item->content->security->issuer, $post_id);
-                update_field('issuer_registration_date', $item->content->security->jscRegistrationDate, $post_id);
+                update_field('issuer_registration_date', dateConverter($item->content->security->jscRegistrationDate), $post_id);
                 update_field('issuer_security_type', $item->content->security->securityType, $post_id);
                 update_field('issuer_security_category', $item->content->security->securityCategory, $post_id);
                 update_field('issuer_registration_number', $item->content->security->registrationNumber, $post_id);
                 update_field('issuer_isin_code', $item->content->security->isinCode, $post_id);
-                update_field('issuer_registration_date', $item->content->security->registrationDate, $post_id);
-                update_field('issuer_cancellation_date', $item->content->security->cancellationDate, $post_id);
+                update_field('issuer_registration_date', dateConverter($item->content->security->registrationDate), $post_id);
+                update_field('issuer_cancellation_date', dateConverter($item->content->security->cancellationDate), $post_id);
                 update_field('issuer_denomination', $item->content->security->denomination, $post_id);
                 update_field('issuer_issue_volume', $item->content->security->issueVolume, $post_id);
                 update_field('issuer_issue_amount', $item->content->security->issueAmount, $post_id);
@@ -470,13 +471,13 @@ function securitiesIssuerHistory($cat_name, $section_name)// Выпуски це
                     update_field('history_issuer_id', $history->id, $post_id);
                     update_field('history_issuer_title', $history->title, $post_id);
                     update_field('history_issuer_name', $history->content->security->issuer, $post_id);
-                    update_field('history_issuer_jscRegistrationDate', $item->content->security->jscRegistrationDate, $post_id);
+                    update_field('history_issuer_jscRegistrationDate', dateConverter($item->content->security->jscRegistrationDate) , $post_id);
                     update_field('history_issuer_securityType', $history->content->security->securityType, $post_id);
                     update_field('history_issuer_securityCategory', $history->content->security->securityCategory, $post_id);
                     update_field('history_issuer_registrationNumber', $history->content->security->registrationNumber, $post_id);
                     update_field('history_issuer_isinCode', $history->content->security->isinCode, $post_id);
-                    update_field('history_issuer_registrationDate', $history->content->security->registrationDate, $post_id);
-                    update_field('history_issuer_cancellationDate', $history->content->security->cancellationDate, $post_id);
+                    update_field('history_issuer_registrationDate',dateConverter( $history->content->security->registrationDate), $post_id);
+                    update_field('history_issuer_cancellationDate', dateConverter($history->content->security->cancellationDate), $post_id);
                     update_field('history_issuer_denomination', $history->content->security->denomination, $post_id);
                     update_field('history_issuer_issueVolume', $history->content->security->issueVolume, $post_id);
                     update_field('history_issuer_issueAmount', $history->content->security->issueAmount, $post_id);

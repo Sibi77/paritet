@@ -175,7 +175,7 @@ get_header();
         </div>
 
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Создан</div>
+            <div class="disclosure-card__header">Создано</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_created_at") == null || get_field("issuer_created_at") == ''){
                     echo '<span class="api-undefined">Не определено</span>';
@@ -186,7 +186,7 @@ get_header();
             </div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Опубликованно</div>
+            <div class="disclosure-card__header">Опубликовано</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_published_at") == null || get_field("issuer_published_at") == ''){
                     echo '<span class="api-undefined">Не определено</span>';
@@ -197,7 +197,7 @@ get_header();
             </div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Удален</div>
+            <div class="disclosure-card__header">Удалено</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_deleteAt") == null || get_field("issuer_deleteAt") == ''){
                     echo '<span class="api-undefined">Не определено</span>';
@@ -257,8 +257,8 @@ get_header();
 
                             <tr>
                                 <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?php the_field("history_issuer_title") ?></a></td>
-                                <td><?php the_field("history_issuer_publishedAt") ?></td>
-                                <td><?php the_field("history_issuer_deletedAt") ?></td>
+                                <td><?php substr(the_field("history_issuer_publishedAt"),0,10) ?></td>
+                                <td><?php substr(the_field("history_issuer_deletedAt"),0,10) ?></td>
 
                             </tr>
                             <?php

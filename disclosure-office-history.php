@@ -15,8 +15,6 @@ get_header();
 <section class="disclosure-card">
     <div class="pir-container">
 
-        <?php
-       ?>
         <h1 class="pir-title-h1"><?= get_field('history_office_title');?></h1>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Причина публикации</div>

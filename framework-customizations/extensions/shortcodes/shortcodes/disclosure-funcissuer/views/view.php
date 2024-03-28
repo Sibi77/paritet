@@ -48,7 +48,7 @@
                  <tr>
                      <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("transfer_title"); ?></a></td>
                      <td><?= get_field("transfer_inn"); ?></td>
-                     <td><?= get_field("transfer_published"); ?></td>
+                     <td><?= substr(get_field("transfer_published"),0,10) ?></td>
                  </tr>
 
 
