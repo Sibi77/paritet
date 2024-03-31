@@ -312,7 +312,8 @@ function securitiesIssuer($section_name, $cat_name, $cat_name_history)// Вып�
     $save_posts_id = array();
     wp_defer_term_counting(true);
     wp_defer_comment_counting(true);
-    $securities_get = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full');
+
+    $securities_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"'.$section_name.'"}');
     $catId = get_category_by_slug($cat_name)->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -373,7 +374,7 @@ function securitiesIssuer($section_name, $cat_name, $cat_name_history)// Вып�
                 update_field('issuerrr_parent_id', $item->parentDisclosureId, $post_id);
 
                 update_field('issuerrr_name', $item->content->security->issuer, $post_id);
-                update_field('issuer_registration_date', dateConverter($item->content->security->jscRegistrationDate), $post_id);
+                update_field('issuer_jsc_registration_date', dateConverter($item->content->security->jscRegistrationDate), $post_id);
                 update_field('issuer_security_type', $item->content->security->securityType, $post_id);
                 update_field('issuer_security_category', $item->content->security->securityCategory, $post_id);
                 update_field('issuer_registration_number', $item->content->security->registrationNumber, $post_id);
@@ -424,7 +425,7 @@ function securitiesIssuer($section_name, $cat_name, $cat_name_history)// Вып�
 
 function securitiesIssuerHistory($cat_name, $section_name)// Выпуски ценных история +
 {
-    $history_info = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full');
+    $history_info = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"'.$section_name.'"}');
     $catId = get_category_by_slug($cat_name)->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -504,7 +505,7 @@ function issuerPost()// создание эмитентов +
 {
     wp_defer_term_counting(true);
     wp_defer_comment_counting(true);
-    $issuer_get = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Issuers"}');
+    $issuer_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Issuers"}');
     $catId = get_category_by_slug('issuers')->cat_ID;
     $save_posts_id = array();
     $now = current_datetime()->format('Y-m-d H:i:s');
@@ -549,8 +550,6 @@ function issuerPost()// создание эмитентов +
             if ($item->status == 'Deleted' && !has_tag('Deleted', $posts[0])) {
                 wp_add_post_tags($posts[0], 'Deleted');
                 wp_remove_object_terms($posts[0], 'Published', 'post_tag');
-                update_field('issuer_del_reason', $item->deleteReason, $posts[0]);//
-                update_field('issuer_del_at', $item->deletedAt, $posts[0]);// Причина публикации'
             }
 //            $my_post2 = array(
 //                'ID'=> $posts[0]->ID,
@@ -617,12 +616,23 @@ function issuerPost()// создание эмитентов +
 //        } else{
 ////            break;
 //        }
-        $my_post2 = array(
-            'ID' => $posting,
-            'post_status' => 'trash',
-        );
+//        $my_post2 = array(
+//            'ID' => $posting,
+//            'post_status' => 'trash',
+//        );
+//
+//        wp_update_post($my_post2);
 
-        wp_update_post($my_post2);
+
+        if(in_array($posting, $save_posts_id) === false){
+            $my_post2 = array(
+                'ID' => $posting->ID,
+                'post_status' => 'trash',
+            );
+
+            wp_update_post($my_post2);
+//
+        }
     }
 
 //    $posts = get_posts(
@@ -656,7 +666,7 @@ function issuerHistoryPost($cat_name)//Истории эмитентов +
 {
     wp_defer_term_counting(true);
     wp_defer_comment_counting(true);
-    $issuer_get = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Issuers"}');
+    $issuer_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Issuers"}');
     $catId = get_category_by_slug($cat_name)->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -724,8 +734,9 @@ function issuerHistoryPost($cat_name)//Истории эмитентов +
 }
 
 function transferAgents($section_name, $cat_name, $cat_name_history)// + создание трансфер агентов
+
 {
-    $transferAgents_get = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full');
+    $transferAgents_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"'.$section_name.'"}');
     $catId = get_category_by_slug($cat_name)->cat_ID;
     $now = current_datetime()->format('Y-m-d H:i:s');
     $save_posts_id = array();
@@ -817,7 +828,7 @@ function transferAgents($section_name, $cat_name, $cat_name_history)// + соз�
 
 function transferAgentsHistory($cat_name, $section_name)// + История трансфер-агентов
 {
-    $history_info = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full');
+    $history_info = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"'.$section_name.'"}');
     $catId = get_category_by_slug($cat_name)->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -888,7 +899,7 @@ function transferAgentsHistory($cat_name, $section_name)// + История тр
 
 function officials()// Должностные лица +
 {
-    $officials_get = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Officials"}');
+    $officials_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Officials"}');
     $save_posts_id = array();
     $now = current_datetime()->format('Y-m-d H:i:s');
     $catId = get_category_by_slug('officials')->cat_ID;
@@ -978,7 +989,7 @@ function officials()// Должностные лица +
 
 function OfficialsHistory($cat_name)// Должностные лица история +
 {
-    $officials_info = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Officials"}');
+    $officials_info = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Officials"}');
     $catId = get_category_by_slug($cat_name)->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -1046,7 +1057,7 @@ function OfficialsHistory($cat_name)// Должностные лица исто�
 function disclosureBasicInfo()// основные сведения +
 {
     $save_posts_id = array();
-    $base_info_get = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Main"}');
+    $base_info_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Main"}');
     $catId = get_category_by_slug('base_info')->cat_ID;
     $now = current_datetime()->format('Y-m-d H:i:s');
     global $post;
@@ -1154,7 +1165,7 @@ function disclosureBasicInfo()// основные сведения +
 
 function disclosureBasicInfoHistory($cat_name)// Истории для раздела основные сведения +
 {
-    $basic_info = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Main"}');
+    $basic_info = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Main"}');
     $catId = get_category_by_slug($cat_name)->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
@@ -1262,7 +1273,7 @@ function disclosureBasicInfoHistory($cat_name)// Истории для разд�
 
 function disclosure_documents($section_name, $cat_name, $cat_name_history) //тип контента: Документ +
 {
-    $license_get = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full');
+    $license_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"'.$section_name.'"}');
     $response1 = wpgetapi_endpoint('disclo_pir', 'test', array('debug' => false));
     $response1 = json_decode($response1);
     $catId = get_category_by_slug($cat_name)->cat_ID;
@@ -1300,6 +1311,8 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history) //т�
 
             if (!empty($posts)) {
                 if ($item->status == 'Deleted' && !has_tag('Deleted', $posts[0])) {
+                    echo '<pre> найден';
+                    print_r($post_title);
                     wp_add_post_tags($posts[0], 'Deleted');
                     wp_remove_object_terms($posts[0], 'Published', 'post_tag');
 //                    update_field('issuer_del_reason', $item->deleteReason, $posts[0]);
@@ -1307,7 +1320,8 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history) //т�
                 }
                 array_push($save_posts_id, $posts[0]);
             } else {
-
+//                echo '<pre> newPost';
+//                print_r($post_title);
                 $post_id = wp_insert_post($my_post);
                 if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-content-document.php');
                 wp_set_object_terms($post_id, array($status), 'post_tag', false);
@@ -1333,10 +1347,10 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history) //т�
                 update_field('doc_section_name_history', $section_name, $post_id); //имя секции (папаметр для истории)
                 //Добавление файла
                 array_push($save_posts_id, $post_id);
-                $get_files = paritet_get_api('https://preprod.paritet.ru:7443', '/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId=' . $item->id);
+                $get_files = paritet_get_api('https://pir.paritet.ru', '/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId=' . $item->id);
                 if (count($get_files->files) > 0) {
                     $first = 1;
-                    $down_link_orig = 'https://preprod.paritet.ru:7443/api/CloudFileApi/DownloadFile?';
+                    $down_link_orig = 'https://pir.paritet.ru/api/CloudFileApi/DownloadFile?';
                     $down_link = '';
                     $title_file = $item->id;
                     $file_name = '';
@@ -1395,7 +1409,11 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history) //т�
             'posts_per_page' => -1
         ]
     );
+//    echo '<pre> cat';
+//    print_r($catId);
     foreach ($posts as $posting) {
+//        echo '<pre> trash';
+//        print_r($posting);
         $my_post2 = array(
             'ID' => $posting,
             'post_status' => 'trash',
@@ -1407,7 +1425,7 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history) //т�
 
 function disclosure_doc_history($section_name, $cat_name)// история для документов +
 {
-    $issuer_get = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full');
+    $issuer_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"'.$section_name.'"}');
     $response1 = wpgetapi_endpoint('disclo_pir', 'test', array('debug' => false));
     $response1 = json_decode($response1);
     $catId = get_category_by_slug($cat_name)->cat_ID;
@@ -1460,11 +1478,11 @@ function disclosure_doc_history($section_name, $cat_name)// история дл�
                     update_field('history_doc_publishedAt', dateConverter($history->publishedAt), $post_id);
                     update_field('history_doc_deletedAt', dateConverter($history->deletedAt), $post_id);
 
-                    $get_files = paritet_get_api('https://preprod.paritet.ru:7443', '/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$history->id);
+                    $get_files = paritet_get_api('https://pir.paritet.ru', '/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId='.$history->id);
 
                     if (count($get_files->files) > 0) {
                         $first = 1;
-                        $down_link_orig = 'https://preprod.paritet.ru:7443/api/CloudFileApi/DownloadFile?';
+                        $down_link_orig = 'https://pir.paritet.ru/api/CloudFileApi/DownloadFile?';
                         $down_link = '';
                         $title_file = $history->id;
                         $file_name = '';
@@ -1516,7 +1534,7 @@ function office()// Филиалы и представительства +
 
 {
 
-    $office_get = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Offices"}');
+    $office_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Offices"}');
     $catId = get_category_by_slug('offices')->cat_ID;
     $now = current_datetime()->format('Y-m-d H:i:s');
     $save_posts_id = array();
@@ -1611,7 +1629,7 @@ function office()// Филиалы и представительства +
 
 function officeHistory()// основные сведения история +
 {
-    $office_info = paritet_get_api('https://preprod.paritet.ru:7443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Offices"}');
+    $office_info = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Offices"}');
     $catId = get_category_by_slug('offices_history')->cat_ID;
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)

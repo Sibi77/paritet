@@ -218,7 +218,7 @@ get_header();
             </div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Удаленно</div>
+            <div class="disclosure-card__header">Удалено</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("issuer_deletedAt") == null || get_field("issuer_deletedAt") == ''){
                     echo '<span class="api-undefined">Не определено</span>';
@@ -274,9 +274,9 @@ get_header();
                             <?php
                             ?>
                             <tr>
-                                <td><a class="pir-table__download" href="<?php the_permalink(); ?>"><?php the_field("history_issuer_title") ?></a></td>
-                                <td><?php substr(the_field("history_issuer_publishedAt"),0,10)  ?></td>
-                                <td><?php substr(the_field("history_issuer_deletedAt"),0,10) ?></td>
+                                <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?php the_field("history_issuer_title") ?></a></td>
+                                <td><?php echo substr(get_field("history_issuer_publishedAt"),0,10);  ?></td>
+                                <td><?php echo substr(get_field("history_issuer_deletedAt"),0,10); ?></td>
 
                             </tr>
                             <?php

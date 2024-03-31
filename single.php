@@ -12,4 +12,3 @@ while ( have_posts() ) : the_post();
     get_template_part( 'template-parts/content', 'single-page' );
 endwhile; // End of the loop.
 get_footer();
-global $post;

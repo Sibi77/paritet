@@ -45,18 +45,25 @@
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
                  while (have_posts()) : the_post();?>
-                 <tr>
-                     <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("transfer_title"); ?></a></td>
-                     <td><?= get_field("transfer_inn"); ?></td>
-                     <td><?= substr(get_field("transfer_published"),0,10) ?></td>
-                 </tr>
+                     <tr>
+                         <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("transfer_title"); ?></a></td>
+                         <td><?= get_field("transfer_inn"); ?></td>
+                         <td><?= substr(get_field("transfer_published"),0,10) ?></td>
+                     </tr>
+
 
 
                      <!--здесь выводится миниатюра записи-->
-                     <?php endwhile;
+                 <?php endwhile;
                      wp_reset_query();
                  ?>
-
+                 <?php
+                 if (empty(query_posts($args))) {
+                     echo '<tr>
+                    <td style="text-align: center" colspan="4">Пока нет записей</td>
+                </tr>';
+                 }
+                 ?>
 
                 </tbody>
             </table>

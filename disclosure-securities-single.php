@@ -66,10 +66,10 @@ get_header();
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Дата регистрации АО</div>
             <div class="disclosure-card__content">
-                <?php if(get_field("issuer_registration_date") == null || get_field("issuer_registration_date") == ''){
+                <?php if(get_field("issuer_jsc_registration_date") == null || get_field("issuer_jsc_registration_date") == ''){
                     echo '<span class="api-undefined">Не определено</span>';
                 }else{
-                    echo substr(get_field("issuer_registration_date"),0,10) ;
+                    echo substr(get_field("issuer_jsc_registration_date"),0,10) ;
                 }
                 ?>
             </div>
@@ -257,8 +257,8 @@ get_header();
 
                             <tr>
                                 <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?php the_field("history_issuer_title") ?></a></td>
-                                <td><?php substr(the_field("history_issuer_publishedAt"),0,10) ?></td>
-                                <td><?php substr(the_field("history_issuer_deletedAt"),0,10) ?></td>
+                                <td><?php echo substr(get_field("history_issuer_publishedAt"),0,10) ?></td>
+                                <td><?php echo substr(get_field("history_issuer_deletedAt"),0,10) ?></td>
 
                             </tr>
                             <?php

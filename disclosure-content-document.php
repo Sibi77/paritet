@@ -189,8 +189,8 @@ get_header();
                                         <a class="pir-table-api"
                                            href="<?php the_permalink(); ?>"><?php the_field("history_doc_title") ?></a>
                                     </td>
-                                    <td><?php substr(the_field("history_doc_publishedAt"), 0, 10) ?></td>
-                                    <td><?php substr(the_field("history_doc_deletedAt"),0,10)  ?></td>
+                                    <td><?php echo substr(get_field("history_doc_publishedAt"), 0, 10) ?></td>
+                                    <td><?php echo substr(get_field('history_doc_deletedAt'),0,10)  ?></td>
 
                                 </tr>
                                 <?php

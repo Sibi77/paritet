@@ -220,7 +220,7 @@ get_header();
             </div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Удаленно</div>
+            <div class="disclosure-card__header">Удалено</div>
             <div class="disclosure-card__content">
                 <?php if(get_field("history_issuer_deletedAt") == null || get_field("history_issuer_deletedAt") == ''){
                     echo '<span class="api-undefined">Не определено</span>';

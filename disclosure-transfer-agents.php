@@ -207,8 +207,8 @@ get_header();
                         foreach( $myposts as $post ){setup_postdata( $post ); ?>
                             <tr>
                                 <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?php the_field("history_transfer_title") ?></a></td>
-                                <td><?php substr(the_field("history_transfer_published"),0,10);  ?></td>
-                                <td><?php substr(the_field("history_transfer_deletedAt"), 0,10); ?></td>
+                                <td><?php echo substr(get_field("history_transfer_published"),0,10);  ?></td>
+                                <td><?php echo substr(get_field("history_transfer_deletedAt"), 0,10); ?></td>
 
                             </tr>
                             <?php

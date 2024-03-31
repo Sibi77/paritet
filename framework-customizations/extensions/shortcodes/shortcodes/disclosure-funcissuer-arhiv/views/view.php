@@ -52,12 +52,19 @@
                      </tr>
 
 
+
                      <!--здесь выводится миниатюра записи-->
                      <?php endwhile;
                      wp_reset_query();
                  ?>
 
-
+                 <?php
+                 if (empty(query_posts($args))) {
+                     echo '<tr>
+                    <td style="text-align: center" colspan="4">Пока нет архивных записей</td>
+                </tr>';
+                 }
+                 ?>
                 </tbody>
             </table>
             <div class="notfound">Ничего не найдено</div>

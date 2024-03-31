@@ -11,9 +11,9 @@ $options = [
     'alert_text'     => [
         'type'  => 'text',
         'label' => __('Текст', '{domain}'),
-    ],'alert_link'     => [
+    ],
+    'alert_link'     => [
         'type'  => 'text',
         'label' => __('Ссылка на страницу', '{domain}'),
     ],
-
 ];

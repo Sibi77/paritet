@@ -26,8 +26,8 @@
                 <tbody>
 
                 <?php
-//                checkPost('rules', 'Rules');
-                disclosure_documents('Rules','rules','rules_history');
+                //                checkPost('rules', 'Rules');
+                disclosure_documents('Rules', 'rules', 'rules_history');
 
                 $args = array(
                     'category_name' => 'rules',
@@ -71,7 +71,7 @@
                                 <?php
                             } ?>
                             <?php if(empty($media)) { ?>
-                                Отсуствует
+                                Отсутствует
 
                                 <?php
                             }
@@ -86,9 +86,17 @@
                 wp_reset_query();
                 ?>
 
+                <?php
+                if (empty(query_posts($args))) {
+                    echo '<tr>
+                    <td style="text-align: center" colspan="4">Пока нет записей</td>
+                </tr>';
+                }
+                ?>
 
                 </tbody>
             </table>
+
             <div class="notfound">Ничего не найдено</div>
         </div>
 

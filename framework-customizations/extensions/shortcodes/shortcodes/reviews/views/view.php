@@ -31,9 +31,3 @@
         </div>
     <?php endforeach; ?>
 </section>
-
-
-<?php foreach($atts['review'] as $reviews):?>
-
-
-<?php endforeach; ?>

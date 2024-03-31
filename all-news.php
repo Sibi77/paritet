@@ -1,7 +1,6 @@
 <?php
 /*
  * Template name: Все Новости
- * Template Post Type: post
  */
 get_header(); ?>
 
