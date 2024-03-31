@@ -7,6 +7,7 @@
  * @package paritet
  */
 
+
 ?>
 <section class="no-section">
     <div class="pir-container">
