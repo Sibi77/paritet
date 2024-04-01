@@ -259,21 +259,29 @@ function download_url_with_headers($url, $headers = []) // функция для
     return $tmpfname;
 }
 
+
+
 function paritet_get_api($endpoint, $url)// API Полный список раскрытий
 {
     $response1 = wpgetapi_endpoint('disclo_pir', 'test', array('debug' => false));
     $response1 = json_decode($response1);
 
+
     $args = array(
+        'timeout'=> 120,
         'headers' => array(
             'accept' => 'application/json',
             'Authorization' => 'Bearer ' . $response1->jwtToken
         )
     );
-
     $response = wp_remote_get($endpoint . $url, $args);
+    if( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+        echo 'Что-то пошло не так, возможно api отвалилось';
+        exit;
+    }
     $response = wp_remote_retrieve_body($response);
     $response = json_decode($response);
+
     return $response;
     // это ключ-идентификатор значения транзитного кэша
 //    $transient_key = 'pir12322777';
@@ -506,6 +514,7 @@ function issuerPost()// создание эмитентов +
     wp_defer_term_counting(true);
     wp_defer_comment_counting(true);
     $issuer_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Issuers"}');
+
     $catId = get_category_by_slug('issuers')->cat_ID;
     $save_posts_id = array();
     $now = current_datetime()->format('Y-m-d H:i:s');
@@ -591,49 +600,49 @@ function issuerPost()// создание эмитентов +
         }
     }
 
-    $posts = get_posts(
-        [
-            'fields' => 'ids', // Only get post IDs
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'exclude' => $save_posts_id,
-            'category' => $catId,
-//            'orderby' => 'modified',
-//            'order'       => 'ASC',
-            'posts_per_page' => -1
-        ]
-    );
-    foreach ($posts as $posting) {
-//        if($posting->post_modified < $now){
-//        if(in_array($posting, $save_posts_id) === false){
-//            $my_post2 = array(
-//                'ID' => $posting->ID,
-//                'post_status' => 'trash',
-//            );
+//    $posts = get_posts(
+//        [
+//            'fields' => 'ids', // Only get post IDs
+//            'post_type' => 'post',
+//            'post_status' => 'publish',
+//            'exclude' => $save_posts_id,
+//            'category' => $catId,
+////            'orderby' => 'modified',
+////            'order'       => 'ASC',
+//            'posts_per_page' => -1
+//        ]
+//    );
+//    foreach ($posts as $posting) {
+////        if($posting->post_modified < $now){
+////        if(in_array($posting, $save_posts_id) === false){
+////            $my_post2 = array(
+////                'ID' => $posting->ID,
+////                'post_status' => 'trash',
+////            );
+////
+////            wp_update_post($my_post2);
+////
+////        } else{
+//////            break;
+////        }
+////        $my_post2 = array(
+////            'ID' => $posting,
+////            'post_status' => 'trash',
+////        );
+////
+////        wp_update_post($my_post2);
 //
-//            wp_update_post($my_post2);
 //
-//        } else{
-////            break;
-//        }
-//        $my_post2 = array(
-//            'ID' => $posting,
-//            'post_status' => 'trash',
-//        );
-//
-//        wp_update_post($my_post2);
-
-
-        if(in_array($posting, $save_posts_id) === false){
-            $my_post2 = array(
-                'ID' => $posting->ID,
-                'post_status' => 'trash',
-            );
-
-            wp_update_post($my_post2);
-//
-        }
-    }
+////        if(in_array($posting, $save_posts_id) === false){
+////            $my_post2 = array(
+////                'ID' => $posting->ID,
+////                'post_status' => 'trash',
+////            );
+////
+////            wp_update_post($my_post2);
+//////
+////        }
+//    }
 
 //    $posts = get_posts(
 //        [
@@ -658,6 +667,24 @@ function issuerPost()// создание эмитентов +
 //            break;
 //        }
 //    }
+    $posts = get_posts(
+        [
+            'fields' => 'ids', // Only get post IDs
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'exclude' => $save_posts_id,
+            'category' => $catId,
+            'posts_per_page' => -1
+        ]
+    );
+    foreach ($posts as $posting) {
+        $my_post2 = array(
+            'ID' => $posting,
+            'post_status' => 'trash',
+        );
+
+        wp_update_post($my_post2);
+    }
     wp_defer_term_counting(false);
     wp_defer_comment_counting(false);
 }
