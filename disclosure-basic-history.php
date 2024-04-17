@@ -17,14 +17,7 @@ get_header();
         <h1 class="pir-title-h1"><?= get_field('basic_history_title') ?></h1>
             <div class="disclosure-card__label">История</div>
 
-        <?php if(!get_field("basic_history_info_reason_del") == null || !get_field("basic_history_info_reason_del") == '') : ?>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Причина Удаления</div>
-                <div class="disclosure-card__content">
-                    <?= get_field("basic_history_info_reason_del");?>
-                </div>
-            </div>
-        <?php endif; ?>
+
 
         <?php if(!get_field("basic_history_info_name") == null || !get_field("basic_history_info_name") == '') : ?>
             <div class="disclosure-card__item">
@@ -119,17 +112,15 @@ get_header();
                 ?>
             </div>
         </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Факс</div>
-            <div class="disclosure-card__content">
-                <?php if (get_field("basic_history_info_fax") == null || get_field("basic_history_info_fax") == '') {
-                    echo '<span class="api-undefined">Не определено</span>';
-                } else {
-                    echo get_field("basic_history_info_fax");
-                }
-                ?>
+        <?php if(!get_field("basic_history_info_fax") == null || !get_field("basic_history_info_fax") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Факс</div>
+                <div class="disclosure-card__content">
+                   <?=get_field("basic_history_info_fax");?>
+                </div>
             </div>
-        </div>
+        <?php endif; ?>
+
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Электронная почта</div>
             <div class="disclosure-card__content">
@@ -224,17 +215,14 @@ get_header();
                 ?>
             </div>
         </div>
-<!--        <div class="disclosure-card__item">-->
-<!--            <div class="disclosure-card__header">Создано</div>-->
-<!--            <div class="disclosure-card__content">-->
-<!--                --><?php //if (get_field("basic_history_info_create_at") == null || get_field("basic_history_info_create_at") == '') {
-//                    echo '<span class="api-undefined">Не определено</span>';
-//                } else {
-//                    echo get_field("basic_history_info_create_at");
-//                }
-//                ?>
-<!--            </div>-->
-<!--        </div>-->
+        <?php if(!get_field("basic_history_info_reason_del") == null || !get_field("basic_history_info_reason_del") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Причина Удаления</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("basic_history_info_reason_del");?>
+                </div>
+            </div>
+        <?php endif; ?>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Опубликовано</div>
             <div class="disclosure-card__content">

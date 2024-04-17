@@ -15,17 +15,7 @@ get_header();
 <section class="disclosure-card">
     <div class="pir-container">
         <h1 class="pir-title-h1"><?=get_field("basic_info_title")?></h1>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Причина публикации</div>
-            <div class="disclosure-card__content">
-                <?php if (get_field("basic_info_reason_public") == null || get_field("basic_info_reason_public") == '') {
-                    echo '<span class="api-undefined">Не определено</span>';
-                } else {
-                    echo get_field("basic_info_reason_public");
-                }
-                ?>
-            </div>
-        </div>
+
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Краткое наименование</div>
             <div class="disclosure-card__content">
@@ -125,17 +115,15 @@ get_header();
                 ?>
             </div>
         </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Факс</div>
-            <div class="disclosure-card__content">
-                <?php if (get_field("basic_info_fax") == null || get_field("basic_info_fax") == '') {
-                    echo '<span class="api-undefined">Не определено</span>';
-                } else {
-                    echo get_field("basic_info_fax");
-                }
-                ?>
+        <?php if(!get_field("basic_info_fax") == null || !get_field("basic_info_fax") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Факс</div>
+                <div class="disclosure-card__content">
+                  <?=get_field("basic_info_fax");?>
+                </div>
             </div>
-        </div>
+        <?php endif; ?>
+
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Электронная почта</div>
             <div class="disclosure-card__content">
@@ -230,17 +218,17 @@ get_header();
                 ?>
             </div>
         </div>
-<!--        <div class="disclosure-card__item">-->
-<!--            <div class="disclosure-card__header">Создано</div>-->
-<!--            <div class="disclosure-card__content">-->
-<!--                --><?php //if (get_field("basic_info_createAt") == null || get_field("basic_info_createAt") == '') {
-//                    echo '<span class="api-undefined">Не определено</span>';
-//                } else {
-//                    echo get_field("basic_info_createAt");
-//                }
-//                ?>
-<!--            </div>-->
-<!--        </div>-->
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Причина публикации</div>
+            <div class="disclosure-card__content">
+                <?php if (get_field("basic_info_reason_public") == null || get_field("basic_info_reason_public") == '') {
+                    echo '<span class="api-undefined">Не определено</span>';
+                } else {
+                    echo get_field("basic_info_reason_public");
+                }
+                ?>
+            </div>
+        </div>
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Опубликовано</div>
             <div class="disclosure-card__content">
@@ -252,18 +240,14 @@ get_header();
                 ?>
             </div>
         </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Удалено</div>
-            <div class="disclosure-card__content">
-                <?php if (get_field("basic_info_del_at") == null || get_field("basic_info_del_at") == '') {
-                    echo '<span class="api-undefined">Не определено</span>';
-                } else {
-                    echo get_field("basic_info_del_at");
-                }
-                ?>
+        <?php if(!get_field("basic_info_del_at") == null || !get_field("basic_info_del_at") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Удалено</div>
+                <div class="disclosure-card__content">
+                   <?=get_field("basic_info_del_at");?>
+                </div>
             </div>
-        </div>
-
+        <?php endif; ?>
 
     </div>
     <div class="pir-container">

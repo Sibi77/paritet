@@ -78,11 +78,11 @@ get_header();
             </div>
         <?php endif; ?>
 
-        <?php if(!get_field("issuer_cancellation_date") == null || !get_field("issuer_cancellation_date")) : ?>
+        <?php if(!get_field("issuer_cancellation_date") == null || !get_field("issuer_cancellation_date") =='') : ?>
             <div class="disclosure-card__item">
                 <div class="disclosure-card__header">Дата аннулирования выпуска</div>
                 <div class="disclosure-card__content">
-                  <?=substr(get_field("issuer_cancellation_date"),0,10) ;?>
+                  <?= substr(get_field("issuer_cancellation_date"),0,10) ;?>
                 </div>
             </div>
         <?php endif; ?>
