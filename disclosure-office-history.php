@@ -27,28 +27,28 @@ get_header();
                 ?>
             </div>
         </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Причина удаления</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("history_office_delReason") == null || get_field("history_office_delReason") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("history_office_delReason");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Источник</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("history_office_source") == null || get_field("history_office_source") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("history_office_source");
-                }
-                ?>
-            </div>
-        </div>
+<!--        <div class="disclosure-card__item">-->
+<!--            <div class="disclosure-card__header">Причина удаления</div>-->
+<!--            <div class="disclosure-card__content">-->
+<!--                --><?php //if(get_field("history_office_delReason") == null || get_field("history_office_delReason") == ''){
+//                    echo '<span class="api-undefined">Не определено</span>';
+//                }else{
+//                    echo  get_field("history_office_delReason");
+//                }
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="disclosure-card__item">-->
+<!--            <div class="disclosure-card__header">Источник</div>-->
+<!--            <div class="disclosure-card__content">-->
+<!--                --><?php //if(get_field("history_office_source") == null || get_field("history_office_source") == ''){
+//                    echo '<span class="api-undefined">Не определено</span>';
+//                }else{
+//                    echo  get_field("history_office_source");
+//                }
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
 
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Адрес</div>
@@ -95,17 +95,17 @@ get_header();
             </div>
         </div>
 
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Создано</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("history_office_createdAt") == null || get_field("history_office_createdAt") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("history_office_createdAt");
-                }
-                ?>
-            </div>
-        </div>
+<!--        <div class="disclosure-card__item">-->
+<!--            <div class="disclosure-card__header">Создано</div>-->
+<!--            <div class="disclosure-card__content">-->
+<!--                --><?php //if(get_field("history_office_createdAt") == null || get_field("history_office_createdAt") == ''){
+//                    echo '<span class="api-undefined">Не определено</span>';
+//                }else{
+//                    echo  get_field("history_office_createdAt");
+//                }
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Опубликовано</div>
             <div class="disclosure-card__content">

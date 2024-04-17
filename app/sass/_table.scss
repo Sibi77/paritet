@@ -21,6 +21,7 @@
           line-height: rem(25);
           color: var(--pir-label-color);
           text-transform: uppercase;
+
         }
 
 
@@ -35,6 +36,7 @@
           font-size: rem(16);
           line-height: rem(20);
           vertical-align: top;
+          max-width: 525px;
           a{
             text-decoration: underline;
           }

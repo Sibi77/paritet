@@ -41,105 +41,63 @@ get_header();
 
             }
             ?>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Причина публикации</div>
-                <div class="disclosure-card__content">
-                    <?php if (get_field("history_doc_publicationReason") == null || get_field("history_doc_publicationReason") == '') {
-                        echo '<span class="api-undefined">Не определено</span>';
-                    } else {
-                        echo get_field("history_doc_publicationReason");
-                    }
-                    ?>
+
+
+
+            <?php if(!get_field("history_doc_description") == null || !get_field("history_doc_description") == '') : ?>
+                <div class="disclosure-card__item" <?php if(!empty($url)) echo 'style="width: 625px"'; ?>>
+                    <div class="disclosure-card__header">Дополнительная информация</div>
+                    <div class="disclosure-card__content">
+                        <?=get_field("history_doc_description");?>
+                    </div>
                 </div>
-            </div>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Причина удаления</div>
-                <div class="disclosure-card__content">
-                    <?php if (get_field("history_doc_deleteReason") == null || get_field("history_doc_deleteReason") == '') {
-                        echo '<span class="api-undefined">Не определено</span>';
-                    } else {
-                        echo get_field("history_doc_deleteReason");
-                    }
-                    ?>
+            <?php endif; ?>
+
+            <?php if(!get_field("history_doc_validFromDate") == null || !get_field("history_doc_validFromDate") == '') : ?>
+                <div class="disclosure-card__item">
+                    <div class="disclosure-card__header">Действует с</div>
+                    <div class="disclosure-card__content">
+                        <?=get_field("history_doc_validFromDate");?>
+                    </div>
                 </div>
-            </div>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Источник</div>
-                <div class="disclosure-card__content">
-                    <?php if (get_field("history_doc_source") == null || get_field("history_doc_source") == '') {
-                        echo '<span class="api-undefined">Не определено</span>';
-                    } else {
-                        echo get_field("history_doc_source");
-                    }
-                    ?>
+            <?php endif; ?>
+
+            <?php if(!get_field("history_doc_validToDate") == null || !get_field("history_doc_validToDate") == '') : ?>
+                <div class="disclosure-card__item">
+                    <div class="disclosure-card__header">Действует по</div>
+                    <div class="disclosure-card__content">
+                       <?=get_field("history_doc_validToDate");?>
+                    </div>
                 </div>
-            </div>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Дополнительная информация</div>
-                <div class="disclosure-card__content">
-                    <?php if (get_field("history_doc_description") == null || get_field("history_doc_description") == '') {
-                        echo '<span class="api-undefined">Не определено</span>';
-                    } else {
-                        echo get_field("history_doc_description");
-                    }
-                    ?>
+            <?php endif; ?>
+            <?php if(!get_field("history_doc_deleteReason") == null || !get_field("history_doc_deleteReason") == '') : ?>
+                <div class="disclosure-card__item">
+                    <div class="disclosure-card__header">Причина удаления</div>
+                    <div class="disclosure-card__content">
+                        <?=get_field("history_doc_deleteReason");?>
+                    </div>
                 </div>
-            </div>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Действует с</div>
-                <div class="disclosure-card__content">
-                    <?php if (get_field("history_doc_validFromDate") == null || get_field("history_doc_validFromDate") == '') {
-                        echo '<span class="api-undefined">Не определено</span>';
-                    } else {
-                        echo get_field("history_doc_validFromDate");
-                    }
-                    ?>
+            <?php endif; ?>
+
+            <?php if(!get_field("history_doc_publishedAt") == null || !get_field("history_doc_publishedAt") == '') : ?>
+                <div class="disclosure-card__item">
+                    <div class="disclosure-card__header">Опубликовано</div>
+                    <div class="disclosure-card__content">
+                       <?=get_field("history_doc_publishedAt");?>
+                    </div>
                 </div>
-            </div>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Действует по</div>
-                <div class="disclosure-card__content">
-                    <?php if (get_field("history_doc_validToDate") == null || get_field("history_doc_validToDate") == '') {
-                        echo '<span class="api-undefined">Не определено</span>';
-                    } else {
-                        echo get_field("history_doc_validToDate");
-                    }
-                    ?>
+            <?php endif; ?>
+
+
+            <?php if(!get_field("history_doc_deletedAt") == null || !get_field("history_doc_deletedAt") == '') : ?>
+                <div class="disclosure-card__item">
+                    <div class="disclosure-card__header">Удалено</div>
+                    <div class="disclosure-card__content">
+                        <?=get_field("history_doc_deletedAt");?>
+                    </div>
                 </div>
-            </div>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Создано</div>
-                <div class="disclosure-card__content">
-                    <?php if (get_field("history_doc_createdAt") == null || get_field("history_doc_createdAt") == '') {
-                        echo '<span class="api-undefined">Не определено</span>';
-                    } else {
-                        echo get_field("history_doc_createdAt");
-                    }
-                    ?>
-                </div>
-            </div>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Опубликовано</div>
-                <div class="disclosure-card__content">
-                    <?php if (get_field("history_doc_publishedAt") == null || get_field("history_doc_publishedAt") == '') {
-                        echo '<span class="api-undefined">Не определено</span>';
-                    } else {
-                        echo get_field("history_doc_publishedAt");
-                    }
-                    ?>
-                </div>
-            </div>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Удалено</div>
-                <div class="disclosure-card__content">
-                    <?php if (get_field("history_doc_deletedAt") == null || get_field("history_doc_deletedAt") == '') {
-                        echo 'Не определено';
-                    } else {
-                        echo get_field("history_doc_deletedAt");
-                    }
-                    ?>
-                </div>
-            </div>
+            <?php endif; ?>
+
         </div>
     </div>
 </section>

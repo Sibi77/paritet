@@ -84,6 +84,9 @@
     font-weight: 400;
     font-size: rem(18);
     line-height: rem(28);
+    a{
+      text-decoration: none;
+    }
     @include media-breakpoint-down(lg){
       font-size: rem(22);
       line-height: rem(34);

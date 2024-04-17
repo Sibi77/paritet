@@ -25,12 +25,15 @@
 
                 <?php
 //                checkPost('officials', 'Officials');
-                securitiesIssuer('IssuesOfSecurities','issues_securities', 'issues_securiti_history');
+                securitiesIssuer('IssuesOfSecurities','issues_securities', 'securities_history');
 
                 $args = array(
                     'category_name' => 'issues_securities',
                     'tag' => 'Published',
-                    'posts_per_page' => -1
+                    'posts_per_page' => -1,
+                    'meta_key' => 'publishedAt_fix',
+                    'orderby' => 'meta_value',
+                    'order' => 'DESC',
 
                 );
                 query_posts($args);

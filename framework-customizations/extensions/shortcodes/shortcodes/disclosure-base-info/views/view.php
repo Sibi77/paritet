@@ -30,7 +30,10 @@
                 $args = array(
                     'category_name' => 'base_info',
                     'tag' => 'Published',
-                    'posts_per_page' => -1
+                    'posts_per_page' => -1,
+                    'meta_key' => 'publishedAt_fix',
+                    'orderby' => 'meta_value',
+                    'order' => 'DESC',
 
                 );
                 query_posts($args);

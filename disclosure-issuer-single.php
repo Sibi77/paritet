@@ -8,226 +8,162 @@ get_header();
 <div class="pir-container">
     <div class="no-section">
         <div class="pir-breadcrumbs">
-            <?php true_breadcrumbs();?>
+            <?php true_breadcrumbs(); ?>
         </div>
     </div>
 </div>
 <section class="disclosure-card">
     <div class="pir-container">
 
-        <?php
-       ?>
         <h1 class="pir-title-h1"><?= get_field("issuer_title"); ?></h1>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Причина публикации</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_publicationReason") == null || get_field("issuer_publicationReason") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                  echo  get_field("issuer_publicationReason");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Причина перевода</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_deleteReason") == null || get_field("issuer_deleteReason") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_deleteReason");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Источник</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_source") == null || get_field("issuer_source") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_source");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Краткое наименование</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_shortName") == null || get_field("issuer_shortName") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_shortName");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Полное наименование</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_fullName") == null || get_field("issuer_fullName") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_fullName");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">ИНН</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_inn") == null || get_field("issuer_inn") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_inn");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">ОГРН</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_ogrn") == null || get_field("issuer_ogrn") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_ogrn");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Адресс</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_address") == null || get_field("issuer_address") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_address");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Телефон</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_phone") == null || get_field("issuer_phone") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_phone");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Факс</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_fax") == null || get_field("issuer_fax") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_fax");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Дата договора на вед. реестра</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_registryContractDate") == null || get_field("issuer_registryContractDate") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo substr( get_field("issuer_registryContractDate"),0,10);
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Дата акта приема реестра</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_registryIncomingActDate") == null || get_field("issuer_registryIncomingActDate") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  substr(get_field("issuer_registryIncomingActDate"),0,10);
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Дата акта передачи реестра</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_registryOutgoingActDate") == null || get_field("issuer_registryOutgoingActDate") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  substr(get_field("issuer_registryOutgoingActDate"),0,10);
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Дата прекращения договора</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_registryContractTerminationDate") == null || get_field("issuer_registryContractTerminationDate") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  substr(get_field("issuer_registryContractTerminationDate"),0,10);
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Дата приема на хранение</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_registryIncomingForStorageDate") == null || get_field("issuer_registryIncomingForStorageDate") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo substr( get_field("issuer_registryIncomingForStorageDate"),0,10);
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Передано регистратору</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_nextRegistrar") == null || get_field("issuer_nextRegistrar") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_nextRegistrar");
-                }
-                ?>
-            </div>
-        </div>
 
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Создано</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_createdAt") == null || get_field("issuer_createdAt") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_createdAt");
-                }
-                ?>
+
+        <?php if (!get_field("issuer_shortName") == null || !get_field("issuer_shortName") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Краткое наименование</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("issuer_shortName"); ?>
+                </div>
             </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Опубликовано</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_publishedAt") == null || get_field("issuer_publishedAt") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_publishedAt");
-                }
-                ?>
+        <?php endif; ?>
+
+
+        <?php if (!get_field("issuer_fullName") == null || !get_field("issuer_fullName") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Полное наименование</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("issuer_fullName"); ?>
+                </div>
             </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Удалено</div>
-            <div class="disclosure-card__content">
-                <?php if(get_field("issuer_deletedAt") == null || get_field("issuer_deletedAt") == ''){
-                    echo '<span class="api-undefined">Не определено</span>';
-                }else{
-                    echo  get_field("issuer_deletedAt");
-                }
-                ?>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_inn") == null || !get_field("issuer_inn") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">ИНН</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("issuer_inn"); ?>
+                </div>
             </div>
-        </div>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_ogrn") == null || !get_field("issuer_ogrn") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">ОГРН</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("issuer_ogrn"); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_address") == null || !get_field("issuer_address") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Адрес</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("issuer_address"); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+
+        <?php if (!get_field("issuer_phone") == null || !get_field("issuer_phone") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Телефон</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("issuer_phone"); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_fax") == null || !get_field("issuer_fax") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Факс</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("issuer_fax"); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_registryContractDate") == null || !get_field("issuer_registryContractDate") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата договора на вед. реестра</div>
+                <div class="disclosure-card__content">
+                    <?= substr(get_field("issuer_registryContractDate"), 0, 10); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_registryIncomingActDate") == null || !get_field("issuer_registryIncomingActDate") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата акта приема реестра</div>
+                <div class="disclosure-card__content">
+                    <?= substr(get_field("issuer_registryIncomingActDate"), 0, 10); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_registryOutgoingActDate") == null || !get_field("issuer_registryOutgoingActDate") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата акта передачи реестра</div>
+                <div class="disclosure-card__content">
+                    <?= substr(get_field("issuer_registryOutgoingActDate"), 0, 10); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_registryContractTerminationDate") == null || !get_field("issuer_registryContractTerminationDate") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата прекращения договора</div>
+                <div class="disclosure-card__content">
+                    <?= substr(get_field("issuer_registryContractTerminationDate"), 0, 10); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_registryIncomingForStorageDate") == null || !get_field("issuer_registryIncomingForStorageDate") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата приема на хранение</div>
+                <div class="disclosure-card__content">
+                    <?= substr(get_field("issuer_registryIncomingForStorageDate"), 0, 10); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_nextRegistrar") == null || !get_field("issuer_nextRegistrar") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Передано регистратору</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("issuer_nextRegistrar"); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_publicationReason") == null || !get_field("issuer_publicationReason") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Причина публикации</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("issuer_publicationReason"); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_publishedAt") == null || !get_field("issuer_publishedAt") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Опубликовано</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("issuer_publishedAt"); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!get_field("issuer_deletedAt") == null || !get_field("issuer_deletedAt") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Удалено</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("issuer_deletedAt"); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
     </div>
     <div class="pir-container">
         <h2 class="pir-content__title"">История изменений</h2>
@@ -251,32 +187,32 @@ get_header();
                         </thead>
                         <tbody>
                         <?php
-                        $id =  get_field("parent_issuer_id");
-                        //                            $category_name_history = get_field("doc_cat_name_history");
-                        issuerHistoryPost('history');
-                        global $post;
+                        $id = get_field("parent_issuer_id");
                         if ($id === null) {
                             $myposts = get_posts([
                                 'tag' => 0,
                             ]);
-                        } else{
-                            $myposts = get_posts( [
+                        } else {
+                            $myposts = get_posts([
                                 'posts_per_page' => -1,
                                 'category_name' => 'history',
                                 'post_type' => 'post',
-                                'order'    => 'DESC',
+                                'order' => 'DESC',
                                 'tag' => $id,
-                            ] );
+                            ]);
+
+
                         }
 
 
-                        foreach( $myposts as $post ){setup_postdata( $post ); ?>
-                            <?php
-                            ?>
+                        foreach ($myposts as $post) {
+                            setup_postdata($post); ?>
                             <tr>
-                                <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?php the_field("history_issuer_title") ?></a></td>
-                                <td><?php echo substr(get_field("history_issuer_publishedAt"),0,10);  ?></td>
-                                <td><?php echo substr(get_field("history_issuer_deletedAt"),0,10); ?></td>
+                                <td><a class="pir-table-api"
+                                       href="<?php the_permalink(); ?>"><?php the_field("history_issuer_title") ?></a>
+                                </td>
+                                <td><?php echo substr(get_field("history_issuer_publishedAt"), 0, 10); ?></td>
+                                <td><?php echo substr(get_field("history_issuer_deletedAt"), 0, 10); ?></td>
 
                             </tr>
                             <?php

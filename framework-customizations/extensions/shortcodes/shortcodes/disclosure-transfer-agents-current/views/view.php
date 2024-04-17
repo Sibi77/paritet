@@ -40,6 +40,9 @@
                      'posts_per_page' => -1,
                      'category_name' => 'transfer_agents',
                      'tag' => 'Published',
+                     'meta_key' => 'publishedAt_fix',
+                     'orderby' => 'meta_value',
+                     'order' => 'DESC',
 
 
                  );

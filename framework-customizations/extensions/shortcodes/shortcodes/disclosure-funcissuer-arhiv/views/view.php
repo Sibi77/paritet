@@ -40,6 +40,8 @@
                      'posts_per_page' => -1,
                      'category_name' => 'func_issuer',
                      'tag' => 'Deleted',
+                     'orderby' => 'date',
+                     'order' => 'ASC',
 
 
                  );

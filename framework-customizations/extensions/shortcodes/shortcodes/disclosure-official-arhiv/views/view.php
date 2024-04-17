@@ -34,6 +34,7 @@
                     'orderby' => 'date',
                     'order' => 'ASC',
 
+
                 );
                 query_posts($args);
                 while (have_posts()) : the_post(); ?>

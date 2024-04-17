@@ -32,7 +32,8 @@
 
                  <?php
 
-                 issuerPost();
+//                 issuerPost();
+//                 issuerHistoryPost('history');
                  $tag = get_term_by('slug', 'Transferred','post_tag');
                  $tag_id =  $tag->term_id;
                  $args = array(
@@ -40,11 +41,11 @@
 //                     'tag' => array('MovedToArchive', 'TransferredForStorage','Liquidated'),
                      'tag' => array('Deleted', 'TransferredForStorage'),
                      'posts_per_page' => -1,
-                     'orderby' => 'date',
-                     'order' => 'ASC',
-                     'tag__not_in' => array($tag_id)
+                     'meta_key' => 'issuer_publishedAt_fix',
+                     'orderby' => 'meta_value',
+                     'order' => 'DESC',
 
-
+                     'tag__not_in' => array($tag_id),
 
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.

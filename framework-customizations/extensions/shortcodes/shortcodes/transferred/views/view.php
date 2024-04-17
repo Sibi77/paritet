@@ -33,17 +33,19 @@
                  <?php
 
 
-                 issuerPost();
+//                 issuerPost();
                  $args = array(
                      'category_name' => 'issuers',
                      'tag' => 'Transferred',
                      'posts_per_page' => -1,
-                     'orderby' => 'date',
-                     'order' => 'ASC',
+                     'meta_key' => 'issuer_publishedAt_fix',
+                     'orderby' => 'meta_value',
+                     'order' => 'DESC',
 
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
                  while (have_posts()) : the_post();?>
+
                  <tr>
                      <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("issuer_title"); ?></a></td>
                      <td><?= get_field("issuer_inn"); ?></td>

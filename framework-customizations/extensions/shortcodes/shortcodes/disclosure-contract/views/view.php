@@ -19,7 +19,7 @@
                     <td>НАИМЕНОВАНИЕ</td>
                     <td>Действует с</td>
                     <td>Опубликовано</td>
-                    <td style="text-align: center">Скачать</td>
+                    <td></td>
                 </tr>
 
                 </thead>
@@ -33,7 +33,10 @@
                 $args = array(
                     'category_name' => 'contract',
                     'tag' => 'Published',
-                    'posts_per_page' => -1
+                    'posts_per_page' => -1,
+                    'meta_key' => 'doc_publish_fix',
+                    'orderby' => 'meta_value',
+                    'order' => 'DESC',
 
                 );
                 query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
@@ -49,11 +52,26 @@
 
                             <a class="pir-table-api" href="<?php the_permalink(); ?>">
                                 <?php foreach($media as $url):?>
+
                                     <?php if($url->post_mime_type == 'application/msword') : ?>
                                         <img src="<?php bloginfo('template_directory'); ?>/img/icons/doc.svg" alt="Документ doc">
                                     <?php endif; ?>
                                     <?php if($url->post_mime_type == 'application/pdf') : ?>
                                         <img src="<?php bloginfo('template_directory'); ?>/img/icons/pdf.svg" alt="Документ pdf">
+                                    <?php endif; ?>
+                                    <?php if($url->post_mime_type == 'application/zip') : ?>
+                                        <img src="<?php bloginfo('template_directory'); ?>/img/icons/zip.svg" alt="Архив zip">
+                                    <?php endif; ?>
+                                    <?php if($url->post_mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') : ?>
+                                        <img src="<?php bloginfo('template_directory'); ?>/img/icons/xls.svg" alt="Документ xls">
+                                    <?php endif; ?>
+
+                                    <?php if($url->post_mime_type == 'image/jpeg') : ?>
+                                        <img src="<?php bloginfo('template_directory'); ?>/img/icons/jpg.svg" alt="Картинка jpg">
+                                    <?php endif; ?>
+
+                                    <?php if($url->post_mime_type == 'image/png') : ?>
+                                        <img src="<?php bloginfo('template_directory'); ?>/img/icons/png.svg" alt="Картинка png">
                                     <?php endif; ?>
 
                                 <?php endforeach; ?>
@@ -71,12 +89,6 @@
 
                                 <?php
                             } ?>
-                            <?php if(empty($media)) { ?>
-                                Отсутствует
-
-                                <?php
-                            }
-                            ?>
                         </td>
                     </tr>
 

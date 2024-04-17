@@ -40,6 +40,9 @@
                      'posts_per_page' => -1,
                      'category_name' => 'func_issuer',
                      'tag' => 'Published',
+                     'meta_key' => 'publishedAt_fix',
+                     'orderby' => 'meta_value',
+                     'order' => 'DESC',
 
 
                  );

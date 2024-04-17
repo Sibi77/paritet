@@ -29,7 +29,10 @@
                 $args = array(
                     'category_name' => 'additional_issues_securities',
                     'tag' => 'Published',
-                    'posts_per_page' => -1
+                    'posts_per_page' => -1,
+                    'meta_key' => 'publishedAt_fix',
+                    'orderby' => 'meta_value',
+                    'order' => 'DESC',
                 );
                 query_posts($args);
                 while (have_posts()) : the_post(); ?>

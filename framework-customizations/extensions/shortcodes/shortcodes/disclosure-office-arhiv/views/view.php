@@ -29,7 +29,9 @@
                 $args = array(
                     'category_name' => 'offices',
                     'tag' => 'Deleted',
-                    'posts_per_page' => -1
+                    'posts_per_page' => -1,
+                    'orderby' => 'date',
+                    'order' => 'ASC',
 
                 );
                 query_posts($args);

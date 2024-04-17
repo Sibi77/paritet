@@ -28,29 +28,29 @@ get_header();
             </div>
         </div>
 
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Причина удаления</div>
-            <div class="disclosure-card__content">
-                <?php if (get_field("transfer_del_reason") == null || get_field("transfer_del_reason") == '') {
-                    echo '<span class="api-undefined">Не определено</span>';
-                } else {
-                    echo get_field("transfer_del_reason");
-                }
-                ?>
-            </div>
-        </div>
+<!--        <div class="disclosure-card__item">-->
+<!--            <div class="disclosure-card__header">Причина удаления</div>-->
+<!--            <div class="disclosure-card__content">-->
+<!--                --><?php //if (get_field("transfer_del_reason") == null || get_field("transfer_del_reason") == '') {
+//                    echo '<span class="api-undefined">Не определено</span>';
+//                } else {
+//                    echo get_field("transfer_del_reason");
+//                }
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
 
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Источник</div>
-            <div class="disclosure-card__content">
-                <?php if (get_field("transfer_source") == null || get_field("transfer_source") == '') {
-                    echo '<span class="api-undefined">Не определено</span>';
-                } else {
-                    echo get_field("transfer_source");
-                }
-                ?>
-            </div>
-        </div>
+<!--        <div class="disclosure-card__item">-->
+<!--            <div class="disclosure-card__header">Источник</div>-->
+<!--            <div class="disclosure-card__content">-->
+<!--                --><?php //if (get_field("transfer_source") == null || get_field("transfer_source") == '') {
+//                    echo '<span class="api-undefined">Не определено</span>';
+//                } else {
+//                    echo get_field("transfer_source");
+//                }
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Краткое наименование</div>
             <div class="disclosure-card__content">
@@ -128,17 +128,17 @@ get_header();
                 ?>
             </div>
         </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Создано</div>
-            <div class="disclosure-card__content">
-                <?php if (get_field("transfer_createAt") == null || get_field("transfer_createAt") == '') {
-                    echo '<span class="api-undefined">Не определено</span>';
-                } else {
-                    echo get_field("transfer_createAt");
-                }
-                ?>
-            </div>
-        </div>
+<!--        <div class="disclosure-card__item">-->
+<!--            <div class="disclosure-card__header">Создано</div>-->
+<!--            <div class="disclosure-card__content">-->
+<!--                --><?php //if (get_field("transfer_createAt") == null || get_field("transfer_createAt") == '') {
+//                    echo '<span class="api-undefined">Не определено</span>';
+//                } else {
+//                    echo get_field("transfer_createAt");
+//                }
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Опубликовано</div>
             <div class="disclosure-card__content">

@@ -33,8 +33,8 @@
 
 
 
-                 issuerPost();
-
+//                 issuerPost();
+//                 issuerHistoryPost('history');
                  $tag = get_term_by('slug', ' TransferredForStorage','post_tag');
                  $tag_id =  $tag->term_id;
 
@@ -43,8 +43,9 @@
                      'category_name' => 'issuers',
                      'tag' => 'Published',
                      'tag__not_in' => array($tag_id),
-                     'orderby' => 'date',
-                     'order' => 'ASC',
+                     'meta_key' => 'issuer_publishedAt_fix',
+                     'orderby' => 'meta_value',
+                     'order' => 'DESC',
                  );
                  query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
                  while (have_posts()) : the_post();?>

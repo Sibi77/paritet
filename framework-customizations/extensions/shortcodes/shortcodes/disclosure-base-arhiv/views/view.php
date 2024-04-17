@@ -30,7 +30,9 @@
                 $args = array(
                     'category_name' => 'base_info',
                     'tag' => 'Deleted',
-                    'posts_per_page' => -1
+                    'posts_per_page' => -1,
+                    'orderby' => 'date',
+                    'order' => 'ASC',
 
                 );
                 query_posts($args);

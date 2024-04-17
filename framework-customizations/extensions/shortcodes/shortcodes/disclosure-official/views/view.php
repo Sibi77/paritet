@@ -31,8 +31,9 @@
                     'category_name' => 'officials',
                     'tag' => 'Published',
                     'posts_per_page' => -1,
-                      'orderby' => 'date',
-                     'order' => 'ASC',
+                    'meta_key' => 'publishedAt_fix',
+                    'orderby' => 'meta_value',
+                    'order' => 'DESC',
 
                 );
                 query_posts($args);

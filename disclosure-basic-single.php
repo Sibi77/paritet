@@ -27,28 +27,6 @@ get_header();
             </div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Причина Удаления</div>
-            <div class="disclosure-card__content">
-                <?php if (get_field("basic_info_reason_del") == null || get_field("basic_info_reason_del") == '') {
-                    echo '<span class="api-undefined">Не определено</span>';
-                } else {
-                    echo get_field("basic_info_reason_del");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Источник</div>
-            <div class="disclosure-card__content">
-                <?php if (get_field("basic_info_source") == null || get_field("basic_info_source") == '') {
-                    echo '<span class="api-undefined">Не определено</span>';
-                } else {
-                    echo get_field("basic_info_source");
-                }
-                ?>
-            </div>
-        </div>
-        <div class="disclosure-card__item">
             <div class="disclosure-card__header">Краткое наименование</div>
             <div class="disclosure-card__content">
                 <?php if (get_field("basic_info_name") == null || get_field("basic_info_name") == '') {
@@ -252,17 +230,17 @@ get_header();
                 ?>
             </div>
         </div>
-        <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Создано</div>
-            <div class="disclosure-card__content">
-                <?php if (get_field("basic_info_createAt") == null || get_field("basic_info_createAt") == '') {
-                    echo '<span class="api-undefined">Не определено</span>';
-                } else {
-                    echo get_field("basic_info_createAt");
-                }
-                ?>
-            </div>
-        </div>
+<!--        <div class="disclosure-card__item">-->
+<!--            <div class="disclosure-card__header">Создано</div>-->
+<!--            <div class="disclosure-card__content">-->
+<!--                --><?php //if (get_field("basic_info_createAt") == null || get_field("basic_info_createAt") == '') {
+//                    echo '<span class="api-undefined">Не определено</span>';
+//                } else {
+//                    echo get_field("basic_info_createAt");
+//                }
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
         <div class="disclosure-card__item">
             <div class="disclosure-card__header">Опубликовано</div>
             <div class="disclosure-card__content">
