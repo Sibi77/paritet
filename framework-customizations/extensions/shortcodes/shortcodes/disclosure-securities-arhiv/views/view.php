@@ -25,7 +25,7 @@
 
                 <?php
 //                checkPost('officials', 'Officials');
-                securitiesIssuer('IssuesOfSecurities','issues_securities', 'securities_history');
+//                securitiesIssuer('IssuesOfSecurities','issues_securities', 'securities_history');
 
                 $args = array(
                     'category_name' => 'issues_securities',

@@ -25,7 +25,7 @@
 
                 <?php
 //                checkPost('officials', 'Officials');
-                officials();
+//                officials();
 
                 $args = array(
                     'category_name' => 'officials',

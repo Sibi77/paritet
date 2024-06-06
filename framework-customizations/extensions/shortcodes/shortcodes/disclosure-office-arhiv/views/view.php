@@ -25,7 +25,7 @@
 
                 <?php
 //                checkPost('officials', 'Officials');
-                office();
+//                office();
                 $args = array(
                     'category_name' => 'offices',
                     'tag' => 'Deleted',

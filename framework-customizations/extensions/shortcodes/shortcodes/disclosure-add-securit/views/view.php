@@ -24,7 +24,7 @@
                 <tbody>
 
                 <?php
-                securitiesIssuer('AdditionalIssuesOfSecurities','additional_issues_securities', 'add_issues_history');
+//                securitiesIssuer('AdditionalIssuesOfSecurities','additional_issues_securities', 'add_issues_history');
 
                 $args = array(
                     'category_name' => 'additional_issues_securities',
