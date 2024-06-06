@@ -22,7 +22,12 @@
                             <a class="pir-btn" href="<?= $screen['link_btn'] ?>"><?= $screen['btn'] ?></a>
 
                         </div>
-                        <?= $screen['name'] ?>
+
+                    <?php
+                        if(isset($screen['name'])){
+                          echo  $screen['name'] ;
+                        }
+                        ?>
                     <?php endforeach; ?>
                 </div>
                 <div class="pir-carousel__info">

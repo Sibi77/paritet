@@ -17,7 +17,7 @@
                 <tr>
                     <td>НАИМЕНОВАНИЕ</td>
                     <td>дата регистрации</td>
-                    <td>Опубликован</td>
+                    <td>Дата раскрытия</td>
                 </tr>
 
                 </thead>
@@ -54,7 +54,7 @@
                 <?php
                 if (empty(query_posts($args))) {
                     echo '<tr>
-                    <td style="text-align: center" colspan="4">Пока нет записей</td>
+                    <td style="text-align: center" colspan="3">Информация отсутствует</td>
                 </tr>';
                 }
                 ?>

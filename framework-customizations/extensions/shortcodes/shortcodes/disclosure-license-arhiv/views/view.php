@@ -16,9 +16,8 @@
             <table class="pir-table__table">
                 <thead>
                 <tr>
-                    <td>НАИМЕНОВАНИЕ</td>
-                    <td>Действует</td>
-                    <td>Опубликовано</td>
+                    <td class="pir-table-width">НАИМЕНОВАНИЕ</td>
+                    <td>Дата раскрытия</td>
                     <td></td>
                 </tr>
 
@@ -27,7 +26,7 @@
 
                 <?php
 //                checkPost('license', 'Licenses');
-                disclosure_documents('Licenses', 'license', 'license_history');
+//                disclosure_documents('Licenses', 'license', 'license_history');
                 $args = array(
                     'category_name' => 'license',
                     'tag' => 'Deleted',
@@ -76,7 +75,6 @@
                                 <?= get_field("doc_title"); ?>
                             </a>
                         </td>
-                        <td><?= substr(get_field("doc_validFromDate"),0,10) ; ?></td>
                         <td><?= substr(get_field("doc_publishedAt"), 0, 10); ?></td>
                         <td style="text-align: center">
                             <?php if(!empty($media)) { ?>
@@ -86,6 +84,7 @@
 
                                 <?php
                             } ?>
+
                         </td>
                     </tr>
 
@@ -99,7 +98,7 @@
                 <?php
                 if (empty(query_posts($args))) {
                     echo '<tr>
-                    <td style="text-align: center" colspan="4">Пока нет архивных записей</td>
+                    <td style="text-align: center" colspan="3">Архивные записи отсутствуют</td>
                 </tr>';
                 }
                 ?>

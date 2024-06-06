@@ -17,7 +17,7 @@
                 <tr>
                     <td>НАИМЕНОВАНИЕ</td>
                     <td>ИНН</td>
-                    <td>Опубликовано</td>
+                    <td>Дата раскрытия</td>
                 </tr>
 
                 </thead>
@@ -25,7 +25,7 @@
 
                 <?php
 //                checkPost('base_info', 'Main');
-                disclosureBasicInfo();
+//                disclosureBasicInfo();
 
                 $args = array(
                     'category_name' => 'base_info',
@@ -55,7 +55,7 @@
                 <?php
                 if (empty(query_posts($args))) {
                     echo '<tr>
-                    <td style="text-align: center" colspan="4">Пока нет записей</td>
+                    <td style="text-align: center" colspan="3">Информация отсутствует</td>
                 </tr>';
                 }
                 ?>

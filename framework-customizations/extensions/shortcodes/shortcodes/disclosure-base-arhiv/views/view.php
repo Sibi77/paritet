@@ -16,8 +16,8 @@
                 <thead>
                 <tr>
                     <td>НАИМЕНОВАНИЕ</td>
-                    <td>Удалено</td>
-                    <td>Опубликовано</td>
+                    <td>ИНН</td>
+                    <td>Дата раскрытия</td>
                 </tr>
 
                 </thead>
@@ -25,7 +25,7 @@
 
                 <?php
 //                checkPost('base_info', 'Main');
-                disclosureBasicInfo();
+//                disclosureBasicInfo();
 
                 $args = array(
                     'category_name' => 'base_info',
@@ -44,8 +44,9 @@
                             <a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("basic_info_title"); ?></a>
 
                         </td>
-                        <td><?=substr( get_field("basic_info_del_at"),0,10); ?></td>
+                        <td><?= get_field("basic_history_info_bank_inn") ?></td>
                         <td><?= substr(get_field("basic_info_published"),0,10); ?></td>
+
                     </tr>
 
 
@@ -56,7 +57,7 @@
                 <?php
                 if (empty(query_posts($args))) {
                     echo '<tr>
-                    <td style="text-align: center" colspan="4">Пока нет архивных записей</td>
+                    <td style="text-align: center" colspan="3">Архивные записи отсутствуют</td>
                 </tr>';
                 }
                 ?>

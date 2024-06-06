@@ -81,7 +81,14 @@ get_header();
                 </div>
             </div>
         <?php endif; ?>
-
+        <?php if(!get_field("transfer_published") == null || !get_field("transfer_published") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата раскрытия</div>
+                <div class="disclosure-card__content">
+                    <?=substr(get_field("transfer_published"),0,10);?>
+                </div>
+            </div>
+        <?php endif; ?>
         <?php if(!get_field("transfer_reason_public") == null || !get_field("transfer_reason_public") == '') : ?>
             <div class="disclosure-card__item">
                 <div class="disclosure-card__header">Причина публикации</div>
@@ -91,14 +98,6 @@ get_header();
             </div>
         <?php endif; ?>
 
-        <?php if(!get_field("transfer_del_reason") == null || !get_field("transfer_del_reason") == '') : ?>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Причина удаления</div>
-                <div class="disclosure-card__content">
-                    <?=get_field("transfer_del_reason");?>
-                </div>
-            </div>
-        <?php endif; ?>
 
         <?php if(!get_field("transfer_published") == null || !get_field("transfer_published") == '') : ?>
             <div class="disclosure-card__item">
@@ -130,11 +129,7 @@ get_header();
                             <td>
                                 Наименование
                             </td>
-                            <td>
-                                Опубликовано
-                            </td>
-
-                            <td>удалено</td>
+                            <td>Перенесено в архив</td>
 
                         </tr>
 
@@ -144,7 +139,7 @@ get_header();
                         $id =  get_field("transfer_parent_id");
                         $transfer_cat = get_field('transfer_cat_name');
                         $transfer_sections = get_field('transfer_cat_sections');
-                        transferAgentsHistory($transfer_cat,$transfer_sections);
+//                        transferAgentsHistory($transfer_cat,$transfer_sections);
                         global $post;
                         if ($id === null) {
                             $myposts = get_posts([
@@ -164,7 +159,6 @@ get_header();
                         foreach( $myposts as $post ){setup_postdata( $post ); ?>
                             <tr>
                                 <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?php the_field("history_transfer_title") ?></a></td>
-                                <td><?php echo substr(get_field("history_transfer_published"),0,10);  ?></td>
                                 <td><?php echo substr(get_field("history_transfer_deletedAt"), 0,10); ?></td>
 
                             </tr>
@@ -172,7 +166,7 @@ get_header();
 
                         }
                         if (empty($myposts)) {
-                            echo '<tr>' . '<td>Нет истории</td>' . '</tr>';
+                            echo '<tr>' . '<td colspan="2" style="text-align: center">Нет предыдущих версий раскрытия</td>' . '</tr>';
                         }
                         wp_reset_postdata();
                         ?>

@@ -57,7 +57,7 @@ get_header();
                 <div class="disclosure-card__item">
                     <div class="disclosure-card__header">Действует с</div>
                     <div class="disclosure-card__content">
-                        <?=get_field("history_doc_validFromDate");?>
+                        <?= substr(get_field("history_doc_validFromDate"),0,10);?>
                     </div>
                 </div>
             <?php endif; ?>
@@ -67,6 +67,14 @@ get_header();
                     <div class="disclosure-card__header">Действует по</div>
                     <div class="disclosure-card__content">
                        <?=get_field("history_doc_validToDate");?>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <?php if(!get_field("history_doc_publishedAt") == null || !get_field("history_doc_publishedAt") == '') : ?>
+                <div class="disclosure-card__item">
+                    <div class="disclosure-card__header">Дата раскрытия</div>
+                    <div class="disclosure-card__content">
+                        <?=substr(get_field("history_doc_publishedAt"),0,10);?>
                     </div>
                 </div>
             <?php endif; ?>

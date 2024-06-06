@@ -94,7 +94,7 @@ get_header();
             </div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Адресс Указанные в ЕГРЮЛ</div>
+            <div class="disclosure-card__header">Адрес указанный в ЕГРЮЛ</div>
             <div class="disclosure-card__content">
                 <?php if (get_field("basic_info_address") == null || get_field("basic_info_address") == '') {
                     echo '<span class="api-undefined">Не определено</span>';
@@ -219,6 +219,17 @@ get_header();
             </div>
         </div>
         <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Дата раскрытия</div>
+            <div class="disclosure-card__content">
+                <?php if (get_field("basic_info_published") == null || get_field("basic_info_published") == '') {
+                    echo '<span class="api-undefined">Не определено</span>';
+                } else {
+                    echo substr(get_field("basic_info_published"),0,10);
+                }
+                ?>
+            </div>
+        </div>
+        <div class="disclosure-card__item">
             <div class="disclosure-card__header">Причина публикации</div>
             <div class="disclosure-card__content">
                 <?php if (get_field("basic_info_reason_public") == null || get_field("basic_info_reason_public") == '') {
@@ -261,18 +272,16 @@ get_header();
                             <td>
                                 Наименование
                             </td>
-                            <td>
-                                Опубликовано
-                            </td>
 
-                            <td>Удалено</td>
+
+                            <td>Перенесено в архив</td>
 
                         </tr>
 
                         </thead>
                         <tbody>
                         <?php
-                        disclosureBasicInfoHistory('base_info_history');
+//                        disclosureBasicInfoHistory('base_info_history');
                         $id =  get_field("basic_info_parent_id");
                         //                            $category_name_history = get_field("doc_cat_name_history");
                         //                            issuerHistoryPost('history');
@@ -301,7 +310,6 @@ get_header();
                                 <td>
                                     <a class="pir-table-api" href="<?php the_permalink(); ?>"> <?php the_field("basic_history_title") ?></a>
                                    </a></td>
-                                <td><?php echo substr(get_field("basic_history_info_published"),0,10) ?></td>
                                 <td> <?php echo substr(get_field("basic_history_info_del_at"),0,10)?></td>
 
                             </tr>
@@ -309,7 +317,7 @@ get_header();
 
                         }
                         if (empty($myposts)) {
-                            echo '<tr>' . '<td>Нет истории</td>' . '</tr>';
+                            echo '<tr>' . '<td colspan="2" style="text-align: center">Нет предыдущих версий раскрытия</td>' . '</tr>';
                         }
                         wp_reset_postdata();
                         ?>

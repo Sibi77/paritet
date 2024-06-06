@@ -91,7 +91,7 @@ get_header();
             </div>
         </div>
         <div class="disclosure-card__item">
-            <div class="disclosure-card__header">Адресс Указанные в ЕГРЮЛ</div>
+            <div class="disclosure-card__header">Адрес указанный в ЕГРЮЛ</div>
             <div class="disclosure-card__content">
                 <?php if (get_field("basic_history_info_address") == null || get_field("basic_history_info_address") == '') {
                     echo '<span class="api-undefined">Не определено</span>';
@@ -211,6 +211,17 @@ get_header();
                     echo '<span class="api-undefined">Не определено</span>';
                 } else {
                     echo get_field("basic_history_info_bank_kpp");
+                }
+                ?>
+            </div>
+        </div>
+        <div class="disclosure-card__item">
+            <div class="disclosure-card__header">Дата раскрытия</div>
+            <div class="disclosure-card__content">
+                <?php if (get_field("basic_history_info_published") == null || get_field("basic_history_info_published") == '') {
+                    echo '<span class="api-undefined">Не определено</span>';
+                } else {
+                    echo substr(get_field("basic_history_info_published"),0,10);
                 }
                 ?>
             </div>

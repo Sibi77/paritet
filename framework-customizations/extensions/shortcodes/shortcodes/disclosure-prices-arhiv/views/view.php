@@ -18,7 +18,7 @@
                 <tr>
                     <td>НАИМЕНОВАНИЕ</td>
                     <td>Действует с</td>
-                    <td>Опубликовано</td>
+                    <td>Дата раскрытия</td>
                     <td></td>
                 </tr>
 
@@ -27,7 +27,7 @@
 
                 <?php
 //                checkPost('prices', 'Prices');
-                disclosure_documents('Prices', 'prices', 'prices_history');
+//                disclosure_documents('Prices', 'prices', 'prices_history');
 
 
                 $args = array(
@@ -100,7 +100,7 @@
                 <?php
                 if (empty(query_posts($args))) {
                     echo '<tr>
-                    <td style="text-align: center" colspan="4">Пока нет архивных записей</td>
+                    <td style="text-align: center" colspan="4">Архивные записи отсутствуют</td>
                 </tr>';
                 }
                 ?>

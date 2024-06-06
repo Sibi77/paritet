@@ -17,14 +17,7 @@ get_header();
         <h1 class="pir-title-h1"><?= get_field('history_officials_title')?></h1>
         <div class="disclosure-card__label">История</div>
 
-        <?php if(!get_field("history_officials_del_reason") == null || !get_field("history_officials_del_reason") == '') : ?>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Причина Удаления</div>
-                <div class="disclosure-card__content">
-                  <?= get_field("history_officials_del_reason");?>
-                </div>
-            </div>
-        <?php endif; ?>
+
 
         <?php if(!get_field("history_officials_fio") == null || !get_field("history_officials_fio") == '') : ?>
             <div class="disclosure-card__item">
@@ -61,7 +54,22 @@ get_header();
                 </div>
             </div>
         <?php endif; ?>
-
+        <?php if(!get_field("history_officials_published_at") == null || !get_field("history_officials_published_at") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата раскрытия</div>
+                <div class="disclosure-card__content">
+                    <?= substr(get_field("history_officials_published_at"),0,10);?>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php if(!get_field("history_officials_del_reason") == null || !get_field("history_officials_del_reason") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Причина Удаления</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("history_officials_del_reason");?>
+                </div>
+            </div>
+        <?php endif; ?>
         <?php if(!get_field("history_officials_published_at") == null || !get_field("history_officials_published_at") == '') : ?>
             <div class="disclosure-card__item">
                 <div class="disclosure-card__header">Опубликовано</div>

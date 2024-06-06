@@ -86,6 +86,14 @@ get_header();
                 </div>
             </div>
         <?php endif; ?>
+        <?php if(!get_field("issuer_published_at") == null || !get_field("issuer_published_at") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата раскрытия</div>
+                <div class="disclosure-card__content">
+                    <?=substr(get_field("issuer_published_at"),0,10);?>
+                </div>
+            </div>
+        <?php endif; ?>
         <?php if(!get_field("issuer_publication_reason") == null || !get_field("issuer_publication_reason") == '') : ?>
             <div class="disclosure-card__item">
                 <div class="disclosure-card__header">Причина публикации</div>
@@ -123,12 +131,7 @@ get_header();
                             <td>
                                 Наименование
                             </td>
-                            <td>
-                                Опубликован
-                            </td>
-
-                            <td>Удален</td>
-
+                            <td>Перенесено в архив</td>
                         </tr>
 
                         </thead>
@@ -161,15 +164,13 @@ get_header();
 
                             <tr>
                                 <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?php the_field("history_issuer_title") ?></a></td>
-                                <td><?php echo substr(get_field("history_issuer_publishedAt"),0,10) ?></td>
                                 <td><?php echo substr(get_field("history_issuer_deletedAt"),0,10) ?></td>
-
                             </tr>
                             <?php
 
                         }
                         if (empty($myposts)) {
-                            echo '<tr>' . '<td>Нет истории</td>' . '</tr>';
+                            echo '<tr>' . '<td colspan="2" style="text-align: center">Нет предыдущих версий раскрытия</td>' . '</tr>';
                         }
                         wp_reset_postdata();
                         ?>

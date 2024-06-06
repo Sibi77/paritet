@@ -5,6 +5,26 @@
  * Опции (поля) шорткода
  * @link Список всех возможных опицй http://manual.unyson.io/en/latest/options/built-in/introduction.html
  */
+$pirApi = paritet_get_api('https://master.paritet.ru:9443', '/api/PirDisclosure/v2/Disclosures/Full');
+foreach ($pirApi->data->items as $api){
+
+    if($api->isSingle == 1 && $api->status == 'Published'){
+//        echo '<pre>';
+//        print_r($api->sectionName);
+
+    }
+}
+
+
+
+            $args = array(
+                'tag' => '1',
+                'status' => 'Publish',
+                'posts_per_page' => -1,
+
+            );
+
+
 $options = [
     //ключ - slug опции, к которому будем обращаться во view
     //значение - массив конфигураций для опции
@@ -23,6 +43,7 @@ $options = [
                 'type'  => 'text',
                 'label' => __('Название', '{domain}')
             ],
+
             'bar_list_link'     => [
                 'type'  => 'text',
                 'label' => __('Ссылка', '{domain}')
@@ -31,7 +52,12 @@ $options = [
                 'type'  => 'text',
                 'label' => __('Цена', '{domain}'),
             ],
-//            'bar_list_icons'     => [
+            'bar_list_single'     => [
+                'type'  => 'checkbox',
+                'label' => __('Единственная запись', '{domain}'),
+                'value' => false, // checked/unchecked
+            ],
+            //            'bar_list_icons'     => [
 //                'type'  => 'upload',
 //                'label' => __('Иконка', '{domain}'),
 //            ],

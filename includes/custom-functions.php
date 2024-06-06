@@ -143,7 +143,7 @@ add_action('pre_get_posts', function ($query) {
         $query->query_vars['post_type'] = ['post'];
         $query->is_home = false;
         $query->is_page = true;
-//        $query->is_single = true;
+        $query->is_single = false;
         $query->is_404 = false;
         $query->queried_object_id = $post->ID;
         $query->set('page_id', $post->ID);

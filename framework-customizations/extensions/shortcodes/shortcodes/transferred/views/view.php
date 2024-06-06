@@ -22,7 +22,7 @@
                     <td>
                         инн
                     </td>
-                    <td>опубликовано</td>
+                    <td>Дата раскрытия</td>
 
 
                 </tr>
@@ -38,7 +38,7 @@
                      'category_name' => 'issuers',
                      'tag' => 'Transferred',
                      'posts_per_page' => -1,
-                     'meta_key' => 'issuer_publishedAt_fix',
+                     'meta_key' => 'issuer_deletedAt_fix',
                      'orderby' => 'meta_value',
                      'order' => 'DESC',
 
@@ -49,18 +49,16 @@
                  <tr>
                      <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("issuer_title"); ?></a></td>
                      <td><?= get_field("issuer_inn"); ?></td>
-                     <td><?= substr(get_field("issuer_publishedAt"),0,10) ; ?></td>
+                     <td><?= substr(get_field("issuer_deletedAt"),0,10) ; ?></td>
                  </tr>
 
-
-                     <!--здесь выводится миниатюра записи-->
                      <?php endwhile;
                      wp_reset_query();
                  ?>
                  <?php
                  if (empty(query_posts($args))) {
                      echo '<tr>
-                    <td style="text-align: center" colspan="4">Пока нет записей</td>
+                    <td style="text-align: center" colspan="3">Архивные записи отсутствуют</td>
                 </tr>';
                  }
                  ?>

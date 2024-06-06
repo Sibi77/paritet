@@ -22,7 +22,7 @@
                     <td>
                         инн
                     </td>
-                    <td>опубликовано</td>
+                    <td>Дата раскрытия</td>
 
 
                 </tr>
@@ -41,19 +41,19 @@
 //                     'tag' => array('MovedToArchive', 'TransferredForStorage','Liquidated'),
                      'tag' => array('Deleted', 'TransferredForStorage'),
                      'posts_per_page' => -1,
-                     'meta_key' => 'issuer_publishedAt_fix',
+                     'meta_key' => 'issuer_deletedAt_fix',
                      'orderby' => 'meta_value',
                      'order' => 'DESC',
 
                      'tag__not_in' => array($tag_id),
 
                  );
-                 query_posts($args); // вместо "5" указываем идентификатор вашей рубрики.
+                 query_posts($args);
                  while (have_posts()) : the_post();?>
                  <tr>
                      <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("issuer_title"); ?></a></td>
                      <td><?= get_field("issuer_inn"); ?></td>
-                     <td><?= substr(get_field("issuer_publishedAt"),0,10) ; ?></td>
+                     <td><?= substr(get_field("issuer_deletedAt"),0,10) ; ?></td>
                  </tr>
 
 
@@ -65,7 +65,7 @@
                  <?php
                  if (empty(query_posts($args))) {
                      echo '<tr>
-                    <td style="text-align: center" colspan="4">Пока нет записей</td>
+                    <td style="text-align: center" colspan="4">Информация отсутствует</td>
                 </tr>';
                  }
                  ?>

@@ -15,9 +15,9 @@
             <table class="pir-table__table">
                 <thead>
                 <tr>
-                    <td>НАИМЕНОВАНИЕ</td>
+                    <td style="width: 40%">НАИМЕНОВАНИЕ</td>
                     <td>должность</td>
-                    <td>Опубликован</td>
+                    <td>Дата раскрытия</td>
                 </tr>
 
                 </thead>
@@ -55,7 +55,7 @@
                 <?php
                 if (empty(query_posts($args))) {
                     echo '<tr>
-                    <td style="text-align: center" colspan="4">Пока нет архивных записей</td>
+                    <td style="text-align: center" colspan="3">Архивные записи отсутствуют</td>
                 </tr>';
                 }
                 ?>

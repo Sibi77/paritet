@@ -17,7 +17,7 @@
                 <tr>
                     <td>НАИМЕНОВАНИЕ</td>
                     <td>дата регистрации</td>
-                    <td>Опубликовано</td>
+                    <td>Дата раскрытия</td>
                 </tr>
 
                 </thead>
@@ -25,7 +25,7 @@
 
                 <?php
 //                checkPost('officials', 'Officials');
-                securitiesIssuer('IssuesOfSecurities','issues_securities', 'issues_securiti_history');
+                securitiesIssuer('IssuesOfSecurities','issues_securities', 'securities_history');
 
                 $args = array(
                     'category_name' => 'issues_securities',
@@ -55,7 +55,7 @@
                 <?php
                 if (empty(query_posts($args))) {
                     echo '<tr>
-                    <td style="text-align: center" colspan="4">Пока нет архивных записей</td>
+                    <td style="text-align: center" colspan="4">Архивные записи отсутствуют</td>
                 </tr>';
                 }
                 ?>

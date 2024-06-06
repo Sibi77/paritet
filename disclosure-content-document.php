@@ -71,6 +71,15 @@ get_header();
                 </div>
             <?php endif; ?>
 
+            <?php if(!get_field("doc_publishedAt") == null || !get_field("doc_publishedAt") == '') : ?>
+                <div class="disclosure-card__item">
+                    <div class="disclosure-card__header">Дата раскрытия</div>
+                    <div class="disclosure-card__content">
+                        <?=substr(get_field("doc_publishedAt"),0,10)?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <?php if(!get_field("doc_publicationReason") == null || !get_field("doc_publicationReason") == '') : ?>
                 <div class="disclosure-card__item">
                     <div class="disclosure-card__header">Причина публикации</div>
@@ -109,11 +118,8 @@ get_header();
                                 <td>
                                     Наименование
                                 </td>
-                                <td>
-                                    Опубликовано
-                                </td>
 
-                                <td>Удалено</td>
+                                <td>Перенесено в архив</td>
 
                             </tr>
 
@@ -126,7 +132,7 @@ get_header();
                             $category_name_history = get_field("doc_cat_name_history");
                             $sections_name_history = get_field("doc_section_name_history");
                             global $post;
-                            disclosure_doc_history($sections_name_history, $category_name_history);
+//                            disclosure_doc_history($sections_name_history, $category_name_history);
                             if ($id === null) {
                                 $myposts = get_posts([
                                     'tag' => 0,
@@ -147,7 +153,6 @@ get_header();
                                         <a class="pir-table-api"
                                            href="<?php the_permalink(); ?>"><?php the_field("history_doc_title") ?></a>
                                     </td>
-                                    <td><?php echo substr(get_field("history_doc_publishedAt"), 0, 10) ?></td>
                                     <td><?php echo substr(get_field('history_doc_deletedAt'),0,10)  ?></td>
 
                                 </tr>
@@ -155,7 +160,7 @@ get_header();
 
                             }
                             if (empty($myposts)) {
-                                echo '<tr>' . '<td>Нет истории</td>' . '</tr>';
+                                echo '<tr>' . '<td colspan="2" style="text-align: center">Нет предыдущих версий раскрытия</td>' . '</tr>';
                             }
                             wp_reset_postdata();
                             ?>

@@ -15,9 +15,9 @@
             <table class="pir-table__table">
                 <thead>
                 <tr>
-                    <td>НАИМЕНОВАНИЕ</td>
+                    <td style="width: 40%">НАИМЕНОВАНИЕ</td>
                     <td>должность</td>
-                    <td>Опубликован</td>
+                    <td>Дата раскрытия</td>
                 </tr>
 
                 </thead>
@@ -40,7 +40,7 @@
                 while (have_posts()) : the_post(); ?>
 
                     <tr>
-                        <td >
+                        <td>
                             <a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("officials_fio"); ?></a>
                         </td>
                         <td><?= get_field("officials_position"); ?></td>
@@ -55,7 +55,7 @@
                 <?php
                 if (empty(query_posts($args))) {
                     echo '<tr>
-                    <td style="text-align: center" colspan="4">Пока нет записей</td>
+                    <td style="text-align: center" colspan="3">Информация отсутствует</td>
                 </tr>';
                 }
                 ?>

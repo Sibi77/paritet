@@ -21,10 +21,19 @@
           line-height: rem(25);
           color: var(--pir-label-color);
           text-transform: uppercase;
+          white-space: nowrap;
+          &:first-child{
+            width: 100%;
+          }
 
         }
 
 
+      }
+      .not-space{
+        td{
+          white-space: normal!important;
+        }
       }
     }
     tbody{

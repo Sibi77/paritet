@@ -12,9 +12,9 @@
        <div class="table-calc__tab-mob">
            <table class="pir-table__table">
                <thead>
-               <tr>
+               <tr class="<?php if ($atts['table_space']) { ?> not-space<?php } ?>">
                    <?php foreach($atts['table_header'] as $tablehead):?>
-                       <td><?= $tablehead['title'] ?></td>
+                       <td ><?= $tablehead['title'] ?></td>
 
                    <?php endforeach; ?>
                </tr>

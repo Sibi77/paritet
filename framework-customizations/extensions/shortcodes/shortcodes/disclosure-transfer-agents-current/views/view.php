@@ -22,7 +22,7 @@
                     <td>
                         инн
                     </td>
-                    <td>опубликовано</td>
+                    <td>Дата раскрытия</td>
 
 
                 </tr>
@@ -33,7 +33,7 @@
                  <?php
 
 //                 checkPost('transfer_agents','TransferAgents');
-                 transferAgents('TransferAgents', 'transfer_agents','transfer_agents_history');
+//                 transferAgents('TransferAgents', 'transfer_agents','transfer_agents_history');
 //                 issuerHistoryPost();
 
                  $args = array(
@@ -63,7 +63,7 @@
                  <?php
                  if (empty(query_posts($args))) {
                      echo '<tr>
-                    <td style="text-align: center" colspan="4">Пока нет записей</td>
+                    <td style="text-align: center" colspan="3">Информация отсутствует</td>
                 </tr>';
                  }
                  ?>

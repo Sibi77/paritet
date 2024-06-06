@@ -320,7 +320,7 @@ function securitiesIssuer($section_name, $cat_name, $cat_name_history)// Вып�
     wp_defer_term_counting(true);
     wp_defer_comment_counting(true);
 
-    $securities_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"' . $section_name . '"}');
+    $securities_get = paritet_get_api('https://master.paritet.ru:9443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"' . $section_name . '"}');
     $catId = get_category_by_slug($cat_name)->cat_ID;
 
 
@@ -488,24 +488,847 @@ function securitiesIssuer($section_name, $cat_name, $cat_name_history)// Вып�
     wp_defer_term_counting(false);
     wp_defer_comment_counting(false);
 }
+
+//issuerPost();
+
+
+function officials()// Должностные лица +
+{
+    $officials_get = paritet_get_api('https://master.paritet.ru:9443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Officials"}');
+    $save_posts_id = array();
+    $now = current_datetime()->format('Y-m-d H:i:s');
+    $catId = get_category_by_slug('officials')->cat_ID;
+    $catIdHistory = get_category_by_slug('officials_history')->cat_ID;
+    global $post;
+    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
+    foreach ($officials_get->data->items as $item) {
+        $officials_info_id = $item->id;// id
+        $officials_info_title = $item->content->official->fullName . ' ' . 'id ' . $officials_info_id; //Заголовок поста
+        $officials_url_name = translit($item->content->official->fullName);
+        $date_fix = substr($item->publishedAt, 0, 10);
+        $date_fix = str_replace(".", "", $date_fix);
+        $my_post = array(
+            'post_title' => $officials_info_title,
+            'post_name' => $officials_url_name,
+            'post_status' => 'publish',
+            'post_type' => 'post',
+            'ping_status' => 'closed',
+            'comment_status' => 'closed',
+            'post_category' => array($catId),
+            'post_parent' => $get_post_id
+        );
+        $posts = get_posts(
+            [
+                'fields' => 'ids',
+                'post_type' => 'post',
+                'title' => $officials_info_title,
+                'post_status' => 'publish',
+                'post_category' => array($catId),
+                'orderby' => 'post_date ID',
+                'order' => 'ASC',
+            ]
+        );
+
+        if (!empty($posts)) {
+            if ($item->status == 'Deleted' && !has_tag('Deleted', $posts[0])) {
+                wp_add_post_tags($posts[0], 'Deleted');
+                wp_remove_object_terms($posts[0], 'Published', 'post_tag');
+            }
+            array_push($save_posts_id, $posts[0]);
+        } else {
+
+            $post_id = wp_insert_post($my_post);
+            if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-officials-single.php');
+            wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
+            update_field('officials_id', $officials_info_id, $post_id);
+            update_field('officials_title', $item->title, $post_id);
+            update_field('officials_parent_id', $item->parentDisclosureId, $post_id);
+
+            update_field('officials_fio', $item->content->official->fullName, $post_id);
+            update_field('officials_position', $item->content->official->position, $post_id);
+            update_field('officials_date_election', $item->content->official->electionDate, $post_id);
+            update_field('officials_work_experience', $item->content->official->workExperience, $post_id);
+
+            update_field('officials_del_reason', $item->deleteReasonName, $post_id);
+            update_field('officials_pub_reason', $item->publicationReasonName, $post_id);
+            update_field('officials_source', $item->sourceName, $post_id);
+
+            update_field('officials_created_at', dateConverter($item->createdAt), $post_id);
+            update_field('officials_published_at', dateConverter($item->publishedAt), $post_id);
+            update_field('officials_del_at', dateConverter($item->deletedAt), $post_id);
+            update_field('publishedAt_fix', $date_fix, $post_id);
+            array_push($save_posts_id, $post_id);
+
+
+
+            $str_id = strval($item->parentDisclosureId);
+            foreach ($item->history as $history) {
+//                echo '<pre>';
+//                print_r($history);
+                $history_officials_info_id = $history->id;// id
+                $history_officials_info_title = $history->title . ' ' . 'id ' . $history_officials_info_id; //Заголовок поста
+                $history_officials_info_short_name = translit($history->content->official->fullName);// Полное имя
+                $my_post_history = array(
+                    'post_title' => $history_officials_info_title,
+                    'post_status' => 'publish',
+                    'post_name' => $history_officials_info_short_name,
+                    'post_type' => 'post',
+                    'post_category' => array($catIdHistory),
+                    'post_parent' => $post_id
+                );
+                $posts_history = get_posts(
+                    [
+                        'post_type' => 'post',
+                        'title' => $history_officials_info_title,
+                        'post_status' => 'publish',
+                        'category' => array($catIdHistory),
+                        'orderby' => 'post_date ID',
+                        'order' => 'ASC',
+                    ]
+                );
+
+                if (!empty($posts_history)) {
+
+                } else {
+
+                    $post_id_history = wp_insert_post($my_post_history);
+                    if ($post_id_history) update_post_meta($post_id_history, '_wp_page_template', 'disclosure-officials-history.php');
+                    wp_set_object_terms($post_id_history, $str_id, 'post_tag', false);
+                    update_field('history_officials_id', $officials_info_id, $post_id_history);
+                    update_field('history_officials_title', $history->title, $post_id_history);
+
+                    update_field('history_officials_fio', $history->content->official->fullName, $post_id_history);
+                    update_field('history_officials_position', $history->content->official->position, $post_id_history);
+                    update_field('history_officials_date_election', $history->content->official->electionDate, $post_id_history);
+                    update_field('history_officials_work_experience', $history->content->official->workExperience, $post_id_history);
+
+                    update_field('history_officials_del_reason', $history->deleteReasonName, $post_id_history);
+                    update_field('history_officials_pub_reason', $history->publicationReasonName, $post_id_history);
+                    update_field('history_officials_source', $history->sourceName, $post_id_history);
+
+                    update_field('history_officials_created_at', dateConverter($history->createdAt), $post_id_history);
+                    update_field('history_officials_published_at', dateConverter($history->publishedAt), $post_id_history);
+                    update_field('history_officials_deletedAt', dateConverter($history->deletedAt), $post_id_history);
+
+
+                }
+            }
+
+        }
+    }
+    $posts = get_posts(
+        [
+            'fields' => 'ids', // Only get post IDs
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'exclude' => $save_posts_id,
+            'category' => $catId,
+            'posts_per_page' => -1
+        ]
+    );
+    foreach ($posts as $posting) {
+        $my_post2 = array(
+            'ID' => $posting,
+            'post_status' => 'trash',
+        );
+
+        wp_update_post($my_post2);
+    }
+}
+
+
+
+
+function disclosure_documents($section_name, $cat_name, $cat_name_history, $parent_url) //тип контента: Документ +
+{
+
+    $license_get = paritet_get_api('https://master.paritet.ru:9443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"' . $section_name . '"}');
+    $response1 = wpgetapi_endpoint('disclo_pir', 'test', array('debug' => false));
+    $response1 = json_decode($response1);
+    $catId = get_category_by_slug($cat_name)->cat_ID;
+    $save_posts_id = array();
+
+    $now = current_datetime()->format('Y-m-d H:i:s');
+////    global $post;
+//    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
+    foreach ($license_get->data->items as $item) {
+//
+//        echo '<pre>';
+//        print_r($item);
+        if ($item->isSingle == '1'){
+            $pageId = url_to_postid('/disclosure-v2/');
+        } else{
+            $pageId = url_to_postid('/disclosure-v2/'.$parent_url);
+        }
+
+        if ($item->section == $section_name) {
+            $id_ = $item->id;
+            $post_title = $item->title . ' ' . 'id ' . $id_; //Заголовок поста
+            $post_url = translit($item->title);
+            $date_fix = substr($item->publishedAt, 0, 10);//дата для сортировки
+            $date_fix = str_replace(".", "", $date_fix);//дата для сортировки
+            $my_post = array(
+                'post_title' => $post_title,
+                'post_content' => $item->sectionName,
+                'post_status' => 'publish',
+                'post_type' => 'post',
+                'post_name' => $post_url,
+                'post_category' => array($catId),
+                'post_parent' => $pageId
+            );
+            $posts = get_posts(
+                [
+                    'fields' => 'ids',
+                    'post_type' => 'post',
+                    'title' => $post_title,
+                    'post_status' => 'publish',
+                    'post_category' => array($catId),
+                    'orderby' => 'post_date ID',
+                    'order' => 'ASC',
+                ]
+            );
+
+            if (!empty($posts)) {
+                if ($item->status == 'Deleted' && !has_tag('Deleted', $posts[0])) {
+                    print_r($post_title);
+                    wp_add_post_tags($posts[0], 'Deleted');
+                    wp_remove_object_terms($posts[0], 'Published', 'post_tag');
+//                    update_field('issuer_del_reason', $item->deleteReason, $posts[0]);
+//                    update_field('issuer_del_at', $item->deletedAt, $posts[0]);// Причина публикации'
+                }
+                array_push($save_posts_id, $posts[0]);
+            } else {
+//                echo '<pre> newPost';
+//                print_r($post_title);
+                $post_id = wp_insert_post($my_post);
+                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-content-document.php');
+                wp_set_object_terms($post_id, array($item->status), 'post_tag', false);
+                if ($item->isSingle == '1' && $item->status == 'Published'){
+                    wp_set_object_terms($post_id, array($item->status, $item->isSingle), 'post_tag', false);
+                }
+
+                update_field('doc_id', $item->id, $post_id); // id API
+                update_field('doc_parent_id', $item->parentDisclosureId, $post_id); // id  родительский API
+                update_field('doc_title', $item->title, $post_id); // Заголовок
+
+                update_field('doc_publicationReason', $item->publicationReasonName, $post_id);
+                update_field('doc_deleteReason', $item->deleteReasonName, $post_id);
+                update_field('doc_source', $item->sourceName, $post_id);
+
+                update_field('doc_description', $item->content->document->description, $post_id);
+                update_field('doc_validFromDate', dateConverter($item->content->document->validFromDate), $post_id);
+                update_field('doc_validToDate', dateConverter($item->content->document->validToDate), $post_id);
+
+                update_field('doc_createdAt', dateConverter($item->createdAt), $post_id);
+                update_field('doc_publishedAt', dateConverter($item->publishedAt), $post_id);
+                update_field('doc_deletedAt', dateConverter($item->deletedAt), $post_id);
+                update_field('doc_publish_fix', $date_fix, $post_id);
+
+
+                update_field('doc_cat_name_history', $cat_name_history, $post_id); //имя категории истории
+                update_field('doc_section_name_history', $section_name, $post_id); //имя секции (папаметр для истории)
+                //Добавление файла
+                array_push($save_posts_id, $post_id);
+                $get_files = paritet_get_api('https://master.paritet.ru:9443', '/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId=' . $item->id);
+                if (count($get_files->files) > 0) {
+                    $first = 1;
+                    $down_link_orig = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?';
+                    $down_link = '';
+                    $title_file = $item->id;
+                    $file_name = '';
+                    foreach ($get_files->files as $file) {
+                        $file_name = $file->fileName;
+                        $post_name = html_entity_decode($file->sourceFileName, ENT_QUOTES, "UTF-8");
+                        if ($first != 1) {
+                            $down_link = $down_link . '&';
+                            $file_name = $title_file . '.zip';
+                        } else {
+                            $down_link = $down_link_orig;
+                            $file_name = $file->sourceFileName;
+                        }
+                        $first = 0;
+                        $down_link = $down_link . 'id=';
+                        $down_link = $down_link . $file->id;
+                    }
+
+                    $headers = [
+                        'accept' => '*/*',
+                        'Authorization' => 'Bearer ' . $response1->jwtToken
+                    ];
+
+                    $image_data = download_url_with_headers($down_link, $headers);
+
+                    $file_array = [
+                        'name' => $file_name,
+                        'tmp_name' => $image_data,
+                        'error' => 0,
+                        'size' => filesize($image_data),
+                    ];
+
+                    $image_id = media_handle_sideload($file_array, $post_id, $post_name);
+                    if (is_wp_error($image_id)) {
+                        print_r($image_id->get_error_messages());
+                    }
+                    @unlink($file_array['tmp_name']);
+                }
+
+
+
+                $catIdHistory = get_category_by_slug($cat_name_history)->cat_ID;
+//                global $post;
+//                $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
+                if ($item->section == $section_name) {
+                    $str_id_history = strval($item->parentDisclosureId);
+                    foreach ($item->history as $history) {
+                        $history_id = $history->id;// id эмитента
+                        $history_title = $history->title . ' ' . 'id ' . $history_id; //Заголовок поста
+                        $post_url_history = translit($history->title);
+                        $history_post = array(
+                            'post_title' => $history_title,
+                            'post_name' => $post_url_history,
+                            'post_status' => 'publish',
+                            'post_type' => 'post',
+                            'post_category' => array($catIdHistory),
+                            'post_parent' => $post_id
+                        );
+                        $history_posts = get_posts(
+                            [
+                                'post_type' => 'post',
+                                'title' => $history_title,
+                                'post_status' => 'publish',
+                                'post_category' => array($catIdHistory),
+                                'orderby' => 'post_date ID',
+                                'order' => 'ASC',
+                            ]
+                        );
+
+                        if (!empty($history_posts)) {
+
+                        } else {
+
+                            $history_post_id = wp_insert_post($history_post);
+                            if ($history_post_id) update_post_meta($history_post_id, '_wp_page_template', 'disclosure-document-history.php');
+                            wp_set_object_terms($history_post_id, $str_id_history, 'post_tag', false);
+                            update_field('history_doc_title', $history->title, $history_post_id);
+
+                            update_field('history_doc_publicationReasonName', $history->publicationReason, $history_post_id);
+                            update_field('history_doc_deleteReasonName', $history->deleteReason, $history_post_id);
+                            update_field('history_doc_sourceName', $history->source, $history_post_id);
+
+                            update_field('history_doc_description', $history->content->document->description, $history_post_id);
+                            update_field('history_doc_validFromDate', dateConverter($history->content->document->validFromDate), $history_post_id);
+                            update_field('history_doc_validToDate', dateConverter($history->content->document->validToDate), $history_post_id);
+                            update_field('history_doc_createdAt', dateConverter($history->createdAt), $history_post_id);
+                            update_field('history_doc_publishedAt', dateConverter($history->publishedAt), $history_post_id);
+                            update_field('history_doc_deletedAt', dateConverter($history->deletedAt), $history_post_id);
+
+                            $get_files_history = paritet_get_api('https://master.paritet.ru:9443', '/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId=' . $history->id);
+
+                            if (count($get_files_history->files) > 0) {
+                                $first_history = 1;
+                                $history_down_link_orig = 'https://master.paritet.ru:9443/api/CloudFileApi/DownloadFile?';
+                                $history_down_link = '';
+                                $history_title_file = $history->id;
+                                $history_file_name = '';
+
+                                foreach ($get_files_history->files as $file) {
+                                    $history_file_name = $file->fileName;
+                                    $history_post_name = translit($file->sourceFileName);
+                                    if ($first_history != 1) {
+                                        $history_down_link = $history_down_link . '&';
+                                        $history_file_name = $history_title_file . '.zip';
+                                    } else {
+                                        $history_down_link = $history_down_link_orig;
+                                        $history_file_name = $file->sourceFileName;
+                                    }
+                                    $first_history = 0;
+                                    $history_down_link = $history_down_link . 'id=';
+                                    $history_down_link = $history_down_link . $file->id;
+
+
+                                }
+
+                                $history_headers = [
+                                    'accept' => '*/*',
+                                    'Authorization' => 'Bearer ' . $response1->jwtToken
+                                ];
+                                $history_image_data = download_url_with_headers($history_down_link, $history_headers);
+
+                                $history_file_array = [
+                                    'name' => $history_file_name,
+                                    'tmp_name' => $history_image_data,
+                                    'error' => 0,
+                                    'size' => filesize($history_image_data),
+                                ];
+
+                                $history_image_id = media_handle_sideload($history_file_array, $history_post_id, $history_post_name);
+                                if (is_wp_error($history_image_id)) {
+                                    print_r($history_image_id->get_error_messages());
+                                }
+                                @unlink($history_file_array['tmp_name']);
+                            }
+                        }
+                    }
+                }
+
+
+            }
+
+
+        }
+
+    }
+    $posts = get_posts(
+        [
+            'fields' => 'ids', // Only get post IDs
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'exclude' => $save_posts_id,
+            'category' => $catId,
+            'posts_per_page' => -1
+        ]
+    );
+//    echo '<pre> cat';
+//    print_r($catId);
+    foreach ($posts as $posting) {
+//        echo '<pre> trash';
+//        print_r($posting);
+        $my_post2 = array(
+            'ID' => $posting,
+            'post_status' => 'trash',
+        );
+
+        wp_update_post($my_post2);
+    }
+}
+function office()// Филиалы и представительства +
+
+{
+
+    $office_get = paritet_get_api('https://master.paritet.ru:9443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Offices"}');
+    $catId = get_category_by_slug('offices')->cat_ID;
+    $now = current_datetime()->format('Y-m-d H:i:s');
+    $save_posts_id = array();
+    global $post;
+    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
+    wp_defer_term_counting(true);
+    wp_defer_comment_counting(true);
+    $now = current_datetime()->format('Y-m-d H:i:s');
+
+    foreach ($office_get->data->items as $item) {
+
+        $office_id = $item->id;// id эмитента
+        $office_title = $item->title . ' ' . 'id ' . $office_id; //Заголовок поста
+        $post_name = translit($item->content->office->headOfOffice);
+        $date_fix = substr($item->publishedAt, 0, 10);
+        $date_fix = str_replace(".", "", $date_fix);
+        $my_post = array(
+            'post_title' => $office_title,
+            'post_status' => 'publish',
+            'post_name' => $post_name,
+            'post_type' => 'post',
+            'ping_status' => 'closed',
+            'comment_status' => 'closed',
+            'post_category' => array($catId),
+            'post_parent' => $get_post_id
+        );
+        $posts = get_posts(
+            [
+                'fields' => 'ids',
+                'post_type' => 'post',
+                'title' => $office_title,
+                'post_status' => 'publish',
+                'post_category' => array($catId),
+            ]
+        );
+
+        if (!empty($posts)) {
+            if ($item->status == 'Deleted' && !has_tag('Deleted', $posts[0])) {
+                wp_add_post_tags($posts[0], 'Deleted');
+                wp_remove_object_terms($posts[0], 'Published', 'post_tag');
+//                    update_field('issuer_del_reason', $item->deleteReason, $posts[0]);
+//                    update_field('issuer_del_at', $item->deletedAt, $posts[0]);// Причина публикации'
+            }
+            array_push($save_posts_id, $posts[0]);
+
+
+        } else {
+
+            $post_id = wp_insert_post($my_post);
+            if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-office-single.php');
+            wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
+            update_field('office_id', $item->id, $post_id);
+            update_field('office_parent_id', $item->parentDisclosureId, $post_id);
+            update_field('office_title', $item->title, $post_id);
+            update_field('office_address', $item->content->office->address, $post_id);
+            update_field('office_phone', $item->content->office->phone, $post_id);
+            update_field('office_fax', $item->content->office->fax, $post_id);
+            update_field('office_head', $item->content->office->headOfOffice, $post_id);
+
+            update_field('office_pub_reason', $item->publicationReasonName, $post_id);
+            update_field('office_pub_delReason', $item->deleteReasonName, $post_id);
+            update_field('office_pub_source', $item->sourceName, $post_id);
+
+            update_field('office_createdAt', dateConverter($item->createdAt), $post_id);
+            update_field('office_publishedAt', dateConverter($item->publishedAt), $post_id);
+            update_field('office_delAt', dateConverter($item->deletedAt), $post_id);
+
+            update_field('publishedAt_fix', $date_fix, $post_id);
+
+            array_push($save_posts_id, $post_id);
+
+        }
+    }
+
+    $posts = get_posts(
+        [
+            'fields' => 'ids', // Only get post IDs
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'exclude' => $save_posts_id,
+            'category' => $catId,
+            'posts_per_page' => -1
+        ]
+    );
+    foreach ($posts as $posting) {
+        $my_post2 = array(
+            'ID' => $posting,
+            'post_status' => 'trash',
+        );
+
+        wp_update_post($my_post2);
+    }
+    wp_defer_term_counting(false);
+    wp_defer_comment_counting(false);
+}
+
+function officeHistory()// основные сведения история +
+{
+    $office_info = paritet_get_api('https://master.paritet.ru:9443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Offices"}');
+    $catId = get_category_by_slug('offices_history')->cat_ID;
+    global $post;
+    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
+    foreach ($office_info->data->items as $item) {
+
+        if ($item->section == 'Offices') {
+
+            $str_id = strval($item->parentDisclosureId);
+            foreach ($item->history as $history) {
+//                echo '<pre>';
+//                print_r($history);
+                $office_info_id = $history->id;// id
+                $office_info_title = $history->title . ' ' . 'id ' . $office_info_id; //Заголовок поста
+                $post_url = translit($history->title);
+                $office_info_short_name = $history->content->office->headOfOffice;// Полное имя
+                $my_post = array(
+                    'post_title' => $office_info_title,
+                    'post_name' => $post_url,
+                    'post_status' => 'publish',
+                    'post_type' => 'post',
+                    'post_category' => array($catId),
+                    'post_parent' => $get_post_id
+                );
+                $posts = get_posts(
+                    [
+                        'post_type' => 'post',
+                        'title' => $office_info_title,
+                        'post_status' => 'publish',
+                        'post_category' => array($catId),
+                        'orderby' => 'post_date ID',
+                        'order' => 'ASC',
+                    ]
+                );
+
+                if (!empty($posts)) {
+
+                } else {
+
+                    $post_id = wp_insert_post($my_post);
+                    if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-office-history.php');
+                    wp_set_object_terms($post_id, $str_id, 'post_tag', false);
+                    update_field('history_office_id', $history->id, $post_id);
+                    update_field('history_office_title', $history->title, $post_id);
+                    update_field('history_office_address', $history->content->office->address, $post_id);
+                    update_field('history_office_phone', $history->content->office->phone, $post_id);
+                    update_field('history_office_fax', $history->content->office->fax, $post_id);
+                    update_field('history_office_head', $history->content->office->headOfOffice, $post_id);
+
+                    update_field('history_office_pub_reason', $history->publicationReasonName, $post_id);
+                    update_field('history_office_delReason', $history->deleteReasonName, $post_id);
+                    update_field('history_office_source', $history->sourceName, $post_id);
+
+                    update_field('history_office_createdAt', dateConverter($history->createdAt), $post_id);
+                    update_field('history_office_publishedAt', dateConverter($history->publishedAt), $post_id);
+                    update_field('history_office_deletedAt', dateConverter($history->createdAt), $post_id);
+
+
+                }
+            }
+        }
+
+    }
+}
+
+//Основные сведения
+function disclosureBasicInfo()// основные сведения +
+{
+    $save_posts_id = array();
+    $base_info_get = paritet_get_api('https://master.paritet.ru:9443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Main"}');
+    $catId = get_category_by_slug('base_info')->cat_ID;
+    $now = current_datetime()->format('Y-m-d H:i:s');
+
+//    global $post;
+//    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
+
+
+    foreach ($base_info_get->data->items as $item) {
+        echo '<pre>';
+        print_r($item);
+        if ($item->isSingle == '1'){
+            $pageId = url_to_postid('/disclosure-v2/');
+        } else{
+            $pageId = url_to_postid('/disclosure-v2/basic-info/');
+        }
+
+        $base_info_id = $item->id;// id
+        $base_info_title = $item->content->registrar->shortName . ' ' . 'id ' . $base_info_id; //Заголовок поста
+        $base_url_name = translit($item->content->registrar->shortName);
+        $date_fix = substr($item->publishedAt, 0, 10);
+        $date_fix = str_replace(".", "", $date_fix);
+
+
+        $my_post = array(
+            'post_title' => $base_info_title,
+            'post_name' => $base_url_name,
+            'post_content' => $item->sectionName,
+            'post_status' => 'publish',
+            'post_type' => 'post',
+            'ping_status' => 'closed',
+            'comment_status' => 'closed',
+            'post_category' => array($catId),
+            'post_parent' => $pageId
+        );
+        $posts = get_posts(
+            [
+                'fields' => 'ids',
+                'post_type' => 'post',
+                'title' => $base_info_title,
+                'post_status' => 'publish',
+                'post_category' => array($catId),
+                'orderby' => 'post_date ID',
+                'order' => 'ASC',
+            ]
+        );
+
+        if (!empty($posts)) {
+            if ($item->status == 'Deleted' && !has_tag('Deleted', $posts[0])) {
+                wp_add_post_tags($posts[0], 'Deleted');
+                wp_remove_object_terms($posts[0], 'Published', 'post_tag');
+//                    update_field('issuer_del_reason', $item->deleteReason, $posts[0]);//
+//                    update_field('issuer_del_at', $item->deletedAt, $posts[0]);// Причина публикации'
+            }
+            array_push($save_posts_id, $posts[0]);
+        } else {
+
+            $post_id = wp_insert_post($my_post);
+            if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-basic-single.php');
+            wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
+            if ($item->isSingle == '1' && $item->status == 'Published'){
+                wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->isSingle), 'post_tag', false);
+            }
+
+            update_field('basic_info_title', $item->title, $post_id);
+            update_field('basic_info_id', $item->id, $post_id);
+            update_field('basic_info_parent_id', $item->parentDisclosureId, $post_id);
+            update_field('basic_info_name', $item->content->registrar->shortName, $post_id);
+            update_field('basic_info_full_name', $item->content->registrar->fullName, $post_id);
+            update_field('basic_info_short_name_en', $item->content->registrar->shortNameEng, $post_id);
+            update_field('basic_info_full_name_en', $item->content->registrar->fullNameEng, $post_id);
+            update_field('basic_info_inn', $item->content->registrar->inn, $post_id);
+            update_field('basic_info_kpp', $item->content->registrar->kpp, $post_id);
+            update_field('basic_info_ogrn', $item->content->registrar->ogrn, $post_id);
+            update_field('basic_info_address', $item->content->registrar->address, $post_id);
+            update_field('basic_info_phone', $item->content->registrar->phone, $post_id);
+            update_field('basic_info_fax', $item->content->registrar->fax, $post_id);
+            update_field('basic_info_email', $item->content->registrar->email, $post_id);
+            update_field('basic_info_site', $item->content->registrar->webSite, $post_id);
+            update_field('basic_info_social', $item->content->registrar->socialMedia, $post_id);
+            update_field('basic_info_bank_recipient', $item->content->registrar->bank->recipient, $post_id);
+            update_field('basic_info_bank_rs', $item->content->registrar->bank->rs, $post_id);
+            update_field('basic_info_bank_bic', $item->content->registrar->bank->bic, $post_id);
+            update_field('basic_info_bank_ks', $item->content->registrar->bank->ks, $post_id);
+            update_field('basic_info_bank_name', $item->content->registrar->bank->name, $post_id);
+            update_field('basic_info_bank_inn', $item->content->registrar->bank->inn, $post_id);
+            update_field('basic_info_bank_kpp', $item->content->registrar->bank->kpp, $post_id);
+
+            update_field('basic_info_reason_public', $item->publicationReasonName, $post_id);
+            update_field('basic_info_reason_del', $item->deleteReasonName, $post_id);
+            update_field('basic_info_source', $item->sourceName, $post_id);
+
+            update_field('basic_info_createAt', dateConverter($item->createdAt), $post_id);
+            update_field('basic_info_published', dateConverter($item->publishedAt), $post_id);
+            update_field('basic_info_del_at', dateConverter($item->deletedAt), $post_id);
+            update_field('publishedAt_fix', $date_fix, $post_id);
+            if ($item->isSingle == '1' && $item->status == 'Published'){
+                update_field('post_url', get_permalink($post_id) , $post_id);
+                update_field('postIsSingle', $item->isSingle , $post_id);
+            }
+
+            array_push($save_posts_id, $post_id);
+
+
+            $catIdHistory = get_category_by_slug('base_info_history')->cat_ID;
+
+            $str_id = strval($item->parentDisclosureId);
+            foreach ($item->history as $history) {
+
+                $basic_info_id = $history->id;// id
+                $basic_info_title = $history->title . ' ' . 'id ' . $basic_info_id; //Заголовок поста
+                $basic_url = translit($history->title);
+                $basic_info_short_name = $history->content->registrar->shortName;// Краткое имя
+                $basic_info_full_name = $history->content->registrar->fullName;// Полное имя
+                $basic_info_short_name_eng = $history->content->registrar->shortNameEng;// Краткое имя на англ
+                $basic_info_full_name_eng = $history->content->registrar->fullNameEng; // Полное имя на англ
+                $basic_info_inn = $history->content->registrar->inn; // ИНН
+                $basic_info_kpp = $history->content->registrar->kpp;// КПП
+                $basic_info_ogrn = $history->content->registrar->ogrn; // Огрн
+                $basic_info_address = $history->content->registrar->address; // Адрес
+                $basic_info_phone = $history->content->registrar->phone; //Телефон
+                $basic_info_fax = $history->content->registrar->fax; //факс
+                $basic_info_email = $history->content->registrar->email;// email
+                $basic_info_site = $history->content->registrar->webSite;// веб-сайт
+                $basic_info_media = $history->content->registrar->socialMedia;// социальные сети
+                $basic_info_bank_recipient = $history->content->registrar->bank->recipient;//реквизиты банка
+                $basic_info_bank_rs = $history->content->registrar->bank->rs;//реквизиты банка
+                $basic_info_bank_bic = $history->content->registrar->bank->bic;//реквизиты банка
+                $basic_info_bank_ks = $history->content->registrar->bank->ks;//реквизиты банка
+                $basic_info_bank_name = $history->content->registrar->bank->name;//реквизиты банка
+                $basic_info_bank_inn = $history->content->registrar->bank->inn;//реквизиты банка
+                $basic_info_bank_kpp = $history->content->registrar->bank->kpp; //реквизиты банка
+
+                $basic_info_pub_reason = $history->publicationReasonName; // Причина публикации
+                $basic_info_del_reason = $history->deleteReasonName; // Причина Удаления
+                $basic_info_source = $history->sourceName; // Источник
+
+                $basic_info_create_at = dateConverter($history->createdAt); // Создано
+                $basic_info_pub_at = dateConverter($history->publishedAt); // Опубликовано
+                $basic_info_del_at = dateConverter($history->deletedAt); // Удалено
+
+                $basic_info_history_title = $history->title;
+                $my_post_history = array(
+                    'post_title' => $basic_info_title,
+                    'post_name' => $basic_url,
+                    'post_status' => 'publish',
+                    'post_type' => 'post',
+                    'post_category' => array($catIdHistory),
+                    'post_parent' => $post_id
+                );
+                $posts_history = get_posts(
+                    [
+                        'post_type' => 'post',
+                        'title' => $basic_info_title,
+                        'post_status' => 'publish',
+                        'post_category' => array($catId),
+                        'orderby' => 'post_date ID',
+                        'order' => 'ASC',
+                    ]
+                );
+
+                if (!empty($posts_history)) {
+
+                } else {
+
+                    $post_id_history = wp_insert_post($my_post_history);
+                    if ($post_id_history) update_post_meta($post_id_history, '_wp_page_template', 'disclosure-basic-history.php');
+                    wp_set_object_terms($post_id_history, $str_id, 'post_tag', false);
+                    update_field('basic_history_title', $basic_info_history_title, $post_id_history);
+                    update_field('basic_history_info_id', $basic_info_id, $post_id_history);
+                    update_field('basic_history_info_name', $basic_info_short_name, $post_id_history);
+                    update_field('basic_history_info_full_name', $basic_info_full_name, $post_id_history);
+                    update_field('basic_history_info_short_name_en', $basic_info_short_name_eng, $post_id_history);
+                    update_field('basic_history_info_full_name_en', $basic_info_full_name_eng, $post_id_history);
+                    update_field('basic_history_info_inn', $basic_info_inn, $post_id_history);
+                    update_field('basic_history_info_kpp', $basic_info_kpp, $post_id_history);
+                    update_field('basic_history_info_ogrn', $basic_info_ogrn, $post_id_history);
+                    update_field('basic_history_info_address', $basic_info_address, $post_id_history);
+                    update_field('basic_history_info_phone', $basic_info_phone, $post_id_history);
+                    update_field('basic_history_info_fax', $basic_info_fax, $post_id_history);
+                    update_field('basic_history_info_email', $basic_info_email, $post_id_history);
+                    update_field('basic_history_info_site', $basic_info_site, $post_id_history);
+                    update_field('basic_history_info_social', $basic_info_media, $post_id_history);
+                    update_field('basic_history_info_bank_recipient', $basic_info_bank_recipient, $post_id_history);
+                    update_field('basic_history_info_bank_rs', $basic_info_bank_rs, $post_id_history);
+                    update_field('basic_history_info_bank_bic', $basic_info_bank_bic, $post_id_history);
+                    update_field('basic_history_info_bank_ks', $basic_info_bank_ks, $post_id_history);
+                    update_field('basic_history_info_bank_name', $basic_info_bank_name, $post_id_history);
+                    update_field('basic_history_info_bank_inn', $basic_info_bank_inn, $post_id_history);
+                    update_field('basic_history_info_bank_kpp', $basic_info_bank_kpp, $post_id_history);
+
+
+                    update_field('basic_history_info_reason_public', $basic_info_pub_reason, $post_id_history);
+                    update_field('basic_history_info_reason_del', $basic_info_del_reason, $post_id_history);
+                    update_field('basic_history_info_source', $basic_info_source, $post_id_history);
+
+                    update_field('basic_history_info_published', $basic_info_pub_at, $post_id_history);
+                    update_field('basic_history_info_create_at', $basic_info_create_at, $post_id_history);
+                    update_field('basic_history_info_del_at', $basic_info_del_at, $post_id_history);
+
+                }
+            }
+        }
+    }
+    $posts = get_posts(
+        [
+            'fields' => 'ids', // Only get post IDs
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'exclude' => $save_posts_id,
+            'category' => $catId,
+            'posts_per_page' => -1
+        ]
+    );
+    foreach ($posts as $posting) {
+        $my_post2 = array(
+            'ID' => $posting,
+            'post_status' => 'trash',
+        );
+
+        wp_update_post($my_post2);
+    }
+}
+add_action('base_info_hook', 'disclosureBasicInfo'); // эмитенты
+// time() - текущее время в UNIX-формате, то есть в первый раз задача выполнится моментально
+if( !wp_next_scheduled('base_info_hook') )
+    wp_schedule_event( time(), 'hourly', 'base_info_hook');
+
+//end основные сведения
+
+
+
+// Эмитенты
 function issuerPost()// создание эмитентов +
 
 {
     $pageId = url_to_postid('/disclosure-v2/issuers/');
     wp_defer_term_counting(true);
     wp_defer_comment_counting(true);
-    $issuer_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Issuers"}');
+    $issuer_get = paritet_get_api('https://master.paritet.ru:9443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Issuers"}');
 
     $catId = get_category_by_slug('issuers')->cat_ID;
     $catIdHistory = get_category_by_slug('history')->cat_ID;
     $save_posts_id = array();
 
     foreach ($issuer_get->data->items as $item) {
+//        echo '<pre>';
+//        print_r($item);
         $issuer_id = $item->id;// id эмитента
         $issuer_title = $item->content->issuer->shortName . ' ' . 'id ' . $issuer_id; //Заголовок поста
         $post_name = translit($item->content->issuer->shortName);
         $date_fix = substr($item->publishedAt, 0, 10);
         $date_fix = str_replace(".", "", $date_fix);
+
+        $date_fix_delete = substr($item->deletedAt, 0, 10);
+        $date_fix_delete = str_replace(".", "", $date_fix_delete);
 //        echo '<pre>';
 //        print_r($date_fix);
         $my_post = array(
@@ -566,11 +1389,13 @@ function issuerPost()// создание эмитентов +
             update_field('issuer_registryIncomingActDate', dateConverter($item->content->issuer->registryIncomingActDate), $post_id);
             update_field('issuer_registryOutgoingActDate', dateConverter($item->content->issuer->registryOutgoingActDate), $post_id);
             update_field('issuer_registryContractTerminationDate', dateConverter($item->content->issuer->registryContractTerminationDate), $post_id);
+            print_r(dateConverter($item->content->issuer->registryContractTerminationDate), $post_id);
             update_field('issuer_registryIncomingForStorageDate', dateConverter($item->content->issuer->registryIncomingForStorageDate), $post_id);
             update_field('issuer_nextRegistrar', $item->content->issuer->nextRegistrar, $post_id);
             update_field('issuer_createdAt', dateConverter($item->createdAt), $post_id);
             update_field('issuer_publishedAt', dateConverter($item->publishedAt), $post_id);
             update_field('issuer_publishedAt_fix', $date_fix, $post_id);
+            update_field('issuer_deletedAt_fix', $date_fix_delete, $post_id);
             update_field('issuer_deletedAt', dateConverter($item->deletedAt), $post_id);
 
             array_push($save_posts_id, $post_id);
@@ -723,22 +1548,31 @@ function issuerPost()// создание эмитентов +
     wp_defer_term_counting(false);
     wp_defer_comment_counting(false);
 }
-
-add_action('issuer_hook', 'issuerPost');
+add_action('issuer_hook', 'issuerPost'); // эмитенты
 // time() - текущее время в UNIX-формате, то есть в первый раз задача выполнится моментально
 if( !wp_next_scheduled('issuer_hook') )
     wp_schedule_event( time(), 'hourly', 'issuer_hook');
+// end Эмитенты
 
-function transferAgents($section_name, $cat_name, $cat_name_history)// + создание трансфер агентов
+
+
+
+// Трансфер-агенты + эмитенты с частю функций регистратора
+function transferAgents($section_name, $cat_name, $cat_name_history, $parent_url)// + создание трансфер агентов, disclosure-funcissuer, disclosure-transfer
 
 {
-    $transferAgents_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"' . $section_name . '"}');
+    $transferAgents_get = paritet_get_api('https://master.paritet.ru:9443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"' . $section_name . '"}');
     $catId = get_category_by_slug($cat_name)->cat_ID;
     $now = current_datetime()->format('Y-m-d H:i:s');
     $save_posts_id = array();
     global $post;
     $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
     foreach ($transferAgents_get->data->items as $item) {
+        if ($item->isSingle == '1'){
+            $pageId = url_to_postid('/disclosure-v2/');
+        } else{
+            $pageId = url_to_postid('/disclosure-v2/'.$parent_url);
+        }
         if ($item->section == $section_name) {
             $transfer_id = $item->id;// id эмитента
             $transfer_title = $item->content->company->shortName . ' ' . 'id ' . $transfer_id; //Заголовок поста
@@ -751,7 +1585,7 @@ function transferAgents($section_name, $cat_name, $cat_name_history)// + соз�
                 'post_status' => 'publish',
                 'post_type' => 'post',
                 'post_category' => array($catId),
-                'post_parent' => $get_post_id
+                'post_parent' => $pageId
             );
             $posts = get_posts(
                 [
@@ -800,797 +1634,68 @@ function transferAgents($section_name, $cat_name, $cat_name_history)// + соз�
                 update_field('transfer_cat_name', $cat_name_history, $post_id);
                 update_field('transfer_cat_sections', $section_name, $post_id);
                 array_push($save_posts_id, $post_id);
-            }
-        }
-    }
-    $posts = get_posts(
-        [
-            'fields' => 'ids', // Only get post IDs
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'exclude' => $save_posts_id,
-            'category' => $catId,
-            'posts_per_page' => -1
-        ]
-    );
-    foreach ($posts as $posting) {
-        $my_post2 = array(
-            'ID' => $posting,
-            'post_status' => 'trash',
-        );
 
-        wp_update_post($my_post2);
-    }
-}
 
-function transferAgentsHistory($cat_name, $section_name)// + История трансфер-агентов
-{
-    $history_info = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"' . $section_name . '"}');
-    $catId = get_category_by_slug($cat_name)->cat_ID;
-    global $post;
-    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
-    foreach ($history_info->data->items as $item) {
-
-        if ($item->section == $section_name) {
-
-            $history_info_id1 = $item->id;
-            $str_id = strval($item->parentDisclosureId);
-            foreach ($item->history as $history) {
+                $catIdHistory = get_category_by_slug($cat_name_history)->cat_ID;
+                $str_id_history = strval($item->parentDisclosureId);
+                foreach ($item->history as $history) {
 //                echo '<pre>';
 //                print_r( $history->deleteReason);
-                $history_info_id = $history->id;// id
-                $history_info_title = $history->title . ' ' . 'id ' . $history_info_id; //Заголовок поста
-                $post_url = $history->title;
-                $officials_info_short_name = $history->content->security->issuer;// Полное имя
-                $my_post = array(
-                    'post_title' => $history_info_title,
-                    'post_name' => $post_url,
-                    'post_status' => 'publish',
-                    'post_type' => 'post',
-                    'post_category' => array($catId),
-                    'post_parent' => $get_post_id
-
-                );
-                $posts = get_posts(
-                    [
-                        'post_type' => 'post',
-                        'title' => $history_info_title,
+                    $history_info_id = $history->id;// id
+                    $history_info_title = $history->title . ' ' . 'id ' . $history_info_id; //Заголовок поста
+                    $post_url_history = $history->title;
+                    $my_post_history = array(
+                        'post_title' => $history_info_title,
+                        'post_name' => $post_url_history,
                         'post_status' => 'publish',
-                        'post_category' => array($catId),
-                        'orderby' => 'post_date ID',
-                        'order' => 'ASC',
-                    ]
-                );
-
-                if (!empty($posts)) {
-
-                } else {
-
-                    $post_id = wp_insert_post($my_post);
-                    if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-transfer-history.php');
-                    wp_set_object_terms($post_id, $str_id, 'post_tag', false);
-
-                    update_field('history_transfer_id', $history->id, $post_id);
-                    update_field('history_transfer_title', $history->title, $post_id);
-                    update_field('history_transfer_short_name', $history->content->company->shortName, $post_id);//Краткое наименование
-                    update_field('history_transfer_full_name', $history->content->company->fullName, $post_id);// Полное наименование
-                    update_field('history_transfer_inn', $history->content->company->inn, $post_id);//Инн
-                    update_field('history_transfer_ogrn', $history->content->company->ogrn, $post_id);//ОГРН
-                    update_field('history_transfer_address', $history->content->company->address, $post_id);// Адресс
-                    update_field('history_transfer_phone', $history->content->company->phone, $post_id);// Телефон
-                    update_field('history_transfer_fax', $history->content->company->fax, $post_id);// Факс
-
-                    update_field('history_transfer_reason_public', $history->publicationReasonName, $post_id);// Причина публикации'
-                    update_field('history_transfer_deleteReason', $history->deleteReasonName, $post_id);//
-                    update_field('history_transfer_deleteReason', $history->sourceName, $post_id);//
-
-                    update_field('history_transfer_createAt', dateConverter($history->createdAt), $post_id);//
-                    update_field('history_transfer_source', dateConverter($history->deletedAt), $post_id);//
-                    update_field('history_transfer_published', dateConverter($history->publishedAt), $post_id);//
-                }
-            }
-        }
-
-    }
-}
-
-function officials()// Должностные лица +
-{
-    $officials_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Officials"}');
-    $save_posts_id = array();
-    $now = current_datetime()->format('Y-m-d H:i:s');
-    $catId = get_category_by_slug('officials')->cat_ID;
-    $catIdHistory = get_category_by_slug('officials_history')->cat_ID;
-    global $post;
-    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
-    foreach ($officials_get->data->items as $item) {
-        $officials_info_id = $item->id;// id
-        $officials_info_title = $item->content->official->fullName . ' ' . 'id ' . $officials_info_id; //Заголовок поста
-        $officials_url_name = translit($item->content->official->fullName);
-        $date_fix = substr($item->publishedAt, 0, 10);
-        $date_fix = str_replace(".", "", $date_fix);
-        $my_post = array(
-            'post_title' => $officials_info_title,
-            'post_name' => $officials_url_name,
-            'post_status' => 'publish',
-            'post_type' => 'post',
-            'ping_status' => 'closed',
-            'comment_status' => 'closed',
-            'post_category' => array($catId),
-            'post_parent' => $get_post_id
-        );
-        $posts = get_posts(
-            [
-                'fields' => 'ids',
-                'post_type' => 'post',
-                'title' => $officials_info_title,
-                'post_status' => 'publish',
-                'post_category' => array($catId),
-                'orderby' => 'post_date ID',
-                'order' => 'ASC',
-            ]
-        );
-
-        if (!empty($posts)) {
-            if ($item->status == 'Deleted' && !has_tag('Deleted', $posts[0])) {
-                wp_add_post_tags($posts[0], 'Deleted');
-                wp_remove_object_terms($posts[0], 'Published', 'post_tag');
-            }
-            array_push($save_posts_id, $posts[0]);
-        } else {
-
-            $post_id = wp_insert_post($my_post);
-            if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-officials-single.php');
-            wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
-            update_field('officials_id', $officials_info_id, $post_id);
-            update_field('officials_title', $item->title, $post_id);
-            update_field('officials_parent_id', $item->parentDisclosureId, $post_id);
-
-            update_field('officials_fio', $item->content->official->fullName, $post_id);
-            update_field('officials_position', $item->content->official->position, $post_id);
-            update_field('officials_date_election', $item->content->official->electionDate, $post_id);
-            update_field('officials_work_experience', $item->content->official->workExperience, $post_id);
-
-            update_field('officials_del_reason', $item->deleteReasonName, $post_id);
-            update_field('officials_pub_reason', $item->publicationReasonName, $post_id);
-            update_field('officials_source', $item->sourceName, $post_id);
-
-            update_field('officials_created_at', dateConverter($item->createdAt), $post_id);
-            update_field('officials_published_at', dateConverter($item->publishedAt), $post_id);
-            update_field('officials_del_at', dateConverter($item->deletedAt), $post_id);
-            update_field('publishedAt_fix', $date_fix, $post_id);
-            array_push($save_posts_id, $post_id);
-
-
-
-            $str_id = strval($item->parentDisclosureId);
-            foreach ($item->history as $history) {
-//                echo '<pre>';
-//                print_r($history);
-                $history_officials_info_id = $history->id;// id
-                $history_officials_info_title = $history->title . ' ' . 'id ' . $history_officials_info_id; //Заголовок поста
-                $history_officials_info_short_name = translit($history->content->official->fullName);// Полное имя
-                $my_post_history = array(
-                    'post_title' => $history_officials_info_title,
-                    'post_status' => 'publish',
-                    'post_name' => $history_officials_info_short_name,
-                    'post_type' => 'post',
-                    'post_category' => array($catIdHistory),
-                    'post_parent' => $post_id
-                );
-                $posts_history = get_posts(
-                    [
                         'post_type' => 'post',
-                        'title' => $history_officials_info_title,
-                        'post_status' => 'publish',
-                        'category' => array($catIdHistory),
-                        'orderby' => 'post_date ID',
-                        'order' => 'ASC',
-                    ]
-                );
-
-                if (!empty($posts_history)) {
-
-                } else {
-
-                    $post_id_history = wp_insert_post($my_post_history);
-                    if ($post_id_history) update_post_meta($post_id_history, '_wp_page_template', 'disclosure-officials-history.php');
-                    wp_set_object_terms($post_id_history, $str_id, 'post_tag', false);
-                    update_field('history_officials_id', $officials_info_id, $post_id_history);
-                    update_field('history_officials_title', $history->title, $post_id_history);
-
-                    update_field('history_officials_fio', $history->content->official->fullName, $post_id_history);
-                    update_field('history_officials_position', $history->content->official->position, $post_id_history);
-                    update_field('history_officials_date_election', $history->content->official->electionDate, $post_id_history);
-                    update_field('history_officials_work_experience', $history->content->official->workExperience, $post_id_history);
-
-                    update_field('history_officials_del_reason', $history->deleteReasonName, $post_id_history);
-                    update_field('history_officials_pub_reason', $history->publicationReasonName, $post_id_history);
-                    update_field('history_officials_source', $history->sourceName, $post_id_history);
-
-                    update_field('history_officials_created_at', dateConverter($history->createdAt), $post_id_history);
-                    update_field('history_officials_published_at', dateConverter($history->publishedAt), $post_id_history);
-                    update_field('history_officials_deletedAt', dateConverter($history->deletedAt), $post_id_history);
-
-
-                }
-            }
-
-        }
-    }
-    $posts = get_posts(
-        [
-            'fields' => 'ids', // Only get post IDs
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'exclude' => $save_posts_id,
-            'category' => $catId,
-            'posts_per_page' => -1
-        ]
-    );
-    foreach ($posts as $posting) {
-        $my_post2 = array(
-            'ID' => $posting,
-            'post_status' => 'trash',
-        );
-
-        wp_update_post($my_post2);
-    }
-}
-
-function disclosureBasicInfo()// основные сведения +
-{
-    $save_posts_id = array();
-    $base_info_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Main"}');
-    $catId = get_category_by_slug('base_info')->cat_ID;
-    $now = current_datetime()->format('Y-m-d H:i:s');
-    global $post;
-    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
-
-    foreach ($base_info_get->data->items as $item) {
-        $base_info_id = $item->id;// id
-        $base_info_title = $item->content->registrar->shortName . ' ' . 'id ' . $base_info_id; //Заголовок поста
-        $base_url_name = translit($item->content->registrar->shortName);
-        $date_fix = substr($item->publishedAt, 0, 10);
-        $date_fix = str_replace(".", "", $date_fix);
-
-
-        $my_post = array(
-            'post_title' => $base_info_title,
-            'post_name' => $base_url_name,
-            'post_status' => 'publish',
-            'post_type' => 'post',
-            'ping_status' => 'closed',
-            'comment_status' => 'closed',
-            'post_category' => array($catId),
-            'post_parent' => $get_post_id
-        );
-        $posts = get_posts(
-            [
-                'fields' => 'ids',
-                'post_type' => 'post',
-                'title' => $base_info_title,
-                'post_status' => 'publish',
-                'post_category' => array($catId),
-                'orderby' => 'post_date ID',
-                'order' => 'ASC',
-            ]
-        );
-
-        if (!empty($posts)) {
-            if ($item->status == 'Deleted' && !has_tag('Deleted', $posts[0])) {
-                wp_add_post_tags($posts[0], 'Deleted');
-                wp_remove_object_terms($posts[0], 'Published', 'post_tag');
-//                    update_field('issuer_del_reason', $item->deleteReason, $posts[0]);//
-//                    update_field('issuer_del_at', $item->deletedAt, $posts[0]);// Причина публикации'
-            }
-            array_push($save_posts_id, $posts[0]);
-        } else {
-
-            $post_id = wp_insert_post($my_post);
-            if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-basic-single.php');
-            wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
-            update_field('basic_info_title', $item->title, $post_id);
-            update_field('basic_info_id', $item->id, $post_id);
-            update_field('basic_info_parent_id', $item->parentDisclosureId, $post_id);
-            update_field('basic_info_name', $item->content->registrar->shortName, $post_id);
-            update_field('basic_info_full_name', $item->content->registrar->fullName, $post_id);
-            update_field('basic_info_short_name_en', $item->content->registrar->shortNameEng, $post_id);
-            update_field('basic_info_full_name_en', $item->content->registrar->fullNameEng, $post_id);
-            update_field('basic_info_inn', $item->content->registrar->inn, $post_id);
-            update_field('basic_info_kpp', $item->content->registrar->kpp, $post_id);
-            update_field('basic_info_ogrn', $item->content->registrar->ogrn, $post_id);
-            update_field('basic_info_address', $item->content->registrar->address, $post_id);
-            update_field('basic_info_phone', $item->content->registrar->phone, $post_id);
-            update_field('basic_info_fax', $item->content->registrar->fax, $post_id);
-            update_field('basic_info_email', $item->content->registrar->email, $post_id);
-            update_field('basic_info_site', $item->content->registrar->webSite, $post_id);
-            update_field('basic_info_social', $item->content->registrar->socialMedia, $post_id);
-            update_field('basic_info_bank_recipient', $item->content->registrar->bank->recipient, $post_id);
-            update_field('basic_info_bank_rs', $item->content->registrar->bank->rs, $post_id);
-            update_field('basic_info_bank_bic', $item->content->registrar->bank->bic, $post_id);
-            update_field('basic_info_bank_ks', $item->content->registrar->bank->ks, $post_id);
-            update_field('basic_info_bank_name', $item->content->registrar->bank->name, $post_id);
-            update_field('basic_info_bank_inn', $item->content->registrar->bank->inn, $post_id);
-            update_field('basic_info_bank_kpp', $item->content->registrar->bank->kpp, $post_id);
-
-            update_field('basic_info_reason_public', $item->publicationReasonName, $post_id);
-            update_field('basic_info_reason_del', $item->deleteReasonName, $post_id);
-            update_field('basic_info_source', $item->sourceName, $post_id);
-
-            update_field('basic_info_createAt', dateConverter($item->createdAt), $post_id);
-            update_field('basic_info_published', dateConverter($item->publishedAt), $post_id);
-            update_field('basic_info_del_at', dateConverter($item->deletedAt), $post_id);
-            update_field('publishedAt_fix', $date_fix, $post_id);
-
-            array_push($save_posts_id, $post_id);
-        }
-    }
-    $posts = get_posts(
-        [
-            'fields' => 'ids', // Only get post IDs
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'exclude' => $save_posts_id,
-            'category' => $catId,
-            'posts_per_page' => -1
-        ]
-    );
-    foreach ($posts as $posting) {
-        $my_post2 = array(
-            'ID' => $posting,
-            'post_status' => 'trash',
-        );
-
-        wp_update_post($my_post2);
-    }
-}
-
-function disclosureBasicInfoHistory($cat_name)// Истории для раздела основные сведения +
-{
-    $basic_info = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Main"}');
-    $catId = get_category_by_slug($cat_name)->cat_ID;
-    global $post;
-    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
-    foreach ($basic_info->data->items as $item) {
-
-        $str_id = strval($item->parentDisclosureId);
-        foreach ($item->history as $history) {
-
-            $basic_info_id = $history->id;// id
-            $basic_info_title = $history->title . ' ' . 'id ' . $basic_info_id; //Заголовок поста
-            $basic_url = translit($history->title);
-            $basic_info_short_name = $history->content->registrar->shortName;// Краткое имя
-            $basic_info_full_name = $history->content->registrar->fullName;// Полное имя
-            $basic_info_short_name_eng = $history->content->registrar->shortNameEng;// Краткое имя на англ
-            $basic_info_full_name_eng = $history->content->registrar->fullNameEng; // Полное имя на англ
-            $basic_info_inn = $history->content->registrar->inn; // ИНН
-            $basic_info_kpp = $history->content->registrar->kpp;// КПП
-            $basic_info_ogrn = $history->content->registrar->ogrn; // Огрн
-            $basic_info_address = $history->content->registrar->address; // Адрес
-            $basic_info_phone = $history->content->registrar->phone; //Телефон
-            $basic_info_fax = $history->content->registrar->fax; //факс
-            $basic_info_email = $history->content->registrar->email;// email
-            $basic_info_site = $history->content->registrar->webSite;// веб-сайт
-            $basic_info_media = $history->content->registrar->socialMedia;// социальные сети
-            $basic_info_bank_recipient = $history->content->registrar->bank->recipient;//реквизиты банка
-            $basic_info_bank_rs = $history->content->registrar->bank->rs;//реквизиты банка
-            $basic_info_bank_bic = $history->content->registrar->bank->bic;//реквизиты банка
-            $basic_info_bank_ks = $history->content->registrar->bank->ks;//реквизиты банка
-            $basic_info_bank_name = $history->content->registrar->bank->name;//реквизиты банка
-            $basic_info_bank_inn = $history->content->registrar->bank->inn;//реквизиты банка
-            $basic_info_bank_kpp = $history->content->registrar->bank->kpp; //реквизиты банка
-
-            $basic_info_pub_reason = $history->publicationReasonName; // Причина публикации
-            $basic_info_del_reason = $history->deleteReasonName; // Причина Удаления
-            $basic_info_source = $history->sourceName; // Источник
-
-            $basic_info_create_at = dateConverter($history->createdAt); // Создано
-            $basic_info_pub_at = dateConverter($history->publishedAt); // Опубликовано
-            $basic_info_del_at = dateConverter($history->deletedAt); // Удалено
-
-            $basic_info_history_title = $history->title;
-            $my_post = array(
-                'post_title' => $basic_info_title,
-                'post_name' => $basic_url,
-                'post_status' => 'publish',
-                'post_type' => 'post',
-                'post_category' => array($catId),
-                'post_parent' => $get_post_id
-            );
-            $posts = get_posts(
-                [
-                    'post_type' => 'post',
-                    'title' => $basic_info_title,
-                    'post_status' => 'publish',
-                    'post_category' => array($catId),
-                    'orderby' => 'post_date ID',
-                    'order' => 'ASC',
-                ]
-            );
-
-            if (!empty($posts)) {
-
-            } else {
-
-                $post_id = wp_insert_post($my_post);
-                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-basic-history.php');
-                wp_set_object_terms($post_id, $str_id, 'post_tag', false);
-                update_field('basic_history_title', $basic_info_history_title, $post_id);
-                update_field('basic_history_info_id', $basic_info_id, $post_id);
-                update_field('basic_history_info_name', $basic_info_short_name, $post_id);
-                update_field('basic_history_info_full_name', $basic_info_full_name, $post_id);
-                update_field('basic_history_info_short_name_en', $basic_info_short_name_eng, $post_id);
-                update_field('basic_history_info_full_name_en', $basic_info_full_name_eng, $post_id);
-                update_field('basic_history_info_inn', $basic_info_inn, $post_id);
-                update_field('basic_history_info_kpp', $basic_info_kpp, $post_id);
-                update_field('basic_history_info_ogrn', $basic_info_ogrn, $post_id);
-                update_field('basic_history_info_address', $basic_info_address, $post_id);
-                update_field('basic_history_info_phone', $basic_info_phone, $post_id);
-                update_field('basic_history_info_fax', $basic_info_fax, $post_id);
-                update_field('basic_history_info_email', $basic_info_email, $post_id);
-                update_field('basic_history_info_site', $basic_info_site, $post_id);
-                update_field('basic_history_info_social', $basic_info_media, $post_id);
-                update_field('basic_history_info_bank_recipient', $basic_info_bank_recipient, $post_id);
-                update_field('basic_history_info_bank_rs', $basic_info_bank_rs, $post_id);
-                update_field('basic_history_info_bank_bic', $basic_info_bank_bic, $post_id);
-                update_field('basic_history_info_bank_ks', $basic_info_bank_ks, $post_id);
-                update_field('basic_history_info_bank_name', $basic_info_bank_name, $post_id);
-                update_field('basic_history_info_bank_inn', $basic_info_bank_inn, $post_id);
-                update_field('basic_history_info_bank_kpp', $basic_info_bank_kpp, $post_id);
-
-
-                update_field('basic_history_info_reason_public', $basic_info_pub_reason, $post_id);
-                update_field('basic_history_info_reason_del', $basic_info_del_reason, $post_id);
-                update_field('basic_history_info_source', $basic_info_source, $post_id);
-
-                update_field('basic_history_info_published', $basic_info_pub_at, $post_id);
-                update_field('basic_history_info_create_at', $basic_info_create_at, $post_id);
-                update_field('basic_history_info_del_at', $basic_info_del_at, $post_id);
-
-            }
-        }
-
-    }
-}
-
-function disclosure_documents($section_name, $cat_name, $cat_name_history) //тип контента: Документ +
-{
-    $license_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"' . $section_name . '"}');
-    $response1 = wpgetapi_endpoint('disclo_pir', 'test', array('debug' => false));
-    $response1 = json_decode($response1);
-    $catId = get_category_by_slug($cat_name)->cat_ID;
-    $save_posts_id = array();
-
-    $now = current_datetime()->format('Y-m-d H:i:s');
-    global $post;
-    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
-    foreach ($license_get->data->items as $item) {
-
-        if ($item->section == $section_name) {
-            $id_ = $item->id;
-            $status = $item->status;
-            $post_title = $item->title . ' ' . 'id ' . $id_; //Заголовок поста
-            $post_url = translit($item->title);
-            $date_fix = substr($item->publishedAt, 0, 10);//дата для сортировки
-            $date_fix = str_replace(".", "", $date_fix);//дата для сортировки
-            $my_post = array(
-                'post_title' => $post_title,
-                'post_status' => 'publish',
-                'post_type' => 'post',
-                'post_name' => $post_url,
-                'post_category' => array($catId),
-                'post_parent' => $get_post_id
-            );
-            $posts = get_posts(
-                [
-                    'fields' => 'ids',
-                    'post_type' => 'post',
-                    'title' => $post_title,
-                    'post_status' => 'publish',
-                    'post_category' => array($catId),
-                    'orderby' => 'post_date ID',
-                    'order' => 'ASC',
-                ]
-            );
-
-            if (!empty($posts)) {
-                if ($item->status == 'Deleted' && !has_tag('Deleted', $posts[0])) {
-                    print_r($post_title);
-                    wp_add_post_tags($posts[0], 'Deleted');
-                    wp_remove_object_terms($posts[0], 'Published', 'post_tag');
-//                    update_field('issuer_del_reason', $item->deleteReason, $posts[0]);
-//                    update_field('issuer_del_at', $item->deletedAt, $posts[0]);// Причина публикации'
-                }
-                array_push($save_posts_id, $posts[0]);
-            } else {
-//                echo '<pre> newPost';
-//                print_r($post_title);
-                $post_id = wp_insert_post($my_post);
-                if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-content-document.php');
-                wp_set_object_terms($post_id, array($status), 'post_tag', false);
-
-                update_field('doc_id', $item->id, $post_id); // id API
-                update_field('doc_parent_id', $item->parentDisclosureId, $post_id); // id  родительский API
-                update_field('doc_title', $item->title, $post_id); // Заголовок
-
-                update_field('doc_publicationReason', $item->publicationReasonName, $post_id);
-                update_field('doc_deleteReason', $item->deleteReasonName, $post_id);
-                update_field('doc_source', $item->sourceName, $post_id);
-
-                update_field('doc_description', $item->content->document->description, $post_id);
-                update_field('doc_validFromDate', dateConverter($item->content->document->validFromDate), $post_id);
-                update_field('doc_validToDate', dateConverter($item->content->document->validToDate), $post_id);
-
-                update_field('doc_createdAt', dateConverter($item->createdAt), $post_id);
-                update_field('doc_publishedAt', dateConverter($item->publishedAt), $post_id);
-                update_field('doc_deletedAt', dateConverter($item->deletedAt), $post_id);
-                update_field('doc_publish_fix', $date_fix, $post_id);
-
-
-                update_field('doc_cat_name_history', $cat_name_history, $post_id); //имя категории истории
-                update_field('doc_section_name_history', $section_name, $post_id); //имя секции (папаметр для истории)
-                //Добавление файла
-                array_push($save_posts_id, $post_id);
-                $get_files = paritet_get_api('https://pir.paritet.ru', '/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId=' . $item->id);
-                if (count($get_files->files) > 0) {
-                    $first = 1;
-                    $down_link_orig = 'https://pir.paritet.ru/api/CloudFileApi/DownloadFile?';
-                    $down_link = '';
-                    $title_file = $item->id;
-                    $file_name = '';
-                    foreach ($get_files->files as $file) {
-                        $file_name = $file->fileName;
-                        $post_name = html_entity_decode($file->sourceFileName, ENT_QUOTES, "UTF-8");
-                        if ($first != 1) {
-                            $down_link = $down_link . '&';
-                            $file_name = $title_file . '.zip';
-                        } else {
-                            $down_link = $down_link_orig;
-                            $file_name = $file->sourceFileName;
-                        }
-                        $first = 0;
-                        $down_link = $down_link . 'id=';
-                        $down_link = $down_link . $file->id;
-                    }
-
-                    $headers = [
-                        'accept' => '*/*',
-                        'Authorization' => 'Bearer ' . $response1->jwtToken
-                    ];
-
-                    $image_data = download_url_with_headers($down_link, $headers);
-
-                    $file_array = [
-                        'name' => $file_name,
-                        'tmp_name' => $image_data,
-                        'error' => 0,
-                        'size' => filesize($image_data),
-                    ];
-
-                    $image_id = media_handle_sideload($file_array, $post_id, $post_name);
-                    if (is_wp_error($image_id)) {
-                        print_r($image_id->get_error_messages());
-                    }
-                    @unlink($file_array['tmp_name']);
-                }
-
-            }
-
-
-        }
-
-    }
-    $posts = get_posts(
-        [
-            'fields' => 'ids', // Only get post IDs
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'exclude' => $save_posts_id,
-            'category' => $catId,
-            'posts_per_page' => -1
-        ]
-    );
-//    echo '<pre> cat';
-//    print_r($catId);
-    foreach ($posts as $posting) {
-//        echo '<pre> trash';
-//        print_r($posting);
-        $my_post2 = array(
-            'ID' => $posting,
-            'post_status' => 'trash',
-        );
-
-        wp_update_post($my_post2);
-    }
-}
-
-function disclosure_doc_history($section_name, $cat_name)// история для документов +
-{
-    $issuer_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"' . $section_name . '"}');
-    $response1 = wpgetapi_endpoint('disclo_pir', 'test', array('debug' => false));
-    $response1 = json_decode($response1);
-    $catId = get_category_by_slug($cat_name)->cat_ID;
-    global $post;
-    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
-    foreach ($issuer_get->data->items as $item) {
-
-        if ($item->section == $section_name) {
-            $str_id = strval($item->parentDisclosureId);
-            foreach ($item->history as $history) {
-                $history_id = $history->id;// id эмитента
-                $history_title = $history->title . ' ' . 'id ' . $history_id; //Заголовок поста
-                $post_url = translit($history->title);
-                $my_post = array(
-                    'post_title' => $history_title,
-                    'post_name' => $post_url,
-                    'post_status' => 'publish',
-                    'post_type' => 'post',
-                    'post_category' => array($catId),
-                    'post_parent' => $get_post_id
-                );
-                $posts = get_posts(
-                    [
-                        'post_type' => 'post',
-                        'title' => $history_title,
-                        'post_status' => 'publish',
-                        'post_category' => array($catId),
-                        'orderby' => 'post_date ID',
-                        'order' => 'ASC',
-                    ]
-                );
-
-                if (!empty($posts)) {
-
-                } else {
-
-                    $post_id = wp_insert_post($my_post);
-                    if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-document-history.php');
-                    wp_set_object_terms($post_id, $str_id, 'post_tag', false);
-                    update_field('history_doc_title', $history->title, $post_id);
-
-                    update_field('history_doc_publicationReasonName', $history->publicationReason, $post_id);
-                    update_field('history_doc_deleteReasonName', $history->deleteReason, $post_id);
-                    update_field('history_doc_sourceName', $history->source, $post_id);
-
-                    update_field('history_doc_description', $history->content->document->description, $post_id);
-                    update_field('history_doc_validFromDate', dateConverter($history->content->document->validFromDate), $post_id);
-                    update_field('history_doc_validToDate', dateConverter($history->content->document->validToDate), $post_id);
-                    update_field('history_doc_createdAt', dateConverter($history->createdAt), $post_id);
-                    update_field('history_doc_publishedAt', dateConverter($history->publishedAt), $post_id);
-                    update_field('history_doc_deletedAt', dateConverter($history->deletedAt), $post_id);
-
-                    $get_files = paritet_get_api('https://pir.paritet.ru', '/api/CloudFileApi/EntityAttachments?attachmentTypeId=22&entityId=' . $history->id);
-
-                    if (count($get_files->files) > 0) {
-                        $first = 1;
-                        $down_link_orig = 'https://pir.paritet.ru/api/CloudFileApi/DownloadFile?';
-                        $down_link = '';
-                        $title_file = $history->id;
-                        $file_name = '';
-
-                        foreach ($get_files->files as $file) {
-                            $file_name = $file->fileName;
-                            $post_name = translit($file->sourceFileName);
-                            if ($first != 1) {
-                                $down_link = $down_link . '&';
-                                $file_name = $title_file . '.zip';
-                            } else {
-                                $down_link = $down_link_orig;
-                                $file_name = $file->sourceFileName;
-                            }
-                            $first = 0;
-                            $down_link = $down_link . 'id=';
-                            $down_link = $down_link . $file->id;
-
-
-                        }
-
-                        $headers = [
-                            'accept' => '*/*',
-                            'Authorization' => 'Bearer ' . $response1->jwtToken
-                        ];
-                        $image_data = download_url_with_headers($down_link, $headers);
-
-                        $file_array = [
-                            'name' => $file_name,
-                            'tmp_name' => $image_data,
-                            'error' => 0,
-                            'size' => filesize($image_data),
-                        ];
-
-                        $image_id = media_handle_sideload($file_array, $post_id, $post_name);
-                        if (is_wp_error($image_id)) {
-                            print_r($image_id->get_error_messages());
-                        }
-                        @unlink($file_array['tmp_name']);
+                        'post_category' => array($catIdHistory),
+                        'post_parent' => $post_id
+
+                    );
+                    $posts_history = get_posts(
+                        [
+                            'post_type' => 'post',
+                            'title' => $history_info_title,
+                            'post_status' => 'publish',
+                            'post_category' => array($catIdHistory),
+                            'orderby' => 'post_date ID',
+                            'order' => 'ASC',
+                        ]
+                    );
+
+                    if (!empty($posts_history)) {
+
+                    } else {
+
+                        $post_id_history = wp_insert_post($my_post_history);
+                        if ($post_id_history) update_post_meta($post_id_history, '_wp_page_template', 'disclosure-transfer-history.php');
+                        wp_set_object_terms($post_id_history, $str_id_history, 'post_tag', false);
+
+                        update_field('history_transfer_id', $history->id, $post_id_history);
+                        update_field('history_transfer_title', $history->title, $post_id_history);
+                        update_field('history_transfer_short_name', $history->content->company->shortName, $post_id_history);//Краткое наименование
+                        update_field('history_transfer_full_name', $history->content->company->fullName, $post_id_history);// Полное наименование
+                        update_field('history_transfer_inn', $history->content->company->inn, $post_id_history);//Инн
+                        update_field('history_transfer_ogrn', $history->content->company->ogrn, $post_id_history);//ОГРН
+                        update_field('history_transfer_address', $history->content->company->address, $post_id_history);// Адресс
+                        update_field('history_transfer_phone', $history->content->company->phone, $post_id_history);// Телефон
+                        update_field('history_transfer_fax', $history->content->company->fax, $post_id_history);// Факс
+
+                        update_field('history_transfer_reason_public', $history->publicationReasonName, $post_id_history);// Причина публикации'
+                        update_field('history_transfer_deleteReason', $history->deleteReasonName, $post_id_history);//
+                        update_field('history_transfer_deleteReason', $history->sourceName, $post_id_history);//
+
+                        update_field('history_transfer_createAt', dateConverter($history->createdAt), $post_id_history);//
+                        update_field('history_transfer_source', dateConverter($history->deletedAt), $post_id_history);//
+                        update_field('history_transfer_published', dateConverter($history->publishedAt), $post_id_history);//
                     }
                 }
+
+
             }
         }
-
     }
-}
-
-function office()// Филиалы и представительства +
-
-{
-
-    $office_get = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Offices"}');
-    $catId = get_category_by_slug('offices')->cat_ID;
-    $now = current_datetime()->format('Y-m-d H:i:s');
-    $save_posts_id = array();
-    global $post;
-    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
-    wp_defer_term_counting(true);
-    wp_defer_comment_counting(true);
-    $now = current_datetime()->format('Y-m-d H:i:s');
-
-    foreach ($office_get->data->items as $item) {
-
-        $office_id = $item->id;// id эмитента
-        $office_title = $item->title . ' ' . 'id ' . $office_id; //Заголовок поста
-        $post_name = translit($item->content->office->headOfOffice);
-        $date_fix = substr($item->publishedAt, 0, 10);
-        $date_fix = str_replace(".", "", $date_fix);
-        $my_post = array(
-            'post_title' => $office_title,
-            'post_status' => 'publish',
-            'post_name' => $post_name,
-            'post_type' => 'post',
-            'ping_status' => 'closed',
-            'comment_status' => 'closed',
-            'post_category' => array($catId),
-            'post_parent' => $get_post_id
-        );
-        $posts = get_posts(
-            [
-                'fields' => 'ids',
-                'post_type' => 'post',
-                'title' => $office_title,
-                'post_status' => 'publish',
-                'post_category' => array($catId),
-            ]
-        );
-
-        if (!empty($posts)) {
-            if ($item->status == 'Deleted' && !has_tag('Deleted', $posts[0])) {
-                wp_add_post_tags($posts[0], 'Deleted');
-                wp_remove_object_terms($posts[0], 'Published', 'post_tag');
-//                    update_field('issuer_del_reason', $item->deleteReason, $posts[0]);
-//                    update_field('issuer_del_at', $item->deletedAt, $posts[0]);// Причина публикации'
-            }
-            array_push($save_posts_id, $posts[0]);
-
-
-        } else {
-
-            $post_id = wp_insert_post($my_post);
-            if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-office-single.php');
-            wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
-            update_field('office_id', $item->id, $post_id);
-            update_field('office_parent_id', $item->parentDisclosureId, $post_id);
-            update_field('office_title', $item->title, $post_id);
-            update_field('office_address', $item->content->office->address, $post_id);
-            update_field('office_phone', $item->content->office->phone, $post_id);
-            update_field('office_fax', $item->content->office->fax, $post_id);
-            update_field('office_head', $item->content->office->headOfOffice, $post_id);
-
-            update_field('office_pub_reason', $item->publicationReasonName, $post_id);
-            update_field('office_pub_delReason', $item->deleteReasonName, $post_id);
-            update_field('office_pub_source', $item->sourceName, $post_id);
-
-            update_field('office_createdAt', dateConverter($item->createdAt), $post_id);
-            update_field('office_publishedAt', dateConverter($item->publishedAt), $post_id);
-            update_field('office_delAt', dateConverter($item->deletedAt), $post_id);
-
-            update_field('publishedAt_fix', $date_fix, $post_id);
-
-            array_push($save_posts_id, $post_id);
-
-        }
-    }
-
     $posts = get_posts(
         [
             'fields' => 'ids', // Only get post IDs
@@ -1609,74 +1714,87 @@ function office()// Филиалы и представительства +
 
         wp_update_post($my_post2);
     }
-    wp_defer_term_counting(false);
-    wp_defer_comment_counting(false);
 }
+add_action('disclosure_transfer_agent', 'transferAgents', 10, 4);
 
-function officeHistory()// основные сведения история +
-{
-    $office_info = paritet_get_api('https://pir.paritet.ru', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Offices"}');
-    $catId = get_category_by_slug('offices_history')->cat_ID;
-    global $post;
-    $get_post_id = $post->ID; // сохраняем id родительского поста(для хлебных крошек)
-    foreach ($office_info->data->items as $item) {
+$param_transfer = array( 'TransferAgents','transfer_agents','transfer_agents_history', 'tansfer-agents/' ); //Трансфер-агенты
 
-        if ($item->section == 'Offices') {
+$param_func_issuer = array( 'IssuersWithPartOfTheRegistrarFunctions','func_issuer','func_issuer_history', 'issuers-registrar/' ); //Эмитенты с частью функций регистратора
 
-            $str_id = strval($item->parentDisclosureId);
-            foreach ($item->history as $history) {
-//                echo '<pre>';
-//                print_r($history);
-                $office_info_id = $history->id;// id
-                $office_info_title = $history->title . ' ' . 'id ' . $office_info_id; //Заголовок поста
-                $post_url = translit($history->title);
-                $office_info_short_name = $history->content->office->headOfOffice;// Полное имя
-                $my_post = array(
-                    'post_title' => $office_info_title,
-                    'post_name' => $post_url,
-                    'post_status' => 'publish',
-                    'post_type' => 'post',
-                    'post_category' => array($catId),
-                    'post_parent' => $get_post_id
-                );
-                $posts = get_posts(
-                    [
-                        'post_type' => 'post',
-                        'title' => $office_info_title,
-                        'post_status' => 'publish',
-                        'post_category' => array($catId),
-                        'orderby' => 'post_date ID',
-                        'order' => 'ASC',
-                    ]
-                );
+if( !wp_next_scheduled('disclosure_transfer_agent', $param_transfer ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_transfer_agent', $param_transfer );
 
-                if (!empty($posts)) {
-
-                } else {
-
-                    $post_id = wp_insert_post($my_post);
-                    if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-office-history.php');
-                    wp_set_object_terms($post_id, $str_id, 'post_tag', false);
-                    update_field('history_office_id', $history->id, $post_id);
-                    update_field('history_office_title', $history->title, $post_id);
-                    update_field('history_office_address', $history->content->office->address, $post_id);
-                    update_field('history_office_phone', $history->content->office->phone, $post_id);
-                    update_field('history_office_fax', $history->content->office->fax, $post_id);
-                    update_field('history_office_head', $history->content->office->headOfOffice, $post_id);
-
-                    update_field('history_office_pub_reason', $history->publicationReasonName, $post_id);
-                    update_field('history_office_delReason', $history->deleteReasonName, $post_id);
-                    update_field('history_office_source', $history->sourceName, $post_id);
-
-                    update_field('history_office_createdAt', dateConverter($history->createdAt), $post_id);
-                    update_field('history_office_publishedAt', dateConverter($history->publishedAt), $post_id);
-                    update_field('history_office_deletedAt', dateConverter($history->createdAt), $post_id);
+if( !wp_next_scheduled('disclosure_transfer_agent', $param_func_issuer ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_transfer_agent', $param_func_issuer );
+// enc Трансфер-агенты + эмитенты с частю функций регистратора
 
 
-                }
-            }
-        }
 
-    }
-}
+
+
+add_action('disclosure_documents_hook', 'disclosure_documents', 10, 4);
+
+$param_licence = array( 'Licenses','license','license_history', 'licenses/' ); //лицензии
+
+$param_affiliates = array( 'Affiliates','affiliates','affiliates_history', 'affiliates-structure/' ); //Аффилированные лица
+
+$param_calculation = array( 'CalculationOfOwnFunds','calculation_funds','calculation_funds_history', 'calculation-means/' ); // расчет собственных средств
+$param_not_compliance = array( 'NonComplianceRequirements','non_compliance','non_compliance_history', 'non-compliance/' ); // Несоответствие требованиям ч. 1 ст. 2.1 ФЗ N 213-ФЗ
+$param_not_contracts = array( 'Contracts','contract','contract_history', 'contracts-and-orders/' ); // Договоры и распоряжения
+$param_disputes = array( 'LegalDisputes','legal_disputes','legal_disputes_history', 'disputes-bankruptcy/' ); // Судебные споры и банкротство
+$param_edo = array( 'Edo','edo','edo_history', 'edo/' ); // Электронный документооборот
+
+$param_finance = array( 'Finance','finance','finance_history', 'accounting-financial/' ); // Бух. финансовая отчетность
+
+$param_prices = array( 'Prices','prices','prices_history', 'price-lists/' ); // Прейскуранты
+
+$param_regulatory = array( 'MembershipInSelfRegulatoryOrganizations','regulatory_organizations','regulatory_organizations_history', 'membership-regulatory/' ); // Членство саморегулируемых организаций
+
+$param_rules = array( 'Rules','rules','rules_history', 'rules-regulations/' ); //Правила и положения
+
+$param_software = array( 'Software','software','software_history', 'software/' ); //Информация о программном обеспечении
+
+$param_tech_fail = array( 'TechnicalFailures','technical_fail','technical_fail_history', 'technical-failures/' ); //Технические сбои
+
+// если хотя бы один из вышеуказанных параметров изменится, хук уже будет считаться уникальным и запланируется снова
+if( !wp_next_scheduled('disclosure_documents_hook', $param_licence ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_licence );
+
+if( !wp_next_scheduled('disclosure_documents_hook', $param_affiliates ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_affiliates );
+
+if( !wp_next_scheduled('disclosure_documents_hook', $param_calculation ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_calculation );
+
+if( !wp_next_scheduled('disclosure_documents_hook', $param_not_compliance ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_not_compliance );
+
+if( !wp_next_scheduled('disclosure_documents_hook', $param_not_contracts ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_not_contracts );
+
+if( !wp_next_scheduled('disclosure_documents_hook', $param_edo ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_edo );
+
+if( !wp_next_scheduled('disclosure_documents_hook', $param_finance ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_finance );
+
+if( !wp_next_scheduled('disclosure_documents_hook', $param_prices ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_prices );
+
+if( !wp_next_scheduled('disclosure_documents_hook', $param_regulatory ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_regulatory );
+
+if( !wp_next_scheduled('disclosure_documents_hook', $param_rules ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_rules );
+
+if( !wp_next_scheduled('disclosure_documents_hook', $param_software ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_software );
+
+if( !wp_next_scheduled('disclosure_documents_hook', $param_tech_fail ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_tech_fail );
+
+if( !wp_next_scheduled('disclosure_documents_hook', $param_disputes ) )
+    wp_schedule_event( time(), 'hourly', 'disclosure_documents_hook', $param_disputes );
+
+
 

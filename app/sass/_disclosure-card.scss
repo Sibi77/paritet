@@ -82,7 +82,12 @@
       padding: rem(10) rem(20);
     }
     &:hover{
-      color: #FA4811;
+      *{
+        color: #fff;
+      }
+      .disclosure-card__title-file{
+        text-decoration: underline;
+      }
     }
   }
   &__title-doc{
@@ -127,6 +132,7 @@
 
     width: 100%;
 
+
   }
   .api-undefined{
     font-style: italic;
@@ -143,7 +149,13 @@
   display: flex;
   align-items: center;
   max-width: fit-content;
+  &:hover{
+    text-decoration: underline!important;
+  }
   img{
     margin-right: rem(12);
   }
+}
+.pir-table-width{
+  width: 76%;
 }

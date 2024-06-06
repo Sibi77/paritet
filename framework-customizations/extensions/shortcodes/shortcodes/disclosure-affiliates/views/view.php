@@ -16,9 +16,8 @@
             <table class="pir-table__table">
                 <thead>
                 <tr>
-                    <td>НАИМЕНОВАНИЕ</td>
-                    <td>Действует c</td>
-                    <td>Опубликовано</td>
+                    <td class="pir-table-width">НАИМЕНОВАНИЕ</td>
+                    <td>Дата раскрытия</td>
                     <td></td>
                 </tr>
 
@@ -27,7 +26,7 @@
 
                 <?php
 //                checkPost('affiliates', 'Affiliates');
-                disclosure_documents('Affiliates', 'affiliates', 'affiliates_history');
+//                disclosure_documents('Affiliates', 'affiliates', 'affiliates_history');
 
                 $args = array(
                     'category_name' => 'affiliates',
@@ -78,7 +77,6 @@
                                 <?= get_field("doc_title"); ?>
                             </a>
                         </td>
-                        <td><?= substr(get_field("doc_validFromDate"),0,10) ; ?></td>
                         <td><?= substr(get_field("doc_publishedAt"), 0, 10); ?></td>
                         <td style="text-align: center">
                             <?php if(!empty($media)) { ?>
@@ -100,7 +98,7 @@
                 <?php
                 if (empty(query_posts($args))) {
                     echo '<tr>
-                    <td style="text-align: center" colspan="4">Пока нет записей</td>
+                    <td style="text-align: center" colspan="3">Информация отсутствует</td>
                 </tr>';
                 }
                 ?>

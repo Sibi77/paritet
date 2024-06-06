@@ -16,14 +16,7 @@ get_header();
     <div class="pir-container">
         <h1 class="pir-title-h1"><?= get_field('officials_title');?></h1>
 
-        <?php if(!get_field("officials_pub_reason") == null || !get_field("officials_pub_reason") == '') : ?>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Причина публикации</div>
-                <div class="disclosure-card__content">
-                 <?= get_field("officials_pub_reason");?>
-                </div>
-            </div>
-        <?php endif; ?>
+
 
         <?php if(!get_field("officials_fio") == null || !get_field("officials_fio") == '') : ?>
             <div class="disclosure-card__item">
@@ -60,7 +53,22 @@ get_header();
                 </div>
             </div>
         <?php endif; ?>
-
+        <?php if(!get_field("officials_published_at") == null || !get_field("officials_published_at") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата раскрытия</div>
+                <div class="disclosure-card__content">
+                    <?=substr(get_field("officials_published_at"),0,10)?>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php if(!get_field("officials_pub_reason") == null || !get_field("officials_pub_reason") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Причина публикации</div>
+                <div class="disclosure-card__content">
+                    <?= get_field("officials_pub_reason");?>
+                </div>
+            </div>
+        <?php endif; ?>
 
         <?php if(!get_field("officials_published_at") == null || !get_field("officials_published_at") == '') : ?>
             <div class="disclosure-card__item">
@@ -84,11 +92,7 @@ get_header();
                             <td>
                                 Наименование
                             </td>
-                            <td>
-                                Опубликован
-                            </td>
-
-                            <td>Удален</td>
+                            <td>Перенесено в архив</td>
 
                         </tr>
 
@@ -120,7 +124,6 @@ get_header();
                             ?>
                             <tr>
                                 <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?php the_field("history_officials_title") ?></a></td>
-                                <td><?php echo substr(get_field("history_officials_published_at"),0,10) ?></td>
                                 <td><?php echo substr(get_field("history_officials_deletedAt"),0,10) ?></td>
 
                             </tr>
@@ -128,7 +131,7 @@ get_header();
 
                         }
                         if (empty($myposts)) {
-                            echo '<tr>' . '<td>Нет истории</td>' . '</tr>';
+                            echo '<tr>' . '<td colspan="2" style="text-align: center">Нет предыдущих версий раскрытия</td>' . '</tr>';
                         }
                         wp_reset_postdata();
                         ?>

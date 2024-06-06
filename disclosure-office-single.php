@@ -55,7 +55,14 @@ get_header();
             </div>
         <?php endif; ?>
 
-
+        <?php if(!get_field("office_publishedAt") == null || !get_field("office_publishedAt") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата раскрытия</div>
+                <div class="disclosure-card__content">
+                    <?=substr(get_field("office_publishedAt"),0,10);?>
+                </div>
+            </div>
+        <?php endif; ?>
         <?php if(!get_field("office_pub_reason") == null || !get_field("office_pub_reason") == '') : ?>
             <div class="disclosure-card__item">
                 <div class="disclosure-card__header">Причина публикации</div>
@@ -65,14 +72,7 @@ get_header();
             </div>
         <?php endif; ?>
 
-        <?php if(!get_field("office_pub_delReason") == null || !get_field("office_pub_delReason") == '') : ?>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Причина удаления</div>
-                <div class="disclosure-card__content">
-                    <?=get_field("office_pub_delReason");?>
-                </div>
-            </div>
-        <?php endif; ?>
+
         <?php if(!get_field("office_publishedAt") == null || !get_field("office_publishedAt") == '') : ?>
             <div class="disclosure-card__item">
                 <div class="disclosure-card__header">Опубликовано</div>
@@ -104,11 +104,7 @@ get_header();
                             <td>
                                 Наименование
                             </td>
-                            <td>
-                                Опубликовано
-                            </td>
-
-                            <td>Удалено</td>
+                            <td>Перенесено в архив</td>
 
                         </tr>
 
@@ -142,7 +138,6 @@ get_header();
                             ?>
                             <tr>
                                 <td><a class="pir-table-api" href="<?php the_permalink(); ?>"><?php the_field("history_office_title") ?></a></td>
-                                <td><?php echo substr(get_field("history_office_publishedAt"),0,10) ?></td>
                                 <td><?php echo substr(get_field("history_office_deletedAt"),0,10) ?></td>
 
                             </tr>
@@ -150,7 +145,7 @@ get_header();
 
                         }
                         if (empty($myposts)) {
-                            echo '<tr>' . '<td>Нет истории</td>' . '</tr>';
+                            echo '<tr>' . '<td colspan="2" style="text-align: center">Нет предыдущих версий раскрытия</td>' . '</tr>';
                         }
                         wp_reset_postdata();
                         ?>

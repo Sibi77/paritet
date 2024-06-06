@@ -82,7 +82,14 @@ get_header();
                 </div>
             </div>
         <?php endif; ?>
-
+        <?php if(!get_field("history_transfer_published") == null || !get_field("history_transfer_published") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата раскрытия</div>
+                <div class="disclosure-card__content">
+                    <?=substr(get_field("history_transfer_published"),0,10);?>
+                </div>
+            </div>
+        <?php endif; ?>
         <?php if(!get_field("history_transfer_deleteReason") == null || !get_field("history_transfer_deleteReason") == '') : ?>
             <div class="disclosure-card__item">
                 <div class="disclosure-card__header">Причина удаления</div>

@@ -8,6 +8,12 @@
 $options = [
     //ключ - slug опции, к которому будем обращаться во view
     //значение - массив конфигураций для опции
+    'table_space' => [
+        'type' => 'checkbox',
+        'value' => false, // checked/unchecked
+        'label' => __('перенос строк', '{domain}'),
+        'text' => __('Убрать перенос', '{domain}'),
+    ],
     'table_header'     => [
         'type' => 'addable-popup',
         'label' => __('Шапка таблицы', '{domain}'),
@@ -22,6 +28,7 @@ $options = [
                 'type'  => 'text',
                 'label' => __('Ячейка', '{domain}')
             ],
+
         ],
     ],
     'table_body'     => [
@@ -60,6 +67,7 @@ $options = [
                         'type'  => 'upload',
                         'label' => __('Документ', '{domain}'),
                     ],
+
                 ],
             ],
         ],

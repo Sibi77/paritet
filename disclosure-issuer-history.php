@@ -59,32 +59,32 @@ get_header();
             </div>
         <?php endif; ?>
 
-        <?php if(!get_field("history_issuer_address") == null || !get_field("history_issuer_address") == '') : ?>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Адрес</div>
-                <div class="disclosure-card__content">
-                   <?=get_field("history_issuer_address");?>
-                </div>
-            </div>
-        <?php endif; ?>
+<!--        --><?php //if(!get_field("history_issuer_address") == null || !get_field("history_issuer_address") == '') : ?>
+<!--            <div class="disclosure-card__item">-->
+<!--                <div class="disclosure-card__header">Адрес</div>-->
+<!--                <div class="disclosure-card__content">-->
+<!--                   --><?php //=get_field("history_issuer_address");?>
+<!--                </div>-->
+<!--            </div>-->
+<!--        --><?php //endif; ?>
 
-        <?php if(!get_field("history_issuer_phone") == null || !get_field("history_issuer_phone") == '') : ?>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Телефон</div>
-                <div class="disclosure-card__content">
-                   <?= get_field("history_issuer_phone");?>
-                </div>
-            </div>
-        <?php endif; ?>
+<!--        --><?php //if(!get_field("history_issuer_phone") == null || !get_field("history_issuer_phone") == '') : ?>
+<!--            <div class="disclosure-card__item">-->
+<!--                <div class="disclosure-card__header">Телефон</div>-->
+<!--                <div class="disclosure-card__content">-->
+<!--                   --><?php //= get_field("history_issuer_phone");?>
+<!--                </div>-->
+<!--            </div>-->
+<!--        --><?php //endif; ?>
 
-        <?php if(!get_field("history_issuer_fax") == null || !get_field("history_issuer_fax") == '') : ?>
-            <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Факс</div>
-                <div class="disclosure-card__content">
-                    <?= get_field("history_issuer_fax");?>
-                </div>
-            </div>
-        <?php endif; ?>
+<!--        --><?php //if(!get_field("history_issuer_fax") == null || !get_field("history_issuer_fax") == '') : ?>
+<!--            <div class="disclosure-card__item">-->
+<!--                <div class="disclosure-card__header">Факс</div>-->
+<!--                <div class="disclosure-card__content">-->
+<!--                    --><?php //= get_field("history_issuer_fax");?>
+<!--                </div>-->
+<!--            </div>-->
+<!--        --><?php //endif; ?>
 
         <?php if(!get_field("history_issuer_registryContractDate") == null || !get_field("history_issuer_registryContractDate") == '') : ?>
             <div class="disclosure-card__item">
@@ -140,10 +140,18 @@ get_header();
                 </div>
             </div>
         <?php endif; ?>
+        <?php if(!get_field("history_issuer_publishedAt") == null || !get_field("history_issuer_publishedAt") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата раскрытия</div>
+                <div class="disclosure-card__content">
+                    <?= substr(get_field("history_issuer_publishedAt"),0,10)?>
+                </div>
+            </div>
+        <?php endif; ?>
 
         <?php if(!get_field("history_issuer_deleteReason") == null || !get_field("history_issuer_deleteReason") == '') : ?>
             <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Причина удаления</div>
+                <div class="disclosure-card__header">Причина переноса в архив</div>
                 <div class="disclosure-card__content">
                     <?= get_field("history_issuer_deleteReason");?>
                 </div>
@@ -161,7 +169,7 @@ get_header();
 
         <?php if(!get_field("history_issuer_deletedAt") == null || !get_field("history_issuer_deletedAt") == '') : ?>
             <div class="disclosure-card__item">
-                <div class="disclosure-card__header">Удалено</div>
+                <div class="disclosure-card__header">Перенесено в архив</div>
                 <div class="disclosure-card__content">
                     <?=get_field("history_issuer_deletedAt");?>
                 </div>

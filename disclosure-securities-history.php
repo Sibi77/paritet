@@ -83,6 +83,14 @@ get_header();
                 </div>
             </div>
         <?php endif; ?>
+        <?php if(!get_field("history_issuer_publishedAt") == null || !get_field("history_issuer_publishedAt") == '') : ?>
+            <div class="disclosure-card__item">
+                <div class="disclosure-card__header">Дата раскрытия</div>
+                <div class="disclosure-card__content">
+                    <?= substr(get_field("history_issuer_publishedAt"),0,10)?>
+                </div>
+            </div>
+        <?php endif; ?>
         <?php if(!get_field("history_issuer_delReason") == null || !get_field("history_issuer_delReason") == '') : ?>
             <div class="disclosure-card__item">
                 <div class="disclosure-card__header">Причина удаления</div>
