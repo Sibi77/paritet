@@ -102,7 +102,7 @@ function ajax_show_posts_in_cat()
             get_template_part('/template-parts/content', $section_name);
         endwhile;
     } else {
-        echo '<tr>
+        echo '<tr class="no-index-search">
                     <td style="text-align: center" colspan="3">Информация отсутствует</td>
                 </tr>';
     }

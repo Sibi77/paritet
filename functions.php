@@ -667,7 +667,7 @@ function disclosureBasicInfo()// основные сведения
         $my_post = array(
             'post_title' => $base_info_title,
             'post_name' => $base_url_name,
-            'post_content' => $item->sectionName,
+            'post_excerpt' => $item->sectionName,
             'post_status' => 'publish',
             'post_type' => 'post',
             'ping_status' => 'closed',
@@ -704,6 +704,7 @@ function disclosureBasicInfo()// основные сведения
                 wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->isSingle), 'post_tag', false);
             }
 
+            update_field('name_section', $item->sectionName, $post_id);
             update_field('basic_info_title', $item->title, $post_id);
             update_field('basic_info_id', $item->id, $post_id);
             update_field('basic_info_parent_id', $item->parentDisclosureId, $post_id);
@@ -1523,7 +1524,7 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history, $pare
             $date_fix = str_replace(".", "", $date_fix);//дата для сортировки
             $my_post = array(
                 'post_title' => $post_title,
-                'post_content' => $item->sectionName,
+                'post_excerpt' => $item->sectionName,
                 'post_status' => 'publish',
                 'post_type' => 'post',
                 'post_name' => $post_url,

@@ -19,8 +19,9 @@
             $save_posts_link = array();
 
             foreach ($my_posts as $post1) {
-                array_push($save_posts_link, array($post1->post_content, $post1->guid));
+                array_push($save_posts_link, array($post1->post_excerpt, $post1->guid));
             }
+
             $barsLink = '';
             ?>
 

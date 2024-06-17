@@ -22,30 +22,21 @@ jQuery(document).ready(function ($) {
         let dataSortKey = $(this).attr('data-sort-key')
 
         let parentCategory = $('.addition-filter .active').attr('data-category-slug')
-        let parentSection = $('.addition-filter  .active').attr('data-section')
-        let parentSortKey = $('.addition-filter .active').attr('data-sort-key')
         let status = ''
 
         if ($(this).hasClass('active')){
             status = parentCategory
-            console.log(status, 'status1')
-            console.log(dataCategory, 'status2')
             ajaxCat(dataCategory, dataSection, dataSortKey, status);
 
 
 
         } else {
             ajaxCat(dataCategory, dataSection, dataSortKey, status);
-            // console.log(dataCategory)
 
         }
 
-
-
-
-
-
     });
+
     $('.addition-filter a').click(function (e) {
         e.preventDefault();
         let parentCategory = $('#disclosure-btn-filter .active').attr('data-category-slug')
@@ -63,25 +54,15 @@ jQuery(document).ready(function ($) {
                 $('.addition-filter a').removeClass('active')
                 $(this).addClass('active')
             status = parentCategory
-            console.log(status, 'status2')
                 ajaxCat(dataCategory, dataSection, dataSortKey, status);
 
         }
 
-
     });
 
 
-    // let dataCategory = $(this).attr('data-category-slug')
-    // Отслеживание события нажатия кнопок браузера "Вперед/Назад"
-
-    // window.onpopstate = function(event) {
-    //     document.title = event.state.page_title;
-    //     ajaxCat(location.href, dataCategory);
-    // }
-
     /**
-     * Ajax запрос постов из рубрики по переданной ссылке на неё
+     * Ajax запрос постов из рубрики по
      *
      *
      * @param catSlug метка записи для фильтров
@@ -105,11 +86,7 @@ jQuery(document).ready(function ($) {
 
             }, // данные
 
-
-
-
             beforeSend : function( xhr ){
-                // filter.find( 'button' ).text( 'Загружаю...' ); // изменяем текст кнопки
                 $mainBox.html()
                 $('#disclosure-btn-filter a').css({
                     pointerEvents: 'none',
@@ -130,14 +107,47 @@ jQuery(document).ready(function ($) {
                     pointerEvents: 'auto',
                     opacity: '1'
                 })
-                let tableCounter = $(".table-counter");
-                let tableData = $(".pir-table__table tbody tr");
-                tableCounter.text(tableData.length -1);
+
                 $mainBox
                     .html(data)
                     .show()
                 imageLoad.hide();
+                let tableCounter = $(".table-counter");
+                let tableData = $(".pir-table__table tbody tr");
+                let noIndex = $('.no-index-search')
+                if (noIndex.length){
+                    tableCounter.text(tableData.length -2);
+                }else {
+                    tableCounter.text(tableData.length -1);
+                }
+                $('.pir-search__search').keyup(function(){
+                    var search = $(this).val();
+                    tableData.hide();
 
+                    var len = $('.pir-table :not(.notfound) td:contains("'+search+'")').length;
+
+
+                    if(len > 0){
+
+                        $('.pir-table:not(.notfound) td:contains("'+search+'")').each(function(){
+                            $(this).closest('tr').show();
+                        });
+                    }else{
+                        $('.notfound').show();
+
+                    }
+                    var numOfVisibleRows = $('.pir-table__table tr:visible').length;
+                    tableCounter.text(numOfVisibleRows -1);
+                    if( !$(this).val() ) {
+
+                        $('.notfound').hide();
+                    }
+                    if($(this).val().trim() === ''){
+                        $('.notfound').hide();
+                    }
+
+
+                });
             }
         });
 
