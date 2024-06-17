@@ -56,6 +56,15 @@
       }
     }
   }
+  .bg-table-disclosure{
+    tbody{
+      tr{
+        &:nth-child(even){
+          background: var(--pir-gridlines-color)!important;
+        }
+      }
+    }
+  }
   &__download{
     display: inline-flex;
     align-items: center;
@@ -90,4 +99,7 @@
   font-size: rem(16);
   font-weight: normal;
   margin: rem(10) 0;
+}
+.hide-filter{
+  display: none;
 }

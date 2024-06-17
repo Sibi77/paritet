@@ -159,3 +159,52 @@
 .pir-table-width{
   width: 76%;
 }
+.preload-disclosure{
+  //position: absolute;
+  display: table-row-group;
+  tr{
+    text-align: center;
+    td{
+      position: relative;
+      span{
+        font-size: rem(16);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+}
+.pir_ajax_table{
+  display: none;
+}
+.addition-filter{
+  margin-bottom: rem(24);
+}
+.image-load {
+  width: 30px;
+  height: 30px;
+  -webkit-animation:spin 4s linear infinite;
+  -moz-animation:spin 4s linear infinite;
+  animation:spin 4s linear infinite;
+  margin-left: rem(12);
+  &:before{
+    content: '';
+    background: url("../img/icons/loading.svg") no-repeat ;
+    background-size: 30px;
+    width: 30px;
+    height: 30px;
+  }
+}
+@-moz-keyframes spin {
+  100% { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform:rotate(360deg);
+  }
+}

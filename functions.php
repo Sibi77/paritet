@@ -142,7 +142,6 @@ function pir_scripts()
     wp_enqueue_script('pir-libPhones', get_template_directory_uri() . '/js/libphonenumber.js', [], '', true);
     wp_enqueue_script('pir-intlTelInput', get_template_directory_uri() . '/js/intlTelInput.min.js', [], '', true);
     enqueue_versioned_script('pir-scripts', '/js/script.min.js', array('jquery'), true);
-//    wp_enqueue_script('pir-scripts', get_template_directory_uri() . '/js/script.min.js', [], '', true);
     wp_localize_script('pir-scripts', 'lawData', array('themePath' => get_template_directory_uri()));
 
     /*
@@ -159,6 +158,8 @@ function pir_scripts()
         ]
     );
 }
+
+
 
 
 add_action('wp_enqueue_scripts', 'pir_scripts');
@@ -321,6 +322,7 @@ function officials()// Филиалы и представительства
 {
     $officials_get = paritet_get_api('https://master.paritet.ru:9443', '/api/PirDisclosure/v2/Disclosures/Full?filter={"section":"Officials"}');
     $save_posts_id = array();
+    $pageId = url_to_postid('/disclosure-v2/officials/');
     $catId = get_category_by_slug('officials')->cat_ID;
     $catIdHistory = get_category_by_slug('officials_history')->cat_ID;
     global $post;
@@ -339,7 +341,7 @@ function officials()// Филиалы и представительства
             'ping_status' => 'closed',
             'comment_status' => 'closed',
             'post_category' => array($catId),
-            'post_parent' => $get_post_id
+            'post_parent' => $pageId
         );
         $posts = get_posts(
             [
@@ -364,6 +366,9 @@ function officials()// Филиалы и представительства
             $post_id = wp_insert_post($my_post);
             if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-officials-single.php');
             wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
+            if ($item->isSingle == '1' && $item->status == 'Published'){
+                wp_set_object_terms($post_id, array($item->status, $item->isSingle,$item->deleteReason, $item->publicationReason), 'post_tag', false);
+            }
             update_field('officials_id', $officials_info_id, $post_id);
             update_field('officials_title', $item->title, $post_id);
             update_field('officials_parent_id', $item->parentDisclosureId, $post_id);
@@ -525,6 +530,9 @@ function office()// Должностные лица
             $post_id = wp_insert_post($my_post);
             if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-office-single.php');
             wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
+            if ($item->isSingle == '1' && $item->status == 'Published'){
+                wp_set_object_terms($post_id, array($item->status, $item->isSingle,  $item->deleteReason, $item->publicationReason), 'post_tag', false);
+            }
             update_field('office_id', $item->id, $post_id);
             update_field('office_parent_id', $item->parentDisclosureId, $post_id);
             update_field('office_title', $item->title, $post_id);
@@ -876,8 +884,8 @@ function issuerPost()// создание эмитентов
     $save_posts_id = array();
 
     foreach ($issuer_get->data->items as $item) {
-//        echo '<pre>';
-//        print_r($item);
+        echo '<pre>';
+        print_r($item);
         $issuer_id = $item->id;// id эмитента
         $issuer_title = $item->content->issuer->shortName . ' ' . 'id ' . $issuer_id; //Заголовок поста
         $post_name = translit($item->content->issuer->shortName);
@@ -927,7 +935,7 @@ function issuerPost()// создание эмитентов
 
             $post_id = wp_insert_post($my_post);
             if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-issuer-single.php');
-            wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
+            wp_set_object_terms($post_id, array($item->sectionFilter, $item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
             update_field('issuer_id', $item->id, $post_id);
             update_field('parent_issuer_id', $item->parentDisclosureId, $post_id);
 
@@ -1105,6 +1113,7 @@ function issuerPost()// создание эмитентов
     wp_defer_term_counting(false);
     wp_defer_comment_counting(false);
 }
+//issuerPost();
 add_action('issuer_hook', 'issuerPost');
 if( !wp_next_scheduled('issuer_hook') )
     wp_schedule_event( time(), 'hourly', 'issuer_hook');
@@ -1174,6 +1183,10 @@ function securitiesIssuer($section_name, $cat_name, $cat_name_history, $parent_u
                 $post_id = wp_insert_post($my_post);
                 if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-securities-single.php');
                 wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
+                if ($item->isSingle == '1' && $item->status == 'Published'){
+                    wp_set_object_terms($post_id, array($item->status, $item->isSingle, $item->deleteReason, $item->publicationReason), 'post_tag', false);
+                }
+
                 update_field('issuerrr_id', $item->id, $post_id);
                 update_field('issuerrr_title', $item->title, $post_id);
                 update_field('issuerrr_parent_id', $item->parentDisclosureId, $post_id);
@@ -1358,6 +1371,9 @@ function transferAgents($section_name, $cat_name, $cat_name_history, $parent_url
                 $post_id = wp_insert_post($my_post);
                 if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-transfer-agents.php');
                 wp_set_object_terms($post_id, array($item->status, $item->deleteReason, $item->publicationReason), 'post_tag', false);
+                if ($item->isSingle == '1' && $item->status == 'Published'){
+                    wp_set_object_terms($post_id, array($item->status, $item->deleteReason,$item->publicationReason, $item->isSingle), 'post_tag', false);
+                }
                 update_field('transfer_id', $item->id, $post_id);
                 update_field('transfer_title', $item->title, $post_id);
                 update_field('transfer_parent_id', $item->parentDisclosureId, $post_id);
@@ -1498,6 +1514,8 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history, $pare
         }
 
         if ($item->section == $section_name) {
+//            echo '<pre>';
+//            print_r($item);
             $id_ = $item->id;
             $post_title = $item->title . ' ' . 'id ' . $id_; //Заголовок поста
             $post_url = translit($item->title);
@@ -1538,7 +1556,7 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history, $pare
 //                print_r($post_title);
                 $post_id = wp_insert_post($my_post);
                 if ($post_id) update_post_meta($post_id, '_wp_page_template', 'disclosure-content-document.php');
-                wp_set_object_terms($post_id, array($item->status), 'post_tag', false);
+                wp_set_object_terms($post_id, array($item->status, $item->sectionFilter), 'post_tag', false);
                 if ($item->isSingle == '1' && $item->status == 'Published'){
                     wp_set_object_terms($post_id, array($item->status, $item->isSingle), 'post_tag', false);
                 }
@@ -1736,6 +1754,7 @@ function disclosure_documents($section_name, $cat_name, $cat_name_history, $pare
         wp_update_post($my_post2);
     }
 }
+
 add_action('disclosure_documents_hook', 'disclosure_documents', 10, 4);
 
 $param_licence = array( 'Licenses','license','license_history', 'licenses/' ); //лицензии

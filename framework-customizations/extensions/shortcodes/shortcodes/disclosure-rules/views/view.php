@@ -13,7 +13,7 @@
 <div class="pir-table">
     <div class="pir-container">
         <div class="table-calc__tab-mob">
-            <table class="pir-table__table">
+            <table class="pir-table__table" id="table_filter">
                 <thead>
                 <tr>
                     <td>НАИМЕНОВАНИЕ</td>
@@ -23,7 +23,13 @@
                 </tr>
 
                 </thead>
-                <tbody>
+                <tbody class="preload-disclosure" >
+                <tr >
+                    <td colspan="3"><span>Данные загружаются <span class="image-load"></span></span> </td>
+                </tr>
+
+                </tbody>
+                <tbody class="pir_ajax_table">
 
                 <?php
                 //                checkPost('rules', 'Rules');

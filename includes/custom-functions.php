@@ -43,6 +43,86 @@
 //}
 
 
+add_action('wp_ajax_get_cat', 'ajax_show_posts_in_cat');
+add_action('wp_ajax_nopriv_get_cat', 'ajax_show_posts_in_cat');
+function ajax_show_posts_in_cat()
+{
+
+//    $link = !empty($_POST['link']) ? esc_attr($_POST['link']) : false;
+//    $slug = $link ? wp_basename($link) : true;
+    $catcat = $_POST['cat_slug'];
+    $section_name = $_POST['section'];
+    $sort_key = $_POST['sort_key'];
+    $status = $_POST['status'];
+//   print_r($_POST);
+//    echo "<script>console.log('{$_POST}' );</script>";
+
+//    $cat  = get_category_by_slug( $catcat );
+    $cat = get_category_by_slug($catcat);
+
+    if(!($status == '')){
+        $args1 = (array(
+            'post_status' => 'publish',
+            'tag' => array($catcat. ' ' .$status),
+            'meta_key' => $sort_key,
+            'category_name' => $section_name,
+            'orderby' => 'meta_value',
+            'order' => 'DESC',
+        ));
+    } else{
+        $args1 = (array(
+            'post_status' => 'publish',
+            'tag' => array($catcat),
+            'meta_key' => $sort_key,
+            'category_name' => $section_name,
+            'orderby' => 'meta_value',
+            'order' => 'DESC',
+        ));
+    }
+
+    if (!$_POST['cat_slug']) {
+       echo '<tr>
+                    <td style="text-align: center" colspan="4">Информация отсутствует</td>
+                </tr>';
+    }
+
+
+
+
+
+
+
+
+
+    query_posts($args1);
+
+    if (have_posts()) {
+        while (have_posts()) : the_post();
+
+            get_template_part('/template-parts/content', $section_name);
+        endwhile;
+    } else {
+        echo '<tr>
+                    <td style="text-align: center" colspan="3">Информация отсутствует</td>
+                </tr>';
+    }
+
+    wp_die();
+}
+
+
+add_action('wp_enqueue_scripts', 'my_assets');
+function my_assets()
+{
+//    wp_enqueue_script( 'custom', plugins_url( 'custom.js', __FILE__ ), array( 'jquery' ) );
+    wp_enqueue_script('custom', get_stylesheet_directory_uri() . '/js/pir-filter.js', array('jquery'), false, true);
+
+    wp_localize_script('custom', 'myPlugin', array(
+        'ajaxurl' => admin_url('admin-ajax.php')
+    ));
+}
+
+
 add_action('registered_post_type', 'make_posts_hierarchical', 99, 2);
 
 /**
@@ -241,22 +321,24 @@ function get_post_from_uri($uri)
 }
 
 
-add_filter( 'excerpt_length', function(){
+add_filter('excerpt_length', function () {
     return 15;
-} );
-function loadmore_script() {
+});
+function loadmore_script()
+{
 }
 
 add_action('wp_enqueue_scripts', 'loadmore_script');
-function loadmore_get_posts(){
+function loadmore_get_posts()
+{
     $args = unserialize(stripslashes($_POST['query']));
     $args['paged'] = $_POST['page'] + 1; // следующая страница
     $args['post_status'] = 'publish';
 
     query_posts($args);
     // если посты есть
-    if(have_posts()) :
-        while(have_posts()): the_post(); ?>
+    if (have_posts()) :
+        while (have_posts()): the_post(); ?>
             <a href="<?php the_permalink(); ?>" <?php post_class('pir-news__wrap'); ?>
                style="background-color: <?php the_field('color_picker_news'); ?>">
 
@@ -293,17 +375,17 @@ add_action('wp_ajax_loadmore', 'loadmore_get_posts');
 add_action('wp_ajax_nopriv_loadmore', 'loadmore_get_posts');
 
 
-
-function true_breadcrumbs(){
+function true_breadcrumbs()
+{
 
     // получаем номер текущей страницы
-    $page_num = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-    $separator =  ' <i class="angle-arrow-right"></i> '; //  разделяем обычным слэшем, но можете чем угодно другим
+    $page_num = (get_query_var('paged')) ? get_query_var('paged') : 1;
+    $separator = ' <i class="angle-arrow-right"></i> '; //  разделяем обычным слэшем, но можете чем угодно другим
 
     // если главная страница сайта
-    if( is_front_page() ){
+    if (is_front_page()) {
 
-        if( $page_num > 1 ) {
+        if ($page_num > 1) {
             echo '<a class="home-page" href="' . site_url() . '">Главная</a>' . $separator . $page_num . '-я страница';
         } else {
             echo 'Вы находитесь на главной странице';
@@ -314,67 +396,69 @@ function true_breadcrumbs(){
         echo '<a class="home-page" href="' . site_url() . '">Главная</a>' . $separator;
 
 
-        if( is_single() ){ // записи
+        if (is_single()) { // записи
 
-            the_category( ', ' ); echo $separator; the_title();
+            the_category(', ');
+            echo $separator;
+            the_title();
 
-        } elseif ( is_page() ){ // страницы WordPress
+        } elseif (is_page()) { // страницы WordPress
 
             global $post;
 // если у текущей страницы существует родительская
-            if ( $post->post_parent ) {
+            if ($post->post_parent) {
 
-                $parent_id  = $post->post_parent; // присвоим в переменную
+                $parent_id = $post->post_parent; // присвоим в переменную
                 $breadcrumbs = array();
 
-                while ( $parent_id ) {
-                    $page = get_page( $parent_id );
-                    $breadcrumbs[] = '<a href="' . get_permalink( $page->ID ) . '">' . get_the_title( $page->ID ) . '</a>';
+                while ($parent_id) {
+                    $page = get_page($parent_id);
+                    $breadcrumbs[] = '<a href="' . get_permalink($page->ID) . '">' . get_the_title($page->ID) . '</a>';
                     $parent_id = $page->post_parent;
                 }
 
-                echo join( $separator, array_reverse( $breadcrumbs ) ) . $separator;
+                echo join($separator, array_reverse($breadcrumbs)) . $separator;
 
             }
 
             the_title();
 
-        } elseif ( is_category() ) {
+        } elseif (is_category()) {
 
             single_cat_title();
 
-        } elseif( is_tag() ) {
+        } elseif (is_tag()) {
 
             single_tag_title();
 
-        } elseif ( is_day() ) { // архивы (по дням)
+        } elseif (is_day()) { // архивы (по дням)
 
-            echo '<a href="' . get_year_link( get_the_time( 'Y' ) ) . '">' . get_the_time( 'Y' ) . '</a>' . $separator;
-            echo '<a href="' . get_month_link( get_the_time( 'Y' ), get_the_time( 'm' ) ) . '">' . get_the_time( 'F' ) . '</a>' . $separator;
+            echo '<a href="' . get_year_link(get_the_time('Y')) . '">' . get_the_time('Y') . '</a>' . $separator;
+            echo '<a href="' . get_month_link(get_the_time('Y'), get_the_time('m')) . '">' . get_the_time('F') . '</a>' . $separator;
             echo get_the_time('d');
 
-        } elseif ( is_month() ) { // архивы (по месяцам)
+        } elseif (is_month()) { // архивы (по месяцам)
 
-            echo '<a href="' . get_year_link( get_the_time( 'Y' ) ) . '">' . get_the_time( 'Y' ) . '</a>' . $separator;
+            echo '<a href="' . get_year_link(get_the_time('Y')) . '">' . get_the_time('Y') . '</a>' . $separator;
             echo get_the_time('F');
 
-        } elseif ( is_year() ) { // архивы (по годам)
+        } elseif (is_year()) { // архивы (по годам)
 
-            echo get_the_time( 'Y' );
+            echo get_the_time('Y');
 
-        } elseif ( is_author() ) { // архивы по авторам
+        } elseif (is_author()) { // архивы по авторам
 
             global $author;
-            $userdata = get_userdata( $author );
+            $userdata = get_userdata($author);
             echo 'Опубликовал(а) ' . $userdata->display_name;
 
-        } elseif ( is_404() ) { // если страницы не существует
+        } elseif (is_404()) { // если страницы не существует
 
             echo 'Ошибка 404';
 
         }
 
-        if ( $page_num > 1 ) { // номер текущей страницы
+        if ($page_num > 1) { // номер текущей страницы
             echo ' (' . $page_num . '-я страница)';
         }
 
@@ -382,45 +466,46 @@ function true_breadcrumbs(){
     }
 
 }
-add_action( 'wp_enqueue_scripts', 'true_jqueryui_scripts' );
 
-function true_jqueryui_scripts() {
+add_action('wp_enqueue_scripts', 'true_jqueryui_scripts');
+
+function true_jqueryui_scripts()
+{
 
 
 }
 
-add_action( 'wp_ajax_mywebsitesearch', 'true_search' );
-add_action( 'wp_ajax_nopriv_mywebsitesearch', 'true_search' );
+add_action('wp_ajax_mywebsitesearch', 'true_search');
+add_action('wp_ajax_nopriv_mywebsitesearch', 'true_search');
 
-function true_search() {
+function true_search()
+{
 
-    $search_term = isset( $_GET[ 'term' ] ) ? $_GET[ 'term' ] : '';
+    $search_term = isset($_GET['term']) ? $_GET['term'] : '';
 
-    $posts = get_posts( array(
+    $posts = get_posts(array(
         'posts_per_page' => 20,
-        'post_type' => array( 'post', 'page' ),
+        'post_type' => array('post', 'page'),
         's' => $search_term
-    ) );
+    ));
 
     $results = array();
 
-    if( $posts ) {
+    if ($posts) {
 
-        foreach( $posts as $post ) {
+        foreach ($posts as $post) {
 
             $results[] = array(
                 'id' => $post->ID,
                 'value' => $post->post_title,
-                'url' => get_permalink( $post->ID )
+                'url' => get_permalink($post->ID)
             );
 
         }
 
     }
 
-    wp_send_json( $results );
-
-
+    wp_send_json($results);
 
 
 }

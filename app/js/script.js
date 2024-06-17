@@ -216,6 +216,7 @@ $(function () {
 
     }
 
+
     visibleCookieModal();
 
 
@@ -664,27 +665,45 @@ $(function () {
             top = $(id).offset().top;
         $('body,html').animate({scrollTop: top}, 1000);
     });
+
+
+
+
+
     //end animated anchor scroll
-    tableCounter.text(tableData.length);
+
+
+
+
+
+    var tableFilter = $("#table_filter");
+    if(tableFilter.length){
+        tableCounter.text(tableData.length-1);
+    } else {
+        tableCounter.text(tableData.length);
+    }
+
 
     $('.pir-search__search').keyup(function(){
         var search = $(this).val();
         tableData.hide();
 
-
         var len = $('.pir-table :not(.notfound) td:contains("'+search+'")').length;
 
 
         if(len > 0){
+
             $('.pir-table:not(.notfound) td:contains("'+search+'")').each(function(){
                 $(this).closest('tr').show();
             });
         }else{
             $('.notfound').show();
+
         }
         var numOfVisibleRows = $('.pir-table__table tr:visible').length;
         tableCounter.text(numOfVisibleRows -1);
         if( !$(this).val() ) {
+
             $('.notfound').hide();
         }
         if($(this).val().trim() === ''){
@@ -779,7 +798,7 @@ $(function () {
     //  Добавление активных ссылок фильтру в компоненте  поиска
     function activeSearch() {
         var url = document.location.href.trim();
-        $.each($(".pir-search__filter-btn a"), function () {
+        $.each($(".pir-search__filter-js a"), function () {
             if (this.href.trim() === url) {
                 $(this).addClass('active');
             }
@@ -909,5 +928,6 @@ function phoneMaskAndValidationInit() {
     inputPhone.attr('type', ('tel'));
 
 }
+
 
 

@@ -16,7 +16,7 @@
             <a href="<?=$atts['facts_work']['0']['facts_work_link']?>" class="facts__item facts__work"
                  style="background-image: url(<?= $atts['facts_work']['0']['facts_work_bg']['url'] ?>)">
                 <p><?= $atts['facts_work']['0']['facts_work_title'] ?></p>
-                <span><?/*= $atts['facts_work']['0']['facts_work_year'] */?>28 лет</span>
+                <span><?/*= $atts['facts_work']['0']['facts_work_year'] */?>29 лет</span>
                 <div class="test-facts"></div>
             </a>
 

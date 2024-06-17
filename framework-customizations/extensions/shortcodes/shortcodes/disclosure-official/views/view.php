@@ -8,11 +8,10 @@
 
 
 ?>
-
 <div class="pir-table">
     <div class="pir-container">
         <div class="table-calc__tab-mob">
-            <table class="pir-table__table">
+            <table class="pir-table__table " id="table_filter">
                 <thead>
                 <tr>
                     <td style="width: 40%">НАИМЕНОВАНИЕ</td>
@@ -21,11 +20,15 @@
                 </tr>
 
                 </thead>
-                <tbody>
+                <tbody class="preload-disclosure" >
+                <tr >
+                    <td colspan="3"><span>Данные загружаются <span class="image-load"></span></span> </td>
+                </tr>
+
+                </tbody>
+                <tbody class="pir_ajax_table">
 
                 <?php
-//                checkPost('officials', 'Officials');
-//                officials();
 
                 $args = array(
                     'category_name' => 'officials',
@@ -41,7 +44,7 @@
 
                     <tr>
                         <td>
-                            <a class="pir-table-api" href="<?php the_permalink(); ?>"><?= get_field("officials_fio"); ?></a>
+                            <a <?php post_class('pir-table-api') ?>  href="<?php the_permalink(); ?>"><?= get_field("officials_fio"); ?></a>
                         </td>
                         <td><?= get_field("officials_position"); ?></td>
                         <td><?= substr(get_field("officials_published_at"),0,10); ?></td>
